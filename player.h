@@ -19,6 +19,8 @@ private:
     sf::Clock attackClock;
     sf::RectangleShape body; // temporarily, later sf::Sprite
     sf::Vector2f position;
+    sf::Vector2f direction;
+    float speed;
 
 public:
     Player();
@@ -28,6 +30,18 @@ public:
     void move(const sf::Vector2f& dir);
     void takeDamage(const int& dam);
     void castSpecial(); //optional
+    const sf::RectangleShape& getBody() const;
+    const sf::Vector2f getPosition() const;
+
+    // This specifies a direction, that player should move in. There are eigth general directions, that can be achieved,
+    // by pressing different combinations of 'WSAD'
+    const sf::Vector2f getDirection() const;
+    void setDirection(sf::Vector2f);
+    void setDirectionY(float);
+    void setDirectionX(float);
+
+    float getSpeed() const;
+    void getSpeed(float);
 };
 
 #endif // PLAYER_H
