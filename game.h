@@ -15,6 +15,7 @@ class Game
 {
 private:
     sf::RenderWindow window;
+
     sf::View view; //optional
 
     Player player;
