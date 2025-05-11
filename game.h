@@ -15,9 +15,7 @@ class Game
 {
 private:
     sf::RenderWindow window;
-
     sf::View view; //optional
-
     Player player;
     std::vector<std::unique_ptr<Enemies>> enemies;
     std::vector<std::unique_ptr<Projectiles>> projectiles;
@@ -33,6 +31,7 @@ public:
     void render();
     void spawnEnemies();
     void updateWave();
+
 
 };
 
