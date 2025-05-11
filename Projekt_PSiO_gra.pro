@@ -10,7 +10,7 @@ SOURCES += main.cpp \
     projectiles.cpp \
     weapons.cpp
 
-INCLUDEPATH += C:/SFML/include
+INCLUDEPATH += C:\SFML\include
 
 LIBS += -LC:/SFML/lib \
     -lsfml-graphics \
