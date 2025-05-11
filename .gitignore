@@ -1,4 +1,4 @@
-# 📦 Qt Creator
+
 *.pro.user
 *.pro.user.*
 *.autosave
@@ -10,7 +10,7 @@
 *.sln
 *.user
 
-# 🔧 Pliki kompilacji
+
 Makefile
 *.o
 *.obj
@@ -24,22 +24,15 @@ Makefile
 *.qrc
 *.tmp
 
-# 🧹 Katalogi tymczasowe
 build*/
 debug/
 release/
-
-# 🛑 CMake (jeśli używasz)
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
-
-# 📁 Backupy
 *~
 *.bak
 *.swp
 .DS_Store
-
-# 📄 logi i cache
 *.log
 *.cache
