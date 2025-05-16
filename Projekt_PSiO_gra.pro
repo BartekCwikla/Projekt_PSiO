@@ -6,6 +6,7 @@ SOURCES += main.cpp \
     enemies.cpp \
     game.cpp \
     hud.cpp \
+    map.cpp \
     player.cpp \
     projectiles.cpp \
     weapons.cpp
@@ -23,6 +24,7 @@ HEADERS += \
     enemies.h \
     game.h \
     hud.h \
+    map.h \
     player.h \
     projectiles.h \
     weapons.h
