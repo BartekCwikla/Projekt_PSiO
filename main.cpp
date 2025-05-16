@@ -5,5 +5,6 @@
 int main() {
     Game* GameObj = new Game();
     GameObj->run();
+    delete GameObj;
     return 0;
 }

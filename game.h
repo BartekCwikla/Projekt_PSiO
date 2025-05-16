@@ -9,6 +9,7 @@
 #include "weapons.h"
 #include "projectiles.h"
 #include "hud.h"
+#include "map.h"
 
 // Main class
 class Game
@@ -20,6 +21,7 @@ private:
     std::vector<std::unique_ptr<Enemies>> enemies;
     std::vector<std::unique_ptr<Projectiles>> projectiles;
     HUD hud;
+    Map map;
     int waveNumber;
 
 
