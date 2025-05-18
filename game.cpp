@@ -1,6 +1,9 @@
 #include "game.h"
+#include "enemy_demon.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <memory>
+#include <cmath>
 Game::Game() : window(sf::VideoMode(2400, 1500), "Window"),
     view(window.getDefaultView()), player()
 {
@@ -74,7 +77,23 @@ void Game::update(sf::Time& dt) {
     player.setPosition(fixedPos);
 
 
+    // Enemy actualization
+    for (auto& enemy : enemies){
+        enemy->update(dt, player.getPosition());
+    }
 
+    // Enemy spawn every 2 seconds;
+    if (enemyspawnClock.getElapsedTime().asSeconds() > 2.f) {
+        sf::Vector2f spawnPos = generateSpawnPositionNear(player.getPosition(), map.getBounds(), 200.f, 400.f);
+        enemies.push_back(std::make_unique<Enemy_Demon>(spawnPos));
+        enemyspawnClock.restart();
+    }
+
+    // Removing dead enemies;
+    enemies.erase(std::remove_if(enemies.begin(), enemies.end(),[](const std::unique_ptr<Enemies>& e) {
+                           return e->getHP() <= 0.f;
+                  }),
+        enemies.end());
 
 
     //Camera
@@ -97,9 +116,33 @@ void Game::render() {
     window.clear(sf::Color::Black);
     window.setView(view);
     map.draw(window); // map must render first
-    window.draw(player.getBody());
 
+    for (auto& enemy : enemies)
+        enemy->render(window);
+
+    window.draw(player.getBody());
     window.display();
 
 
 }
+
+sf::Vector2f Game::generateSpawnPositionNear(const sf::Vector2f& playerPos, const sf::FloatRect& mapBounds, float minDist, float maxDist) {
+    sf::Vector2f spawn;
+    int attempts = 0;
+
+    do {
+        float angle = static_cast<float>(rand()) / RAND_MAX * 2.f * M_PI;
+        float dist = minDist + static_cast<float>(rand()) / RAND_MAX * (maxDist - minDist);
+
+        spawn.x = playerPos.x + std::cos(angle) * dist;
+        spawn.y = playerPos.y + std::sin(angle) * dist;
+
+        attempts++;
+        if (attempts > 50) break;
+    } while (!map.getBounds().contains(spawn));
+
+    return spawn;
+}
+
+
+

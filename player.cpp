@@ -25,8 +25,6 @@ void Player::setPosition(const sf::Vector2f& pos){
 
 // Moving player in a direction specified by 'dir' argument of sf::Vector2f type
 void Player::move(const sf::Vector2f& dir) {
-   // position += dir;
-   // body.setPosition(position);
     body.move(dir);
 }
 

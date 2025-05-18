@@ -16,7 +16,8 @@ class Game
 {
 private:
     sf::RenderWindow window;
-    sf::View view; //optional
+    sf::View view;
+    sf::Clock enemyspawnClock;
     Player player;
     std::vector<std::unique_ptr<Enemies>> enemies;
     std::vector<std::unique_ptr<Projectiles>> projectiles;
@@ -33,6 +34,8 @@ public:
     void render();
     void spawnEnemies();
     void updateWave();
+    sf::Vector2f generateSpawnPositionNear(const sf::Vector2f& playerPos, const sf::FloatRect& mapBounds, float minDist, float maxDist);
+
 
 
 };
