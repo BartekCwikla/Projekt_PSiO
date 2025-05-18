@@ -30,8 +30,10 @@ public:
     void move(const sf::Vector2f& dir);
     void takeDamage(const int& dam);
     void castSpecial(); //optional
+    void setPosition(const sf::Vector2f& pos);
     const sf::RectangleShape& getBody() const;
     const sf::Vector2f getPosition() const;
+    sf::FloatRect getGlobalBounds() const;
 
     // This specifies a direction, that player should move in. There are eigth general directions, that can be achieved,
     // by pressing different combinations of 'WSAD'
@@ -39,7 +41,6 @@ public:
     void setDirection(sf::Vector2f);
     void setDirectionY(float);
     void setDirectionX(float);
-
     float getSpeed() const;
     void getSpeed(float);
 };

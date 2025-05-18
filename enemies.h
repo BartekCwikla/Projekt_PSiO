@@ -5,7 +5,7 @@
 class Enemies
 {
 private:
-    float hp=0.f, speed=0.f;
+    float hp, speed;
 public:
     Enemies();
     virtual ~Enemies() = default;
@@ -14,6 +14,7 @@ public:
     virtual void takeDamage(float dmg)=0;              // enemies damage
     virtual sf::FloatRect getBounds() const = 0;       // collision
     virtual sf::Vector2f getPosition() const = 0;      // actual position
+    virtual float getHP() const = 0;
 
 };
 

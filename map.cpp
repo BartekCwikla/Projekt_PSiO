@@ -19,7 +19,19 @@ bool Map::load(const std::string& texturePath, int tile_size, int width, int hei
             tiles.push_back(tile);
         }
     }
+    mapBounds = sf::FloatRect(0.f, 0.f, mapWidth * tileSize, mapHeight * tileSize);
     return true;
+}
+
+sf::FloatRect Map::getBounds() const {
+    return mapBounds;
+}
+
+sf::Vector2f Map::getSize() const {
+    return sf::Vector2f(
+        static_cast<float>(mapWidth * tileSize),
+        static_cast<float>(mapHeight * tileSize)
+        );
 }
 
 //Map drawing method

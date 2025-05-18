@@ -4,6 +4,7 @@ CONFIG -= qt
 
 SOURCES += main.cpp \
     enemies.cpp \
+    enemy_demon.cpp \
     game.cpp \
     hud.cpp \
     map.cpp \
@@ -22,6 +23,7 @@ LIBS += -LC:/SFML/lib \
 
 HEADERS += \
     enemies.h \
+    enemy_demon.h \
     game.h \
     hud.h \
     map.h \
