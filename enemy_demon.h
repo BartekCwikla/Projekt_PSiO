@@ -18,7 +18,7 @@ public:
     sf::Vector2f getPosition() const override;
     float getHP() const override;
 
-    void update(sf::Time& dt, const sf::Vector2f& playerPos);
+    void update(sf::Time& dt, const sf::Vector2f& playerPos) override;
 };
 
 #endif // ENEMY_DEMON_H
