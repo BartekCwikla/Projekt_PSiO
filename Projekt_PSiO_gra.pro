@@ -3,12 +3,15 @@ CONFIG += console c++17
 CONFIG -= qt
 
 SOURCES += main.cpp \
+    bullet.cpp \
     enemies.cpp \
     game.cpp \
+    gun.cpp \
     hud.cpp \
     player.cpp \
-    projectiles.cpp \
-    weapons.cpp
+    projectile.cpp \
+    range.cpp \
+    weapon.cpp
 
 INCLUDEPATH += C:/SFML/include
 
@@ -20,9 +23,12 @@ LIBS += -LC:/SFML/lib \
     -lsfml-network
 
 HEADERS += \
+    bullet.h \
     enemies.h \
     game.h \
+    gun.h \
     hud.h \
     player.h \
-    projectiles.h \
-    weapons.h
+    projectile.h \
+    range.h \
+    weapon.h

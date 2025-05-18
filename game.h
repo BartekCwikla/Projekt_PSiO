@@ -6,8 +6,8 @@
 #include <vector>
 #include "player.h"
 #include "enemies.h"
-#include "weapons.h"
-#include "projectiles.h"
+#include "weapon.h"
+#include "projectile.h"
 #include "hud.h"
 
 // Main class
@@ -18,7 +18,7 @@ private:
     sf::View view; //optional
     Player player;
     std::vector<std::unique_ptr<Enemies>> enemies;
-    std::vector<std::unique_ptr<Projectiles>> projectiles;
+    std::vector<std::unique_ptr<Projectile>> projectiles;
     HUD hud;
     int waveNumber;
 

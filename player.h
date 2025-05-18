@@ -4,10 +4,10 @@
 #include <vector>
 #include <memory>
 //#include "enemies.h"
-//#include "projectiles.h"
+//#include "projectile.h"
 
-class Weapons;
-class Projectiles;
+class Weapon;
+class Projectile;
 class Enemies;
 
 class Player
@@ -15,17 +15,19 @@ class Player
 private:
     float hp=0.f;
     int lvl=0, cash=0;
-    std::vector<std::unique_ptr<Weapons>> weapons;
+    std::vector<std::unique_ptr<Weapon>> weapons;
+    Weapon* current_weapon = nullptr;
     sf::Clock attackClock;
     sf::RectangleShape body; // temporarily, later sf::Sprite
     sf::Vector2f position;
     sf::Vector2f direction;
+    sf::Vector2f last_direction;
     float speed;
 
 public:
     Player();
     ~Player();
-    void attack(std::vector<std::unique_ptr<Projectiles>>& projectiles);
+    void attack(std::vector<std::unique_ptr<Projectile>>& projectiles);
     void update(sf::Time dt);
     void move(const sf::Vector2f& dir);
     void takeDamage(const int& dam);
@@ -39,9 +41,16 @@ public:
     void setDirection(sf::Vector2f);
     void setDirectionY(float);
     void setDirectionX(float);
+    void setLastDirection(sf::Vector2f);
 
     float getSpeed() const;
     void getSpeed(float);
+
+
+    Weapon* getCurrentWeapon();
+
+
+    std::unique_ptr<Projectile> fire();
 };
 
 #endif // PLAYER_H

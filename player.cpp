@@ -1,8 +1,19 @@
 #include "player.h"
-#include "weapons.h"
+#include "weapon.h"
+#include "projectile.h"
+#include "gun.h"
+
+Player::Player() : body(sf::Vector2f(100, 100)), position(sf::Vector2f(1200, 750)), speed(500.0) {
+
+    auto g = std::make_unique<Gun>();
 
 
-Player::Player() : body(sf::Vector2f(100, 100)), position(sf::Vector2f(1200, 750)), speed(500.0) {}
+    current_weapon = g.get();
+    weapons.push_back(std::move(g));
+
+    direction = {0,0};
+    last_direction = {1,0};
+}
 
 
 Player::~Player() = default;
@@ -39,7 +50,23 @@ void Player::setDirectionY(float y) {
     direction.y = y;
 }
 
+void Player::setLastDirection(sf::Vector2f dir) {
+    last_direction = dir;
+}
+
+
 float Player::getSpeed() const {
     return speed;
 }
+
+
+std::unique_ptr<Projectile> Player::fire() {
+    return current_weapon->fire(getPosition(), last_direction);
+}
+
+
+Weapon* Player::getCurrentWeapon() {
+    return current_weapon;
+}
+
 

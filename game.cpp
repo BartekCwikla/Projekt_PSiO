@@ -37,13 +37,31 @@ void Game::update(sf::Time& dt) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) player.setDirectionX(-1);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) player.setDirectionX(+1);
 
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+        // if fire function is called before cooldown time it returns nullptr. This code is required to push only valid projectiles
+        auto shot = player.fire();
+        if (shot)
+            projectiles.emplace_back(std::move(shot));
+    }
+
+    player.setLastDirection(player.getDirection());
+
     player.move(sf::Vector2f(player.getDirection()) * dt.asSeconds() * player.getSpeed());
+
+
+    for (auto & p: projectiles) {
+        p->move(dt);
+    }
 }
 
 void Game::render() {
     window.clear(sf::Color::Black);
 
     window.draw(player.getBody());
+
+    for (auto & p: projectiles) {
+        window.draw(p->getBody());
+    }
 
     window.display();
 
