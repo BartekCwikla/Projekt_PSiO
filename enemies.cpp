@@ -1,3 +1,4 @@
 #include "enemies.h"
+#include <SFML/Graphics.hpp>
 
-Enemies::Enemies() {}
+Enemies::Enemies() : hp(0), speed(0) {}
