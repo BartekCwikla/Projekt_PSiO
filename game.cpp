@@ -52,11 +52,37 @@ void Game::update(sf::Time& dt) {
     player.setDirection(sf::Vector2f(0.f,0.f));
 
 
+
     // Setting direction based on keyboard input
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) player.setDirectionY(-1);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) player.setDirectionY(+1);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) player.setDirectionX(-1);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) player.setDirectionX(+1);
+
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+        // if fire function is called before cooldown time it returns nullptr. This code is required to push only valid projectiles
+        auto shot = player.fire();
+        if (shot)
+            projectiles.emplace_back(std::move(shot));
+    }
+    if (player.getDirection() != sf::Vector2f(0.f, 0.f)) {
+        player.setLastDirection(player.getDirection());
+    }
+
+
+
+
+    for (auto &p: projectiles) {
+        p->move(dt);
+    }
+
+    // Check whether the projectile has not exceeded it's maximum range, if yes remove it
+    projectiles.erase(std::remove_if(projectiles.begin(), projectiles.end(),
+                                     [](const std::unique_ptr<Projectile>& p){
+                                         return p->distanceExceeded();
+                                     }
+                                     ), projectiles.end());
 
 
     player.move(sf::Vector2f(player.getDirection()) * dt.asSeconds() * player.getSpeed());
@@ -120,7 +146,14 @@ void Game::render() {
     for (auto& enemy : enemies)
         enemy->render(window);
 
+
+    for (auto & p: projectiles) {
+        window.draw(p->getBody());
+    }
+
+
     window.draw(player.getBody());
+
     window.display();
 
 

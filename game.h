@@ -6,8 +6,8 @@
 #include <vector>
 #include "player.h"
 #include "enemies.h"
-#include "weapons.h"
-#include "projectiles.h"
+#include "weapon.h"
+#include "projectile.h"
 #include "hud.h"
 #include "map.h"
 
@@ -20,7 +20,7 @@ private:
     sf::Clock enemyspawnClock;
     Player player;
     std::vector<std::unique_ptr<Enemies>> enemies;
-    std::vector<std::unique_ptr<Projectiles>> projectiles;
+    std::vector<std::unique_ptr<Projectile>> projectiles;
     HUD hud;
     Map map;
     int waveNumber;

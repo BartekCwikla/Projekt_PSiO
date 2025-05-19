@@ -1,5 +1,5 @@
-#ifndef WEAPONS_H
-#define WEAPONS_H
+#ifndef WEAPON_H
+#define WEAPON_H
 #include <string>
 #include <vector>
 #include <memory>
@@ -7,8 +7,9 @@
 
 class Player;
 class Enemies;
+class Projectile;
 
-class Weapons
+class Weapon
 {
 protected:
     std::string name="Unknown";
@@ -16,11 +17,17 @@ protected:
     float damage=0.f;
     sf::Clock coolDown;
 public:
-    Weapons();
-    virtual ~Weapons()=default;
-   virtual void attack(Player&, std::vector<std::unique_ptr<Enemies>>&)=0;
+    Weapon();
+    virtual ~Weapon()=default;
     virtual void upgrade()=0;
+    virtual std::unique_ptr<Projectile> fire(sf::Vector2f, sf::Vector2f);
 
 };
 
-#endif // WEAPONS_H
+
+
+
+
+
+
+#endif // WEAPON_H
