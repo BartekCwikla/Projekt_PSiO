@@ -5,9 +5,11 @@ CONFIG -= qt
 SOURCES += main.cpp \
     bullet.cpp \
     enemies.cpp \
+    enemy_demon.cpp \
     game.cpp \
     gun.cpp \
     hud.cpp \
+    map.cpp \
     player.cpp \
     projectile.cpp \
     range.cpp \
@@ -25,9 +27,11 @@ LIBS += -LC:/SFML/lib \
 HEADERS += \
     bullet.h \
     enemies.h \
+    enemy_demon.h \
     game.h \
     gun.h \
     hud.h \
+    map.h \
     player.h \
     projectile.h \
     range.h \

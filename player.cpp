@@ -22,15 +22,21 @@ const sf::RectangleShape& Player::getBody() const {
     return body;
 }
 
+sf::FloatRect Player::getGlobalBounds() const{
+    return body.getGlobalBounds();
+}
+
 const sf::Vector2f Player::getPosition() const {
-    return position;
+    return body.getPosition();
+}
+void Player::setPosition(const sf::Vector2f& pos){
+    body.setPosition(pos);
 }
 
 
 // Moving player in a direction specified by 'dir' argument of sf::Vector2f type
 void Player::move(const sf::Vector2f& dir) {
-    position += dir;
-    body.setPosition(position);
+    body.move(dir);
 }
 
 
