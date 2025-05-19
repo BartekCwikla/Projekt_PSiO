@@ -1,12 +1,16 @@
 #include "gun.h"
 #include "bullet.h"
 
+
+
 Gun::Gun(float initRange, float initDamage, float initCooldown)
     : cooldownTime(initCooldown)
 {
+    setVelocity(1000);
     setRange(initRange);
     damage     = initDamage;
     level      = 1;
+
 }
 
 std::unique_ptr<Projectile> Gun::fire(sf::Vector2f position, sf::Vector2f direction)

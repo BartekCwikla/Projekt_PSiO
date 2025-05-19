@@ -14,3 +14,8 @@ void Range::setRange(float new_range) {
 float Range::getVelocity() const {
     return velocity;
 }
+
+
+void Range::setVelocity(float new_velocity) {
+    velocity = new_velocity;
+}

@@ -14,6 +14,7 @@ public:
     float getRange() const;
 
     float getVelocity() const;
+    void setVelocity(float);
 
     virtual std::unique_ptr<Projectile> fire(sf::Vector2f, sf::Vector2f);
 };
