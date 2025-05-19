@@ -29,7 +29,7 @@ void Game::update(sf::Time& dt) {
     //Movement logic
 
     // Defaulting direction to {0,0}
-    player.setDirection(sf::Vector2f(0,0));
+    player.setDirection(sf::Vector2f(0.f,0.f));
 
     // Setting direction based on keyboard input
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) player.setDirectionY(-1);
@@ -43,8 +43,10 @@ void Game::update(sf::Time& dt) {
         if (shot)
             projectiles.emplace_back(std::move(shot));
     }
+    if (player.getDirection() != sf::Vector2f(0.f, 0.f)) {
+        player.setLastDirection(player.getDirection());
+    }
 
-    player.setLastDirection(player.getDirection());
 
     player.move(sf::Vector2f(player.getDirection()) * dt.asSeconds() * player.getSpeed());
 
