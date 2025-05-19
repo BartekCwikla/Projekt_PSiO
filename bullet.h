@@ -7,7 +7,7 @@
 
 class Bullet : public Projectile {
 public:
-    Bullet(sf::Vector2f&, sf::Vector2f&, float);
+    Bullet(sf::Vector2f&, sf::Vector2f&, float, float);
     ~Bullet();
 
     void update() {};

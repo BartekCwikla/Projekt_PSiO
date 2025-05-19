@@ -6,7 +6,7 @@
 
 class Range : public Weapon {
 private:
-    float range;
+    float range = 1000;
     float velocity = 100;
 
 public:

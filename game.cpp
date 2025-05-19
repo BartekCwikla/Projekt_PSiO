@@ -50,10 +50,16 @@ void Game::update(sf::Time& dt) {
 
     player.move(sf::Vector2f(player.getDirection()) * dt.asSeconds() * player.getSpeed());
 
-
-    for (auto & p: projectiles) {
+    for (auto &p: projectiles) {
         p->move(dt);
     }
+
+    // Check whether the projectile has not exceeded it's maximum range, if yes remove it
+    projectiles.erase(std::remove_if(projectiles.begin(), projectiles.end(),
+                                     [](const std::unique_ptr<Projectile>& p){
+                                         return p->distanceExceeded();
+                                     }
+                                     ), projectiles.end());
 }
 
 void Game::render() {

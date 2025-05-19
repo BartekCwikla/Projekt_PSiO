@@ -1,11 +1,12 @@
 #include "projectile.h"
+#include <cmath>
 
-Projectile::Projectile(sf::Vector2f dir, sf::Vector2f initial_position, float speed) : direction(dir), position(initial_position) {
+Projectile::Projectile(sf::Vector2f dir, sf::Vector2f initial_position, float speed, float max_distance) : direction(dir), position(initial_position), max_distance(max_distance) {
     body.setRadius(5.f);
     body.setOrigin(5.f, 5.f);
     body.setPosition(position);
     body.setFillColor(sf::Color::White);
-
+    setDistanceTraveled(0.f);
     velocity = direction * speed;
 }
 
@@ -13,6 +14,8 @@ Projectile::Projectile(sf::Vector2f dir, sf::Vector2f initial_position, float sp
 
 void Projectile::move(sf::Time dt) {
     position += velocity * dt.asSeconds();
+    float normalised_velocity = sqrt(pow(velocity.x, 2) + pow(velocity.y, 2));
+    distance_traveled += normalised_velocity * dt.asSeconds();
     body.setPosition(position);
 }
 
@@ -21,3 +24,23 @@ sf::CircleShape& Projectile::getBody() {
     return body;
 }
 
+
+void Projectile::setDistanceTraveled(float distance) {
+    distance_traveled = distance;
+}
+
+float Projectile::getDistanceTraveled() const {
+    return distance_traveled;
+}
+
+void Projectile::setMaxDistance(float distance) {
+    max_distance = distance;
+}
+
+float Projectile::getMaxDistance() const {
+    return max_distance;
+}
+
+bool Projectile::distanceExceeded() const {
+    return (this->getDistanceTraveled() > this->getMaxDistance());
+}
