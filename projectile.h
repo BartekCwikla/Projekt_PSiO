@@ -15,8 +15,11 @@ private:
     float distance_traveled;
     float max_distance;
 
+    // This variable tells whether this projectile has hit the enemy
+    bool hit = false;
+
 public:
-    Projectile(sf::Vector2f, sf::Vector2f, float, float);
+    Projectile(sf::Vector2f, sf::Vector2f, float, float, float);
     virtual ~Projectile()=default;
     virtual void update()=0;
     virtual bool checkColision(const Enemies& colision)=0;
@@ -26,11 +29,18 @@ public:
     // Check if the projectile is within allowed range
     bool distanceExceeded() const;
 
+    void setDamage(float);
+    float getDamage() const;
+
     void setDistanceTraveled(float distance);
     float getDistanceTraveled() const;
 
     void setMaxDistance(float distance);
     float getMaxDistance() const;
+
+    void setHit(bool);
+    bool getHit() const;
+
 };
 
 

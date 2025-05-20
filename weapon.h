@@ -22,6 +22,9 @@ public:
     virtual void upgrade()=0;
     virtual std::unique_ptr<Projectile> fire(sf::Vector2f, sf::Vector2f);
 
+    void setDamage(float new_damage);
+    float getDamage() const;
+
 };
 
 
