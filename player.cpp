@@ -7,6 +7,14 @@ Player::Player() : body(sf::Vector2f(100, 100)), position(sf::Vector2f(1200, 750
 
 Player::~Player() = default;
 
+float Player::getMaxHP() const{
+    return maxHp;
+}
+
+float Player::getHP() const {
+    return hp;
+}
+
 const sf::RectangleShape& Player::getBody() const {
     return body;
 }

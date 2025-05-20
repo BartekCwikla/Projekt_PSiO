@@ -10,8 +10,6 @@ Game::Game() : window(sf::VideoMode(2400, 1500), "Window"),
     map.load("assets/map/ground_stone.png", 256, 64, 64);
     view.setSize(2400,1500);
     sf::Vector2f center = map.getSize() / 2.f;
-
-    std::cout << "MAP CENTER: " << center.x << ", " << center.y << "\n";
     player.setPosition(map.getSize()/2.f);
     view.setCenter(player.getPosition());
 
@@ -121,6 +119,25 @@ void Game::render() {
         enemy->render(window);
 
     window.draw(player.getBody());
+
+    //Player HUD - HP bar
+    float hpPercent = player.getHP() / player.getMaxHP();
+    float barWidth = 300.f;
+    float barHeight = 20.f;
+
+    sf::Vector2f center = view.getCenter(); // środek widoku
+    sf::Vector2f barPosition(center.x - barWidth / 2.f, center.y - view.getSize().y / 2.f + 20.f); // u góry
+
+    sf::RectangleShape hpBack(sf::Vector2f(barWidth, barHeight));
+    hpBack.setFillColor(sf::Color(60, 60, 60));
+    hpBack.setPosition(barPosition);
+
+    sf::RectangleShape hpFront(sf::Vector2f(barWidth * hpPercent, barHeight));
+    hpFront.setFillColor(sf::Color::Green);
+    hpFront.setPosition(barPosition);
+
+    window.draw(hpBack);
+    window.draw(hpFront);
     window.display();
 
 
