@@ -36,5 +36,3 @@ HEADERS += \
     projectile.h \
     range.h \
     weapon.h
-
-RESOURCES +=
