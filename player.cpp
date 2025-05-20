@@ -22,7 +22,7 @@ const sf::RectangleShape& Player::getBody() const {
     return body;
 }
 
-sf::FloatRect Player::getGlobalBounds() const{
+sf::FloatRect Player::getGlobalBounds() const {
     return body.getGlobalBounds();
 }
 

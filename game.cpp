@@ -7,7 +7,7 @@
 Game::Game() : window(sf::VideoMode(2400, 1500), "Window"),
     view(window.getDefaultView()), player()
 {
-    map.load("assets/map/ground_stone.png", 256, 64, 64);
+    map.load("./assets/map/ground_stone.png", 256, 64, 64);
     view.setSize(2400,1500);
     sf::Vector2f center = map.getSize() / 2.f;
 
@@ -77,15 +77,25 @@ void Game::update(sf::Time& dt) {
         p->move(dt);
     }
 
-    // Check whether the projectile has not exceeded it's maximum range, if yes remove it
-    projectiles.erase(std::remove_if(projectiles.begin(), projectiles.end(),
-                                     [](const std::unique_ptr<Projectile>& p){
-                                         return p->distanceExceeded();
-                                     }
-                                     ), projectiles.end());
+
 
 
     player.move(sf::Vector2f(player.getDirection()) * dt.asSeconds() * player.getSpeed());
+
+
+    // Damage enemies if the bullet intersects them, change hit flag to true if yes
+    for (auto &p: projectiles) {
+        const auto& pBody = p->getBody();
+        for (auto &e: enemies) {
+            if (pBody.getGlobalBounds().intersects(e->getBounds())) {
+                e->takeDamage(p->getDamage());
+                p->setHit(true);
+            }
+        }
+
+    }
+
+
 
     sf::FloatRect playerBounds = player.getGlobalBounds();
     sf::FloatRect mapBounds = map.getBounds();
@@ -100,7 +110,7 @@ void Game::update(sf::Time& dt) {
     if (playerBounds.top + playerBounds.height > mapBounds.top + mapBounds.height)
         fixedPos.y = mapBounds.top + mapBounds.height - playerBounds.height;
 
-    player.setPosition(fixedPos);
+    // player.setPosition(fixedPos);
 
 
     // Enemy actualization
@@ -120,6 +130,14 @@ void Game::update(sf::Time& dt) {
                            return e->getHP() <= 0.f;
                   }),
         enemies.end());
+
+
+    // Check whether the projectile has not exceeded it's maximum range or hit an enemy, if yes remove it
+    projectiles.erase(std::remove_if(projectiles.begin(), projectiles.end(),
+                                     [](const std::unique_ptr<Projectile>& p){
+                                         return (p->distanceExceeded() || p->getHit());
+                                     }
+                                     ), projectiles.end());
 
 
     //Camera

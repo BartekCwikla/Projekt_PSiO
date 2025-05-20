@@ -3,7 +3,7 @@
 
 
 std::unique_ptr<Projectile> Range::fire(sf::Vector2f position, sf::Vector2f dir) {
-    return std::make_unique<Bullet>(position, dir, getVelocity(), getRange());
+    return std::make_unique<Bullet>(position, dir, getVelocity(), getRange(), getDamage());
 }
 
 

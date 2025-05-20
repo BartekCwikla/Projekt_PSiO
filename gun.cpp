@@ -20,7 +20,7 @@ std::unique_ptr<Projectile> Gun::fire(sf::Vector2f position, sf::Vector2f direct
 
     coolDown.restart();
 
-    return std::make_unique<Bullet>(direction, position, getVelocity(), getRange());
+    return std::make_unique<Bullet>(direction, position, getVelocity(), getRange(), getDamage());
 }
 
 void Gun::upgrade()
