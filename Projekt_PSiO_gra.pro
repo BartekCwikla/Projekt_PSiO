@@ -6,6 +6,7 @@ SOURCES += main.cpp \
     bullet.cpp \
     enemies.cpp \
     enemy_demon.cpp \
+    exporb.cpp \
     game.cpp \
     gun.cpp \
     hud.cpp \
@@ -28,6 +29,7 @@ HEADERS += \
     bullet.h \
     enemies.h \
     enemy_demon.h \
+    exporb.h \
     game.h \
     gun.h \
     hud.h \

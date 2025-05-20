@@ -13,8 +13,10 @@ class Enemies;
 class Player
 {
 private:
-    float hp=0.f;
-    int lvl=0, cash=0;
+    float hp, maxHp;
+    int lvl, cash;
+    float exp, ExpNextLvl;
+    float speed;
     std::vector<std::unique_ptr<Weapon>> weapons;
     Weapon* current_weapon = nullptr;
     sf::Clock attackClock;
@@ -22,7 +24,7 @@ private:
     sf::Vector2f position;
     sf::Vector2f direction;
     sf::Vector2f last_direction;
-    float speed;
+
 
 public:
     Player();
@@ -43,13 +45,17 @@ public:
     void setDirection(sf::Vector2f);
     void setDirectionY(float);
     void setDirectionX(float);
-
     void setLastDirection(sf::Vector2f);
-
 
     float getSpeed() const;
     void getSpeed(float);
 
+    float getHP() const;
+    float getMaxHP() const;
+
+    float getExp() const;
+    float getExpNextLvl() const;
+    void addExp(float amount);
 
     Weapon* getCurrentWeapon();
 

@@ -3,7 +3,10 @@
 #include "projectile.h"
 #include "gun.h"
 
-Player::Player() : body(sf::Vector2f(100, 100)), position(sf::Vector2f(1200, 750)), speed(500.0) {
+Player::Player()
+    : body(sf::Vector2f(100, 100)), position(sf::Vector2f(1200, 750)),
+    speed(400.0), hp(100.f), maxHp(100.f), exp(100.f), ExpNextLvl(100.f)
+{
 
     auto g = std::make_unique<Gun>();
 
@@ -70,6 +73,38 @@ std::unique_ptr<Projectile> Player::fire() {
     return current_weapon->fire(getPosition(), last_direction);
 }
 
+float Player::getHP() const {
+    return hp;
+}
+
+float Player::getMaxHP() const {
+    return maxHp;
+}
+
+float Player::getExp() const {
+    return exp;
+}
+
+float Player::getExpNextLvl() const {
+    return ExpNextLvl;
+}
+void Player::takeDamage(const int& dam) {
+    hp -= dam;
+    if(hp <= 0.f)
+        hp=0.f;
+}
+//Future method that adding experience and loading the exp bar
+void Player::addExp(float amount) {
+    exp += amount;
+
+    while (exp >= ExpNextLvl) {
+        exp -= ExpNextLvl;
+        lvl++;
+        ExpNextLvl *= 1.2f; // The threshold to reach the next level is rising
+        maxHp += 10.f;
+        hp = maxHp; // Full hp after reaching new level;
+    }
+}
 
 Weapon* Player::getCurrentWeapon() {
     return current_weapon;
