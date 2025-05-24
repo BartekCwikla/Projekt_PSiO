@@ -13,9 +13,9 @@ class Enemies;
 class Player
 {
 private:
-    float hp, maxHp;
-    int lvl, cash;
-    float exp, ExpNextLvl;
+    float hp=100.f, maxHp=100.f;
+    int lvl=0, maxLvl=50; //this may be maximum level that player can reach
+    float exp=100.f, ExpNextLvl=100.f;
     float speed;
     std::vector<std::unique_ptr<Weapon>> weapons;
     Weapon* current_weapon = nullptr;
@@ -47,15 +47,21 @@ public:
     void setDirectionX(float);
     void setLastDirection(sf::Vector2f);
 
+    //Getter methods for any float or integer variables:
     float getSpeed() const;
     void getSpeed(float);
 
     float getHP() const;
     float getMaxHP() const;
 
+    int getLvl() const;
+    int getMaxLvl() const;
+
     float getExp() const;
     float getExpNextLvl() const;
-    void addExp(float amount);
+
+    //addExp method changes the ExpNextLvl variable after reaching new level
+    void addMaxLevelTreshold(float amount);
 
     Weapon* getCurrentWeapon();
 

@@ -5,7 +5,7 @@
 
 Player::Player()
     : body(sf::Vector2f(100, 100)), position(sf::Vector2f(1200, 750)),
-    speed(400.0), hp(100.f), maxHp(100.f), exp(100.f), ExpNextLvl(100.f)
+    speed(300.f), hp(100.f), maxHp(100.f), exp(0.f), ExpNextLvl(100.f)
 {
 
     auto g = std::make_unique<Gun>();
@@ -88,21 +88,35 @@ float Player::getExp() const {
 float Player::getExpNextLvl() const {
     return ExpNextLvl;
 }
+
+int Player::getLvl() const {
+    return lvl;
+}
+
+int Player::getMaxLvl() const {
+    return maxLvl;
+}
 void Player::takeDamage(const int& dam) {
     hp -= dam;
     if(hp <= 0.f)
         hp=0.f;
 }
+
 //Future method that adding experience and loading the exp bar
-void Player::addExp(float amount) {
+void Player::addMaxLevelTreshold(float amount) {
     exp += amount;
+    float increasedHp = 20.f;
 
     while (exp >= ExpNextLvl) {
         exp -= ExpNextLvl;
         lvl++;
-        ExpNextLvl *= 1.2f; // The threshold to reach the next level is rising
-        maxHp += 10.f;
-        hp = maxHp; // Full hp after reaching new level;
+        ExpNextLvl *= 1.3f; // The threshold to reach the next level is rising
+
+        if(lvl%10 == 0){ //When player reach levels: 10,20,30,40,50, his HP will increased;
+            maxHp+=increasedHp;
+            hp=maxHp;
+        }
+
     }
 }
 

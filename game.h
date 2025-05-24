@@ -18,6 +18,7 @@ class Game
 private:
     sf::RenderWindow window;
     sf::View view;
+    sf::View defaultView; //HUD render
     sf::Clock enemyspawnClock;
     Player player;
     std::vector<std::unique_ptr<Enemies>> enemies;

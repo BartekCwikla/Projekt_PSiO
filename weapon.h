@@ -27,10 +27,4 @@ public:
 
 };
 
-
-
-
-
-
-
 #endif // WEAPON_H

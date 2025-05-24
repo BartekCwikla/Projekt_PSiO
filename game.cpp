@@ -8,9 +8,9 @@
 Game::Game() : window(sf::VideoMode(2400, 1500), "Window"),
     view(window.getDefaultView()), player()
 {
-    map.load("./assets/map/ground_stone.png", 256, 64, 64);
+    map.load("./assets/map/ground_stone.png", 256, 64, 64); //Map size is 16 384 x 16 384 pixels
     view.setSize(2400,1500);
-    //sf::Vector2f center = map.getSize() / 2.f;
+    defaultView = window.getDefaultView();
 
     player.setPosition(map.getSize()/2.f);
     view.setCenter(player.getPosition());
@@ -131,7 +131,7 @@ void Game::update(sf::Time& dt) {
                                  [&](const std::unique_ptr<Enemies>& e) {
                                      if (e->getHP() <= 0.f) {
                                          expOrbs.push_back(std::make_unique<ExpOrb>(e->getPosition(), 25.f));
-                                         return true; // usuń z listy
+                                         return true;
                                      }
                                      return false;
                                  }), enemies.end());
@@ -139,8 +139,8 @@ void Game::update(sf::Time& dt) {
     expOrbs.erase(std::remove_if(expOrbs.begin(), expOrbs.end(),[&](const std::unique_ptr<ExpOrb>& orb)
                                  {
                                      if (orb->getBounds().intersects(player.getGlobalBounds())) {
-                                         player.addExp(orb->getExpValue());
-                                         return true; // usuń z mapy
+                                         player.addMaxLevelTreshold(orb->getExpValue());
+                                         return true;
                                      }
                                      return false;
                                  }), expOrbs.end());
@@ -167,13 +167,22 @@ void Game::update(sf::Time& dt) {
     if (viewCenter.y > mapBounds.top + mapBounds.height - halfView.y)
         viewCenter.y = mapBounds.top + mapBounds.height - halfView.y;
 
+
+     hud.update(player, window);
+
     view.setCenter(viewCenter);
+
+
+
+
 }
 
 void Game::render() {
     window.clear(sf::Color::Black);
+
+
     window.setView(view);
-    map.draw(window); // map must render first
+    map.draw(window);
 
     for (auto& enemy : enemies)
         enemy->render(window);
@@ -187,8 +196,12 @@ void Game::render() {
 
 
 
+
     window.draw(player.getBody());
 
+
+    window.setView(window.getDefaultView()); // HUD must be static and not move with the camera
+    hud.draw(window);
     window.display();
 
 
@@ -201,7 +214,7 @@ sf::Vector2f Game::generateSpawnPositionNear(const sf::Vector2f& playerPos, cons
 
 
     do {
-        float angle = static_cast<float>(rand()) / RAND_MAX * 2.f * M_PI;
+        float angle = static_cast<float>(rand()) / RAND_MAX * 2.f * M_PI; //Minimal radius that monster spawn
         float dist = minDist + static_cast<float>(rand()) / RAND_MAX * (maxDist - minDist);
 
         spawn.x = playerPos.x + std::cos(angle) * dist;
