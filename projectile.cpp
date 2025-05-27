@@ -1,6 +1,10 @@
 #include "projectile.h"
 #include <cmath>
 
+
+
+
+
 Projectile::Projectile(sf::Vector2f dir, sf::Vector2f initial_position, float speed, float max_distance, float damage)
     : direction(dir), position(initial_position), max_distance(max_distance), damage(damage) {
     body.setRadius(5.f);
@@ -67,5 +71,17 @@ bool Projectile::getHit() const {
 }
 
 
+sf::Vector2f Projectile::getPosition() const
+{
+    return position;
+}
 
+bool Projectile::getIsExploding() const
+{
+    return isExploding;
+}
 
+void Projectile::setIsExploding(bool newIsExploding)
+{
+    isExploding = newIsExploding;
+}

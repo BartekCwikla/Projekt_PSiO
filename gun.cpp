@@ -1,6 +1,6 @@
 #include "gun.h"
 #include "bullet.h"
-
+#include "exploding_projectile.h"
 
 
 Gun::Gun(float initRange, float initDamage, float initCooldown)
@@ -21,7 +21,8 @@ std::vector<std::unique_ptr<Projectile>> Gun::fire(sf::Vector2f position, sf::Ve
 
     coolDown.restart();
 
-    shots.push_back(std::make_unique<Bullet>(direction, position, getVelocity(), getRange(), getDamage()));
+    // shots.push_back(std::make_unique<Bullet>(direction, position, getVelocity(), getRange(), getDamage()));
+    shots.push_back(std::make_unique<ExplodingProjectile>(direction, position, getVelocity(), getRange(), getDamage(), 200.0f));
 
     return shots;
 }

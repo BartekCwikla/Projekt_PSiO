@@ -8,6 +8,8 @@
 #include <cmath>
 #include <cstdlib>
 #include <cmath>
+#include "exploding_projectile.h"
+
 Game::Game() : window(sf::VideoMode(2400, 1500), "Window"),
     view(window.getDefaultView()), player()
 {
@@ -181,6 +183,31 @@ void Game::update(sf::Time& dt) {
                                      return false;
                                  }), expOrbs.end());
 
+
+    for (auto& p : projectiles) {
+        if (p->distanceExceeded() || p->getHit()) {
+            // Trigger the explosion
+            if (p->getIsExploding()) {
+                auto* exploding = dynamic_cast<ExplodingProjectile*>(p.get());
+                if (exploding) {
+                    float radius = exploding->getExplosionRadius();
+                    sf::Vector2f explosionCenter = exploding->getPosition();
+                    for (auto& e : enemies) {
+                        float dist = std::hypot(explosionCenter.x - e->getPosition().x,
+                                                explosionCenter.y - e->getPosition().y);
+                        if (dist <= radius) {
+                            e->takeDamage(exploding->getDamage());
+                        }
+                    }
+
+                    // TODO sound and visual effects
+                }
+            }
+
+            // Mark projectile as hit so it can be erased later
+            p->setHit(true);
+        }
+    }
 
     // Check whether the projectile has not exceeded it's maximum range or hit an enemy, if yes remove it
     projectiles.erase(std::remove_if(projectiles.begin(), projectiles.end(), [](const std::unique_ptr<Projectile>& p)
