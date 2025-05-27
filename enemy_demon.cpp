@@ -6,7 +6,7 @@ Enemy_Demon::Enemy_Demon(const sf::Vector2f& startPos) {
     bodyDemon.setFillColor(sf::Color::Red);
     bodyDemon.setPosition(startPos);
 
-    hp = 5.f;
+    hp = 10.f;
     speed = 100.f;
     setDamage(10.0f);
 }
