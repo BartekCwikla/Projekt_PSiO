@@ -7,7 +7,9 @@
 
 class DoubleGun : public Gun {
 public:
-    std::vector<std::unique_ptr<Projectile>> fire(sf::Vector2f position, sf::Vector2f direction);
+   DoubleGun(float initRange = 1000.f, float initDamage = 10.f, float initCooldown = 0.1f);
+   ~DoubleGun() override = default;
+    std::vector<std::unique_ptr<Projectile>> fire(sf::Vector2f position, sf::Vector2f direction) override;
 
 };
 

@@ -13,8 +13,9 @@ public:
 
     void upgrade() override;
 
-private:
+protected:
     float cooldownTime;
+    sf::Clock coolDown;
 };
 
 
