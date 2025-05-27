@@ -3,14 +3,16 @@
 #include "projectile.h"
 #include "gun.h"
 #include "double_gun.h"
+#include "sword.h"
+
+
 
 Player::Player()
     : body(sf::Vector2f(100, 100)), position(sf::Vector2f(1200, 750)),
-    speed(300.f), hp(100.f), maxHp(100.f), exp(0.f), ExpNextLvl(100.f)
+    speed(300.f), hp(100.f), maxHp(100.f), exp(0.f), ExpNextLvl(100.f), melee_weapon(std::make_unique<Sword>(100.0f))
 {
 
     auto g = std::make_unique<Gun>();
-
 
     current_weapon = g.get();
     weapons.push_back(std::move(g));
@@ -124,5 +126,12 @@ void Player::addMaxLevelTreshold(float amount) {
 Weapon* Player::getCurrentWeapon() {
     return current_weapon;
 }
+
+
+
+Melee* Player::getMelee() const {
+    return melee_weapon.get();
+}
+
 
 

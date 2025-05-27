@@ -14,9 +14,11 @@ SOURCES += main.cpp \
     gun.cpp \
     hud.cpp \
     map.cpp \
+    melee.cpp \
     player.cpp \
     projectile.cpp \
     range.cpp \
+    sword.cpp \
     weapon.cpp
 
 INCLUDEPATH += C:/SFML/include
@@ -40,7 +42,9 @@ HEADERS += \
     gun.h \
     hud.h \
     map.h \
+    melee.h \
     player.h \
     projectile.h \
     range.h \
+    sword.h \
     weapon.h

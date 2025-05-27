@@ -3,6 +3,8 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <memory>
+#include "melee.h"
+#include "range.h"
 //#include "enemies.h"
 //#include "projectile.h"
 
@@ -18,7 +20,8 @@ private:
     float exp=100.f, ExpNextLvl=100.f;
     float speed;
     std::vector<std::unique_ptr<Weapon>> weapons;
-    Weapon* current_weapon = nullptr;
+    Range* current_weapon = nullptr;
+    std::unique_ptr<Melee> melee_weapon = nullptr;
     sf::Clock attackClock;
     sf::RectangleShape body; // temporarily, later sf::Sprite
     sf::Vector2f position;
@@ -68,6 +71,7 @@ public:
 
     std::vector<std::unique_ptr<Projectile>> fire();
 
+    Melee* getMelee() const;
 };
 
 #endif // PLAYER_H
