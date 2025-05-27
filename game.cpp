@@ -2,14 +2,17 @@
 #include "enemy_demon.h"
 #include "exporb.h"
 #include "enemy_bat.h"
+#include "enemy_ghostgroup.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <memory>
 #include <cmath>
 #include <cstdlib>
+#include <ctime>
 #include <cmath>
+
 Game::Game() : window(sf::VideoMode(2400, 1500), "Window"),
-    view(window.getDefaultView()), player()
+    view(window.getDefaultView()),ghostsDelay(static_cast<float>(rand()%15) + 30.f),  player()
 {
     map.load("./assets/map/ground_stone.png", 256, 64, 64); //Map size is 16 384 x 16 384 pixels
     view.setSize(2400,1500);
@@ -126,6 +129,12 @@ void Game::update(sf::Time& dt) {
         enemy->update(dt, player.getPosition());
     }
 
+//************************************************************************
+//                  All monsters spawner are for testing
+//                  The dificult will change with the
+//                  change of waves, which will be added in the future
+//**************************************************************************
+
     // Enemy spawn every 2 seconds
     //Adding new functions to monsters spawner like more monster spawned at the same time
     if (enemyspawnClock.getElapsedTime().asSeconds() > 2.f) {
@@ -142,11 +151,38 @@ void Game::update(sf::Time& dt) {
 
         enemyspawnClock.restart();
     }
-    if (enemyspawnClock.getElapsedTime().asSeconds() > 6.f){
-        sf::Vector2f batSpawnPos = generateSpawnPositionNear(player.getPosition(), map.getBounds(), 200.f, 400.f);
-        enemies.push_back(std::make_unique<Enemy_Bat>(batSpawnPos));
-        enemyspawnClock.restart();
+//*****************************************************************************************
+//                    Group of ghosts spawn logic
+//**************************************************************************************
+
+    if(ghostSpawnClock.getElapsedTime().asSeconds()>ghostsDelay){
+        sf::FloatRect viewBounds(view.getCenter() - view.getSize()/2.f, view.getSize()); //To spawn ghost behind the view window
+        int groupSize = 40 + rand() % 60; // 40 to 60 ghosts per spawn
+        sf::Vector2f dir;
+        float xGhostPos;
+        float yGhostPos=player.getPosition().y;
+        if (rand() % 2 == 0){
+            dir = sf::Vector2f(1.f, 0.f);  // Group fly to the right
+            xGhostPos = viewBounds.left - 100.f; //100 pixels before left view bound
+        }
+        else{
+            dir = sf::Vector2f(-1.f, 0.f); // Grop fly to the left
+            xGhostPos = viewBounds.width + viewBounds.left + 100.f; //100 pixels after right view bound
+        }
+        for (int i=0; i<groupSize; i++) {
+            //Spreading around Y and X axes
+            float ySpread = static_cast<float>((rand() % 400) - 200);
+            float xSpread = static_cast<float>((rand() % 600) - 300);
+            sf::Vector2f spawnPos(xGhostPos + xSpread, yGhostPos + ySpread);
+
+            enemies.push_back(std::make_unique<Enemy_GhostGroup>(spawnPos, dir));
+            ghostsDelay = 30.f + static_cast<float>(rand()%15); //After spawns delay sets new value 30-45 seconds
+        }
+
+        ghostSpawnClock.restart();
     }
+//******************************       END                   **************************************8
+
 
 
     // Removing dead enemies and dropping exp orbs

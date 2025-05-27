@@ -20,6 +20,8 @@ private:
     sf::View view;
     sf::View defaultView; //HUD render
     sf::Clock enemyspawnClock;
+    sf::Clock ghostSpawnClock; //New clock to spawns group of ghosts
+    float ghostsDelay;
     Player player;
     std::vector<std::unique_ptr<Enemies>> enemies;
     std::vector<std::unique_ptr<Projectile>> projectiles;
