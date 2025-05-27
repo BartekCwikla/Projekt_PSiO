@@ -104,6 +104,17 @@ void Game::update(sf::Time& dt) {
     }
 
 
+    //Damage player if enemy insersects and destoy the enemy
+    for (auto it = enemies.begin(); it != enemies.end(); ) {
+        const auto& eBody = (*it)->getBounds();
+        if (eBody.intersects(player.getBody().getGlobalBounds())) {
+            player.takeDamage((*it)->getDamage());
+            it = enemies.erase(it);
+        } else {
+            ++it;
+        }
+    }
+
 
     sf::FloatRect playerBounds = player.getGlobalBounds();
     sf::FloatRect mapBounds = map.getBounds();
@@ -126,6 +137,7 @@ void Game::update(sf::Time& dt) {
         enemy->update(dt, player.getPosition());
     }
 
+
     // Enemy spawn every 2 seconds
     //Adding new functions to monsters spawner like more monster spawned at the same time
     if (enemyspawnClock.getElapsedTime().asSeconds() > 2.f) {
@@ -145,6 +157,7 @@ void Game::update(sf::Time& dt) {
     if (enemyspawnClock.getElapsedTime().asSeconds() > 6.f){
         sf::Vector2f batSpawnPos = generateSpawnPositionNear(player.getPosition(), map.getBounds(), 200.f, 400.f);
         enemies.push_back(std::make_unique<Enemy_Bat>(batSpawnPos));
+
         enemyspawnClock.restart();
     }
 
