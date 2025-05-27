@@ -9,7 +9,7 @@ Player::Player()
     speed(300.f), hp(100.f), maxHp(100.f), exp(0.f), ExpNextLvl(100.f)
 {
 
-    auto g = std::make_unique<DoubleGun>();
+    auto g = std::make_unique<Gun>();
 
 
     current_weapon = g.get();

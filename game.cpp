@@ -10,6 +10,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <cmath>
+#include "exploding_projectile.h"
 
 Game::Game() : window(sf::VideoMode(2400, 1500), "Window"),
     view(window.getDefaultView()),ghostsDelay(static_cast<float>(rand()%15) + 30.f),  player()
@@ -107,6 +108,17 @@ void Game::update(sf::Time& dt) {
     }
 
 
+    //Damage player if enemy insersects and destoy the enemy
+    for (auto it = enemies.begin(); it != enemies.end(); ) {
+        const auto& eBody = (*it)->getBounds();
+        if (eBody.intersects(player.getBody().getGlobalBounds())) {
+            player.takeDamage((*it)->getDamage());
+            it = enemies.erase(it);
+        } else {
+            ++it;
+        }
+    }
+
 
     sf::FloatRect playerBounds = player.getGlobalBounds();
     sf::FloatRect mapBounds = map.getBounds();
@@ -129,11 +141,13 @@ void Game::update(sf::Time& dt) {
         enemy->update(dt, player.getPosition());
     }
 
+
 //************************************************************************
 //                  All monsters spawner are for testing
 //                  The dificult will change with the
 //                  change of waves, which will be added in the future
 //**************************************************************************
+
 
     // Enemy spawn every 2 seconds
     //Adding new functions to monsters spawner like more monster spawned at the same time
@@ -151,6 +165,7 @@ void Game::update(sf::Time& dt) {
 
         enemyspawnClock.restart();
     }
+
 //*****************************************************************************************
 //                    Group of ghosts spawn logic
 //**************************************************************************************
@@ -180,6 +195,13 @@ void Game::update(sf::Time& dt) {
         }
 
         ghostSpawnClock.restart();
+
+    if (enemyspawnClock.getElapsedTime().asSeconds() > 6.f){
+        sf::Vector2f batSpawnPos = generateSpawnPositionNear(player.getPosition(), map.getBounds(), 200.f, 400.f);
+        enemies.push_back(std::make_unique<Enemy_Bat>(batSpawnPos));
+
+        enemyspawnClock.restart();
+
     }
 //******************************       END                   **************************************8
 
@@ -204,6 +226,31 @@ void Game::update(sf::Time& dt) {
                                      return false;
                                  }), expOrbs.end());
 
+
+    for (auto& p : projectiles) {
+        if (p->distanceExceeded() || p->getHit()) {
+            // Trigger the explosion
+            if (p->getIsExploding()) {
+                auto* exploding = dynamic_cast<ExplodingProjectile*>(p.get());
+                if (exploding) {
+                    float radius = exploding->getExplosionRadius();
+                    sf::Vector2f explosionCenter = exploding->getPosition();
+                    for (auto& e : enemies) {
+                        float dist = std::hypot(explosionCenter.x - e->getPosition().x,
+                                                explosionCenter.y - e->getPosition().y);
+                        if (dist <= radius) {
+                            e->takeDamage(exploding->getDamage());
+                        }
+                    }
+
+                    // TODO sound and visual effects
+                }
+            }
+
+            // Mark projectile as hit so it can be erased later
+            p->setHit(true);
+        }
+    }
 
     // Check whether the projectile has not exceeded it's maximum range or hit an enemy, if yes remove it
     projectiles.erase(std::remove_if(projectiles.begin(), projectiles.end(), [](const std::unique_ptr<Projectile>& p)

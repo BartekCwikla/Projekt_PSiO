@@ -4,8 +4,8 @@
 
 class Enemies
 {
-private:
-    float hp, speed;
+protected:
+    float hp, speed, damage;
 public:
     Enemies();
     virtual ~Enemies() = default;
@@ -15,6 +15,8 @@ public:
     virtual sf::FloatRect getBounds() const = 0;       // collision
     virtual sf::Vector2f getPosition() const = 0;      // actual position
     virtual float getHP() const = 0;
+    float getDamage() const;
+    void setDamage(float dmg);
 
 };
 

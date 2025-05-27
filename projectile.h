@@ -14,6 +14,7 @@ private:
     sf::Vector2f position;
     float distance_traveled;
     float max_distance;
+    bool isExploding = false;
 
     // This variable tells whether this projectile has hit the enemy
     bool hit = false;
@@ -41,6 +42,10 @@ public:
     void setHit(bool);
     bool getHit() const;
 
+    sf::Vector2f getPosition() const;
+
+    bool getIsExploding() const;
+    void setIsExploding(bool newIsExploding);
 };
 
 

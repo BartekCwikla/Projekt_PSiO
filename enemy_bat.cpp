@@ -6,6 +6,7 @@ Enemy_Bat::Enemy_Bat(sf::Vector2f startPos)
     : position(startPos), constY(startPos.y), speed(300.f),
     hp(20.f), amplitude(60.f), frequency(6.f), timePassed(0.f)
 {
+    setDamage(10.0f);
     body.setRadius(20.f);
     body.setFillColor(sf::Color::Yellow);
     body.setOrigin(body.getRadius(), body.getRadius());
