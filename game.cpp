@@ -1,5 +1,6 @@
 #include "game.h"
 #include "enemy_demon.h"
+#include "exporb.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <memory>
@@ -7,11 +8,10 @@
 Game::Game() : window(sf::VideoMode(2400, 1500), "Window"),
     view(window.getDefaultView()), player()
 {
-    map.load("./assets/map/ground_stone.png", 256, 64, 64);
+    map.load("./assets/map/ground_stone.png", 256, 64, 64); //Map size is 16 384 x 16 384 pixels
     view.setSize(2400,1500);
-    sf::Vector2f center = map.getSize() / 2.f;
+    defaultView = window.getDefaultView();
 
-    std::cout << "MAP CENTER: " << center.x << ", " << center.y << "\n";
     player.setPosition(map.getSize()/2.f);
     view.setCenter(player.getPosition());
 
@@ -110,7 +110,7 @@ void Game::update(sf::Time& dt) {
     if (playerBounds.top + playerBounds.height > mapBounds.top + mapBounds.height)
         fixedPos.y = mapBounds.top + mapBounds.height - playerBounds.height;
 
-    // player.setPosition(fixedPos);
+     player.setPosition(fixedPos);
 
 
     // Enemy actualization
@@ -125,16 +125,30 @@ void Game::update(sf::Time& dt) {
         enemyspawnClock.restart();
     }
 
-    // Removing dead enemies;
-    enemies.erase(std::remove_if(enemies.begin(), enemies.end(),[](const std::unique_ptr<Enemies>& e) {
-                           return e->getHP() <= 0.f;
-                  }),
-        enemies.end());
+
+    // Removing dead enemies and dropping exp orbs
+    enemies.erase(std::remove_if(enemies.begin(), enemies.end(),
+                                 [&](const std::unique_ptr<Enemies>& e) {
+                                     if (e->getHP() <= 0.f) {
+                                         expOrbs.push_back(std::make_unique<ExpOrb>(e->getPosition(), 25.f));
+                                         return true;
+                                     }
+                                     return false;
+                                 }), enemies.end());
+
+    expOrbs.erase(std::remove_if(expOrbs.begin(), expOrbs.end(),[&](const std::unique_ptr<ExpOrb>& orb)
+                                 {
+                                     if (orb->getBounds().intersects(player.getGlobalBounds())) {
+                                         player.addMaxLevelTreshold(orb->getExpValue());
+                                         return true;
+                                     }
+                                     return false;
+                                 }), expOrbs.end());
 
 
     // Check whether the projectile has not exceeded it's maximum range or hit an enemy, if yes remove it
-    projectiles.erase(std::remove_if(projectiles.begin(), projectiles.end(),
-                                     [](const std::unique_ptr<Projectile>& p){
+    projectiles.erase(std::remove_if(projectiles.begin(), projectiles.end(), [](const std::unique_ptr<Projectile>& p)
+                                     {
                                          return (p->distanceExceeded() || p->getHit());
                                      }
                                      ), projectiles.end());
@@ -153,36 +167,54 @@ void Game::update(sf::Time& dt) {
     if (viewCenter.y > mapBounds.top + mapBounds.height - halfView.y)
         viewCenter.y = mapBounds.top + mapBounds.height - halfView.y;
 
+
+     hud.update(player, window);
+
     view.setCenter(viewCenter);
+
+
+
+
 }
 
 void Game::render() {
     window.clear(sf::Color::Black);
+
+
     window.setView(view);
-    map.draw(window); // map must render first
+    map.draw(window);
 
     for (auto& enemy : enemies)
         enemy->render(window);
 
+    for (auto& orb : expOrbs)
+        orb->render(window);
 
     for (auto & p: projectiles) {
         window.draw(p->getBody());
     }
 
 
+
+
     window.draw(player.getBody());
 
+
+    window.setView(window.getDefaultView()); // HUD must be static and not move with the camera
+    hud.draw(window);
     window.display();
 
 
 }
 
+//Generates a random position within a specified radius from the player
 sf::Vector2f Game::generateSpawnPositionNear(const sf::Vector2f& playerPos, const sf::FloatRect& mapBounds, float minDist, float maxDist) {
     sf::Vector2f spawn;
     int attempts = 0;
 
+
     do {
-        float angle = static_cast<float>(rand()) / RAND_MAX * 2.f * M_PI;
+        float angle = static_cast<float>(rand()) / RAND_MAX * 2.f * M_PI; //Minimal radius that monster spawn
         float dist = minDist + static_cast<float>(rand()) / RAND_MAX * (maxDist - minDist);
 
         spawn.x = playerPos.x + std::cos(angle) * dist;

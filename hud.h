@@ -1,18 +1,24 @@
 #ifndef HUD_H
 #define HUD_H
 #include <SFML/Graphics.hpp>
-//#include "player.h"
+
 class Player;
 
-class HUD
-{
+class HUD {
 private:
-    sf::RectangleShape hpBar, expBar;
-    sf::Text infoText;
+    sf::RectangleShape hpBarBack;
+    sf::RectangleShape hpBarFront;
+
+    sf::RectangleShape expBarBack;
+    sf::RectangleShape expBarFront;
+
+    sf::Font font;
+    sf::Text hpText, expText, lvlText;
+
 public:
     HUD();
-    void update(const Player&);
+    void update(const Player& player, const sf::RenderWindow& window);
     void draw(sf::RenderWindow& window);
 };
 
-#endif // HUD_H
+#endif //HUD_H

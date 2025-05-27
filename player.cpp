@@ -3,7 +3,10 @@
 #include "projectile.h"
 #include "gun.h"
 
-Player::Player() : body(sf::Vector2f(100, 100)), position(sf::Vector2f(1200, 750)), speed(500.0) {
+Player::Player()
+    : body(sf::Vector2f(100, 100)), position(sf::Vector2f(1200, 750)),
+    speed(300.f), hp(100.f), maxHp(100.f), exp(0.f), ExpNextLvl(100.f)
+{
 
     auto g = std::make_unique<Gun>();
 
@@ -70,6 +73,52 @@ std::unique_ptr<Projectile> Player::fire() {
     return current_weapon->fire(getPosition(), last_direction);
 }
 
+float Player::getHP() const {
+    return hp;
+}
+
+float Player::getMaxHP() const {
+    return maxHp;
+}
+
+float Player::getExp() const {
+    return exp;
+}
+
+float Player::getExpNextLvl() const {
+    return ExpNextLvl;
+}
+
+int Player::getLvl() const {
+    return lvl;
+}
+
+int Player::getMaxLvl() const {
+    return maxLvl;
+}
+void Player::takeDamage(const int& dam) {
+    hp -= dam;
+    if(hp <= 0.f)
+        hp=0.f;
+}
+
+//Future method that adding experience and loading the exp bar
+void Player::addMaxLevelTreshold(float amount) {
+    exp += amount;
+    float increasedHp = 20.f;
+
+    while (exp >= ExpNextLvl) {
+        exp -= ExpNextLvl;
+        lvl++;
+        ExpNextLvl *= 1.3f; // The threshold to reach the next level is rising
+
+        if(lvl%10 == 0){ //When player reach levels: 10,20,30,40,50, his HP will increased;
+            maxHp+=increasedHp;
+            hp=maxHp;
+        }
+
+    }
+}
 
 Weapon* Player::getCurrentWeapon() {
     return current_weapon;
