@@ -7,9 +7,9 @@
 
 class DoubleGun : public Gun {
 public:
-    std::vector<std::unique_ptr<Projectile>> fire();
+    std::vector<std::unique_ptr<Projectile>> fire(sf::Vector2f position, sf::Vector2f direction);
 
-}
+};
 
 
 

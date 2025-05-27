@@ -2,13 +2,14 @@
 #include "weapon.h"
 #include "projectile.h"
 #include "gun.h"
+#include "double_gun.h"
 
 Player::Player()
     : body(sf::Vector2f(100, 100)), position(sf::Vector2f(1200, 750)),
     speed(300.f), hp(100.f), maxHp(100.f), exp(0.f), ExpNextLvl(100.f)
 {
 
-    auto g = std::make_unique<Gun>();
+    auto g = std::make_unique<DoubleGun>();
 
 
     current_weapon = g.get();

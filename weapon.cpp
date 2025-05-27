@@ -1,5 +1,4 @@
 #include "weapon.h"
-#include "projectile.h"
 
 
 Weapon::Weapon()
@@ -7,9 +6,6 @@ Weapon::Weapon()
     , level(0)
     , damage(0.f)
 { }
-
-
-
 
 
 void Weapon::setDamage(float new_damage) {
