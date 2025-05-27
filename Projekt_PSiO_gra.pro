@@ -5,6 +5,7 @@ CONFIG -= qt
 SOURCES += main.cpp \
     bullet.cpp \
     enemies.cpp \
+    enemy_bat.cpp \
     enemy_demon.cpp \
     exporb.cpp \
     game.cpp \
@@ -28,6 +29,7 @@ LIBS += -LC:/SFML/lib \
 HEADERS += \
     bullet.h \
     enemies.h \
+    enemy_bat.h \
     enemy_demon.h \
     exporb.h \
     game.h \
