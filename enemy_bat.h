@@ -7,7 +7,7 @@
 class Enemy_Bat : public Enemies
 {
 private:
-    sf::CircleShape shape;
+    sf::CircleShape body;
     sf::Vector2f position;
     float constY;
     float speed;
@@ -19,7 +19,7 @@ private:
     float timePassed;
 
 public:
-Enemy_Bat(const sf::Vector2f& startPos);
+Enemy_Bat( sf::Vector2f startPos);
 
 void render(sf::RenderWindow& window) override;
 void update(sf::Time& dt, const sf::Vector2f& playerPos) override;
