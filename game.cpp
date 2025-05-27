@@ -1,9 +1,12 @@
 #include "game.h"
 #include "enemy_demon.h"
 #include "exporb.h"
+#include "enemy_bat.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <memory>
+#include <cmath>
+#include <cstdlib>
 #include <cmath>
 Game::Game() : window(sf::VideoMode(2400, 1500), "Window"),
     view(window.getDefaultView()), player()
@@ -123,10 +126,25 @@ void Game::update(sf::Time& dt) {
         enemy->update(dt, player.getPosition());
     }
 
-    // Enemy spawn every 2 seconds;
+    // Enemy spawn every 2 seconds
+    //Adding new functions to monsters spawner like more monster spawned at the same time
     if (enemyspawnClock.getElapsedTime().asSeconds() > 2.f) {
-        sf::Vector2f spawnPos = generateSpawnPositionNear(player.getPosition(), map.getBounds(), 200.f, 400.f);
-        enemies.push_back(std::make_unique<Enemy_Demon>(spawnPos));
+        float RandomMonsterNumber = std::rand()%3+1; //2-5 demons spawns
+
+        for(int i=0; i < RandomMonsterNumber; i++){
+            sf::Vector2f demonSpawnPos = generateSpawnPositionNear(player.getPosition(), map.getBounds(), 200.f, 400.f);
+            enemies.push_back(std::make_unique<Enemy_Demon>(demonSpawnPos));
+        }
+        //MUST INCLUDE WAVE LOGIC
+        //Added bat
+        sf::Vector2f batSpawnPos = generateSpawnPositionNear(player.getPosition(), map.getBounds(), 200.f, 400.f);
+       enemies.push_back(std::make_unique<Enemy_Bat>(batSpawnPos));
+
+        enemyspawnClock.restart();
+    }
+    if (enemyspawnClock.getElapsedTime().asSeconds() > 6.f){
+        sf::Vector2f batSpawnPos = generateSpawnPositionNear(player.getPosition(), map.getBounds(), 200.f, 400.f);
+        enemies.push_back(std::make_unique<Enemy_Bat>(batSpawnPos));
         enemyspawnClock.restart();
     }
 
