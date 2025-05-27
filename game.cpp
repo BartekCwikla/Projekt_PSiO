@@ -101,6 +101,17 @@ void Game::update(sf::Time& dt) {
     }
 
 
+    //Damage player if enemy insersects and destoy the enemy
+    for (auto it = enemies.begin(); it != enemies.end(); ) {
+        const auto& eBody = (*it)->getBounds();
+        if (eBody.intersects(player.getBody().getGlobalBounds())) {
+            player.takeDamage((*it)->getDamage());
+            it = enemies.erase(it);
+        } else {
+            ++it;
+        }
+    }
+
 
     sf::FloatRect playerBounds = player.getGlobalBounds();
     sf::FloatRect mapBounds = map.getBounds();
@@ -124,8 +135,8 @@ void Game::update(sf::Time& dt) {
     }
 
     // Enemy spawn every 2 seconds;
-    if (enemyspawnClock.getElapsedTime().asSeconds() > 2.f) {
-        sf::Vector2f spawnPos = generateSpawnPositionNear(player.getPosition(), map.getBounds(), 200.f, 400.f);
+    if (enemyspawnClock.getElapsedTime().asSeconds() > 0.1f) {
+        sf::Vector2f spawnPos = generateSpawnPositionNear(player.getPosition(), map.getBounds(), 400.f, 4000.f);
         enemies.push_back(std::make_unique<Enemy_Demon>(spawnPos));
         enemyspawnClock.restart();
     }
