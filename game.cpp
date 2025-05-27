@@ -30,7 +30,11 @@ void Game::run() {
 }
 
 
-
+void Game::handleShot(std::vector<std::unique_ptr<Projectile>> v) {
+    for (auto &p : v ) {
+        projectiles.emplace_back(std::move(p));
+    }
+}
 
 void Game::handleEvents() {
     sf::Event event;
@@ -62,9 +66,10 @@ void Game::update(sf::Time& dt) {
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
         // if fire function is called before cooldown time it returns nullptr. This code is required to push only valid projectiles
-        auto shot = player.fire();
-        if (shot)
-            projectiles.emplace_back(std::move(shot));
+        auto shots = player.fire();
+        if (!shots.empty()) {
+            handleShot(std::move(shots));
+        }
     }
     if (player.getDirection() != sf::Vector2f(0.f, 0.f)) {
         player.setLastDirection(player.getDirection());

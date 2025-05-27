@@ -2,10 +2,11 @@
 #include "bullet.h"
 
 
-std::unique_ptr<Projectile> Range::fire(sf::Vector2f position, sf::Vector2f dir) {
-    return std::make_unique<Bullet>(position, dir, getVelocity(), getRange(), getDamage());
+std::vector<std::unique_ptr<Projectile>> Range::fire(sf::Vector2f position, sf::Vector2f dir) {
+    std::vector<std::unique_ptr<Projectile>> projectiles;
+    projectiles.push_back(std::make_unique<Bullet>(position, dir, getVelocity(), getRange(), getDamage()));
+    return projectiles;
 }
-
 
 void Range::setRange(float new_range) {
     range = new_range;

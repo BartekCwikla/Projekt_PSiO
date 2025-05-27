@@ -4,6 +4,7 @@ CONFIG -= qt
 
 SOURCES += main.cpp \
     bullet.cpp \
+    double_gun.cpp \
     enemies.cpp \
     enemy_demon.cpp \
     exporb.cpp \
@@ -27,6 +28,7 @@ LIBS += -LC:/SFML/lib \
 
 HEADERS += \
     bullet.h \
+    double_gun.h \
     enemies.h \
     enemy_demon.h \
     exporb.h \

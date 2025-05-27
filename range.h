@@ -16,7 +16,7 @@ public:
     float getVelocity() const;
     void setVelocity(float);
 
-    virtual std::unique_ptr<Projectile> fire(sf::Vector2f, sf::Vector2f);
+    virtual std::vector<std::unique_ptr<Projectile>> fire(sf::Vector2f, sf::Vector2f);
 };
 
 

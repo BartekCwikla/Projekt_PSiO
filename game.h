@@ -37,6 +37,7 @@ public:
     void render();
     void spawnEnemies();
     void updateWave();
+    void handleShot(std::vector<std::unique_ptr<Projectile>>);
     sf::Vector2f generateSpawnPositionNear(const sf::Vector2f& playerPos, const sf::FloatRect& mapBounds, float minDist, float maxDist);
 
 

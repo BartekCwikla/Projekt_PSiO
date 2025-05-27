@@ -13,14 +13,17 @@ Gun::Gun(float initRange, float initDamage, float initCooldown)
 
 }
 
-std::unique_ptr<Projectile> Gun::fire(sf::Vector2f position, sf::Vector2f direction)
-{
+std::vector<std::unique_ptr<Projectile>> Gun::fire(sf::Vector2f position, sf::Vector2f direction) {
+    std::vector<std::unique_ptr<Projectile>> shots;
+
     if (coolDown.getElapsedTime().asSeconds() < cooldownTime)
-        return nullptr;
+        return shots;
 
     coolDown.restart();
 
-    return std::make_unique<Bullet>(direction, position, getVelocity(), getRange(), getDamage());
+    shots.push_back(std::make_unique<Bullet>(direction, position, getVelocity(), getRange(), getDamage()));
+
+    return shots;
 }
 
 void Gun::upgrade()

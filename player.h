@@ -66,7 +66,8 @@ public:
     Weapon* getCurrentWeapon();
 
 
-    std::unique_ptr<Projectile> fire();
+    std::vector<std::unique_ptr<Projectile>> fire();
+
 };
 
 #endif // PLAYER_H

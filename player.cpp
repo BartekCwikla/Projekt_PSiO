@@ -69,7 +69,7 @@ float Player::getSpeed() const {
 }
 
 
-std::unique_ptr<Projectile> Player::fire() {
+std::vector<std::unique_ptr<Projectile>> Player::fire() {
     return current_weapon->fire(getPosition(), last_direction);
 }
 

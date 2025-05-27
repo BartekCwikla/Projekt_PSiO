@@ -9,11 +9,7 @@ Weapon::Weapon()
 { }
 
 
-std::unique_ptr<Projectile> Weapon::fire(sf::Vector2f, sf::Vector2f)
-{
 
-    return nullptr;
-}
 
 
 void Weapon::setDamage(float new_damage) {
