@@ -4,6 +4,7 @@
 Enemy_GhostGroup::Enemy_GhostGroup(const sf::Vector2f& startPos, const sf::Vector2f& dir)
     :  direction(dir), constY(startPos.y), speed(1000.f), hp(5.f), amplitude(20.f), frequency(2.f), timePassed(0.f)
 {
+    setDamage(2.f);
     body.setSize(sf::Vector2f(20.f, 20.f));
     body.setFillColor(sf::Color::Blue);
     body.setOrigin(10.f, 10.f);

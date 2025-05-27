@@ -10,7 +10,6 @@ SOURCES += main.cpp \
     enemy_demon.cpp \
     enemy_ghostgroup.cpp \
     exploding_projectile.cpp \
-
     exporb.cpp \
     game.cpp \
     gun.cpp \

@@ -195,6 +195,7 @@ void Game::update(sf::Time& dt) {
         }
 
         ghostSpawnClock.restart();
+    }
 
     if (enemyspawnClock.getElapsedTime().asSeconds() > 6.f){
         sf::Vector2f batSpawnPos = generateSpawnPositionNear(player.getPosition(), map.getBounds(), 200.f, 400.f);
@@ -277,13 +278,10 @@ void Game::update(sf::Time& dt) {
      hud.update(player, window);
 
     view.setCenter(viewCenter);
-
-
-
-
 }
 
-void Game::render() {
+void Game::render()
+{
     window.clear(sf::Color::Black);
 
 

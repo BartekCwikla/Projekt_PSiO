@@ -8,6 +8,7 @@ class Enemy_Demon : public Enemies
 {
 private:
     sf::RectangleShape bodyDemon;
+    float hp, speed;
 public:
     Enemy_Demon(const sf::Vector2f& startPos);
 

@@ -4,13 +4,12 @@
 Enemy_Demon::Enemy_Demon(const sf::Vector2f& startPos)
     : hp(10.f), speed(100.f)
 {
+    setDamage(10.f);
     bodyDemon.setSize(sf::Vector2f(40.f, 40.f));
     bodyDemon.setFillColor(sf::Color::Red);
     bodyDemon.setPosition(startPos);
    
-    hp = 10.f;
-    speed = 100.f;
-    setDamage(10.0f);
+   ;
 }
 
 void Enemy_Demon::render(sf::RenderWindow& window) {
