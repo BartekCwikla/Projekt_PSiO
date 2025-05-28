@@ -9,6 +9,7 @@ SOURCES += main.cpp \
     enemy_bat.cpp \
     enemy_demon.cpp \
     enemy_ghostgroup.cpp \
+    enemyboss.cpp \
     exploding_projectile.cpp \
     exporb.cpp \
     game.cpp \
@@ -36,6 +37,7 @@ HEADERS += \
     enemy_bat.h \
     enemy_demon.h \
     enemy_ghostgroup.h \
+    enemyboss.h \
     exploding_projectile.h \
     exporb.h \
     game.h \
