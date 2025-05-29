@@ -19,6 +19,7 @@ public:
     HUD();
     void update(const Player& player, const sf::RenderWindow& window);
     void draw(sf::RenderWindow& window);
+    const sf::Font& getFont() const;
 };
 
 #endif //HUD_H
