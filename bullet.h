@@ -7,7 +7,7 @@
 
 class Bullet : public Projectile {
 public:
-    Bullet(sf::Vector2f&, sf::Vector2f&, float, float, float);
+    Bullet(sf::Vector2f&, sf::Vector2f&, float, float, float, bool isPiercing=false);
     ~Bullet();
 
     void update() {};

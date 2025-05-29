@@ -109,7 +109,10 @@ void Game::update(sf::Time& dt) {
         for (auto &e: enemies) {
             if (pBody.getGlobalBounds().intersects(e->getBounds())) {
                 e->takeDamage(p->getDamage());
-                p->setHit(true);
+                if (!(p->getIsPiercing())){
+                    p->setHit(true);
+                }
+
             }
         }
 
@@ -257,7 +260,10 @@ void Game::update(sf::Time& dt) {
             }
 
             // Mark projectile as hit so it can be erased later
-            p->setHit(true);
+            if (!(p->getIsPiercing())) {
+                p->setHit(true);
+            }
+
         }
     }
 
