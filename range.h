@@ -8,6 +8,8 @@ class Range : public Weapon {
 private:
     float range = 1000;
     float velocity = 100;
+    float explosionRange = 0;
+    bool isPiercing = false;
 
 public:
     void setRange(float range);
@@ -17,6 +19,10 @@ public:
     void setVelocity(float);
 
     virtual std::vector<std::unique_ptr<Projectile>> fire(sf::Vector2f, sf::Vector2f);
+    float getExplosionRange() const;
+    void setExplosionRange(float newExplosionRange);
+    bool getIsPiercing() const;
+    void setIsPiercing(bool newIsPiercing);
 };
 
 

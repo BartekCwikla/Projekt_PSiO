@@ -8,6 +8,26 @@ std::vector<std::unique_ptr<Projectile>> Range::fire(sf::Vector2f position, sf::
     return projectiles;
 }
 
+float Range::getExplosionRange() const
+{
+    return explosionRange;
+}
+
+void Range::setExplosionRange(float newExplosionRange)
+{
+    explosionRange = newExplosionRange;
+}
+
+bool Range::getIsPiercing() const
+{
+    return isPiercing;
+}
+
+void Range::setIsPiercing(bool newIsPiercing)
+{
+    isPiercing = newIsPiercing;
+}
+
 void Range::setRange(float new_range) {
     range = new_range;
 }
