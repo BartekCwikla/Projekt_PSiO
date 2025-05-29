@@ -68,6 +68,9 @@ public:
 
     std::vector<std::unique_ptr<Projectile>> fire();
 
+    const std::vector<std::unique_ptr<Weapon>>& getWeapons() const;
+
+    void selectWeapon(std::size_t index);
 };
 
 #endif // PLAYER_H
