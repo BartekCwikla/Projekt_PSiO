@@ -28,7 +28,7 @@ std::vector<std::unique_ptr<Projectile>> Gun::fire(sf::Vector2f position, sf::Ve
     coolDown.restart();
 
     // shots.push_back(std::make_unique<Bullet>(direction, position, getVelocity(), getRange(), getDamage()));
-    shots.push_back(std::make_unique<ExplodingProjectile>(direction, position, getVelocity(), getRange(), getDamage(), 200.0f));
+    shots.push_back(std::make_unique<Bullet>(direction, position, getVelocity(), getRange(), getDamage()));
 
     return shots;
 }
