@@ -3,6 +3,7 @@
 #include "exporb.h"
 #include "enemy_bat.h"
 #include "enemy_ghostgroup.h"
+#include "enemyboss.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <memory>
@@ -58,6 +59,8 @@ void Game::handleEvents() {
 
 void Game::update(sf::Time& dt) {
     //Movement logic
+
+    static sf::Clock bossSpawnClock;
 
     // Defaulting direction to {0,0}
     player.setDirection(sf::Vector2f(0.f,0.f));
@@ -115,16 +118,20 @@ void Game::update(sf::Time& dt) {
 
     }
 
-
-    //Damage player if enemy insersects and destoy the enemy
     for (auto it = enemies.begin(); it != enemies.end(); ) {
         const auto& eBody = (*it)->getBounds();
         if (eBody.intersects(player.getBody().getGlobalBounds())) {
-            player.takeDamage((*it)->getDamage());
-            it = enemies.erase(it);
-        } else {
-            ++it;
+            if (auto boss = dynamic_cast<EnemyBoss*>(it->get())) {
+                if (boss->canAttack()) {
+                    player.takeDamage(boss->getDamage());
+                }
+            } else {
+                player.takeDamage((*it)->getDamage());
+                it = enemies.erase(it);
+                continue;
+            }
         }
+        ++it;
     }
 
 
@@ -165,6 +172,7 @@ void Game::update(sf::Time& dt) {
         for(int i=0; i < RandomMonsterNumber; i++){
             sf::Vector2f demonSpawnPos = generateSpawnPositionNear(player.getPosition(), map.getBounds(), 200.f, 400.f);
             enemies.push_back(std::make_unique<Enemy_Demon>(demonSpawnPos));
+
         }
         //MUST INCLUDE WAVE LOGIC
         //Added bat
@@ -173,6 +181,7 @@ void Game::update(sf::Time& dt) {
 
         enemyspawnClock.restart();
     }
+
 
 //*****************************************************************************************
 //                    Group of ghosts spawn logic
@@ -189,7 +198,7 @@ void Game::update(sf::Time& dt) {
             xGhostPos = viewBounds.left - 100.f; //100 pixels before left view bound
         }
         else{
-            dir = sf::Vector2f(-1.f, 0.f); // Grop fly to the left
+            dir = sf::Vector2f(-1.f, 0.f); // Group fly to the left
             xGhostPos = viewBounds.width + viewBounds.left + 100.f; //100 pixels after right view bound
         }
         for (int i=0; i<groupSize; i++) {
@@ -202,6 +211,7 @@ void Game::update(sf::Time& dt) {
             ghostsDelay = 30.f + static_cast<float>(rand()%15); //After spawns delay sets new value 30-45 seconds
         }
 
+
         ghostSpawnClock.restart();
     }
 
@@ -210,8 +220,17 @@ void Game::update(sf::Time& dt) {
         enemies.push_back(std::make_unique<Enemy_Bat>(batSpawnPos));
 
         enemyspawnClock.restart();
-
     }
+
+    if (!bossSpawned && bossSpawnClock.getElapsedTime().asSeconds() > 10.f) {
+        sf::Vector2f bossSpawnPos = generateSpawnPositionNear(player.getPosition(), map.getBounds(), 300.f, 500.f);
+        enemies.push_back(std::make_unique<EnemyBoss>(bossSpawnPos));
+
+        bossSpawned = true; // Only for one boss spwan
+    }
+
+
+
 //******************************       END                   **************************************8
 
 
@@ -305,8 +324,8 @@ void Game::render()
         window.draw(p->getBody());
     }
 
-
     window.draw(player.getBody());
+
 
 
     window.setView(window.getDefaultView());
