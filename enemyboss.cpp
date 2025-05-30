@@ -8,7 +8,7 @@ EnemyBoss::EnemyBoss(const sf::Vector2f& startPos)
     currentDirection("right"),
     position(startPos)
 {
-    hp = 5.f;
+    hp = 1000.f;
     speed = 100.f;
     damage = 5.f;
 

@@ -1,5 +1,3 @@
-
-
 #include "enemy_bat.h"
 #include <SFML/Graphics.hpp>
 #include <cmath>

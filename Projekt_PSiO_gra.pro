@@ -12,6 +12,7 @@ SOURCES += main.cpp \
     enemy_demon.cpp \
     enemy_ghostgroup.cpp \
     enemyboss.cpp \
+    enemyknight.cpp \
     exploding_gun.cpp \
     exploding_projectile.cpp \
     exporb.cpp \
@@ -43,6 +44,7 @@ HEADERS += \
     enemy_demon.h \
     enemy_ghostgroup.h \
     enemyboss.h \
+    enemyknight.h \
     exploding_gun.h \
     exploding_projectile.h \
     exporb.h \
