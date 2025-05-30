@@ -3,6 +3,7 @@ CONFIG += console c++17
 CONFIG -= qt
 
 SOURCES += main.cpp \
+    animation.cpp \
     bullet.cpp \
     double_gun.cpp \
     enemies.cpp \
@@ -31,6 +32,7 @@ LIBS += -LC:/SFML/lib \
     -lsfml-network
 
 HEADERS += \
+    animation.h \
     bullet.h \
     double_gun.h \
     enemies.h \
