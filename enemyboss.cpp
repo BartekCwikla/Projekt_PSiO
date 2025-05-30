@@ -84,3 +84,8 @@ bool EnemyBoss::canAttack() {
     }
     return false;
 }
+
+
+void EnemyBoss::setHP(float& hp_) {
+    hp_ = hp;
+}

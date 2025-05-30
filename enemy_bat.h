@@ -31,6 +31,7 @@ void takeDamage(float dmg) override;
 sf::FloatRect getBounds() const override;
 sf::Vector2f getPosition() const override;
 float getHP() const override;
+void setHP(float& hp_) override;
 };
 
 #endif // ENEMY_BAT_H

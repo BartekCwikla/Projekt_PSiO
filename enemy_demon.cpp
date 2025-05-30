@@ -41,3 +41,6 @@ float Enemy_Demon::getHP() const {
     return hp;
 }
 
+void Enemy_Demon::setHP(float& hp_) {
+    hp_ = hp;
+}

@@ -21,6 +21,7 @@ public:
     void takeDamage(float dmg) override;
     sf::FloatRect getBounds() const override;
     sf::Vector2f getPosition() const override;
+    void setHP(float& hp_) override;
     float getHP() const override;
 };
 #endif // ENEMYKNIGHT_H

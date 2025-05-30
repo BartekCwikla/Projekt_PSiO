@@ -9,6 +9,7 @@
 #include "weapon.h"
 #include "projectile.h"
 #include "hud.h"
+#include "waves.h"
 #include "map.h"
 #include "exporb.h"
 
@@ -30,6 +31,7 @@ private:
     std::vector<std::unique_ptr<ExpOrb>> expOrbs;
     HUD hud;
     Map map;
+    Waves wave;
     int waveNumber;
 
 
