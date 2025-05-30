@@ -17,6 +17,7 @@ private:
 
 public:
     HUD();
+    float getWavesInformationPosition() const;
     void update(const Player& player, const sf::RenderWindow& window);
     void draw(sf::RenderWindow& window);
     const sf::Font& getFont() const;

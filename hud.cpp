@@ -90,6 +90,9 @@ void HUD::update(const Player& player, const sf::RenderWindow& window) {
     lvlText.setPosition(xCenter, lvlY);
 
 }
+float HUD::getWavesInformationPosition() const {
+    return lvlText.getPosition().y + lvlText.getLocalBounds().height;
+}
 
 void HUD::draw(sf::RenderWindow& window) {
     window.draw(hpBarBack);

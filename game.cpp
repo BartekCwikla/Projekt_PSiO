@@ -175,7 +175,7 @@ void Game::update(sf::Time& dt) {
             sf::Vector2f demonSpawnPos = generateSpawnPositionNear(player.getPosition(), map.getBounds(), 200.f, 400.f);
             enemies.push_back(std::make_unique<Enemy_Demon>(demonSpawnPos));
             //Vortex enemy testing - the wave logic MUST INCLUDE
-            enemies.push_back(std::make_unique<EnemyVortex>(demonSpawnPos));
+           // enemies.push_back(std::make_unique<EnemyVortex>(demonSpawnPos));
             enemies.push_back(std::make_unique<EnemyKnight>(demonSpawnPos));
             enemies.push_back(std::make_unique<EnemySkeleton>(demonSpawnPos));
 
@@ -312,6 +312,9 @@ void Game::update(sf::Time& dt) {
 
      hud.update(player, window);
 
+    wave.update(window);
+
+
     view.setCenter(viewCenter);
 }
 
@@ -343,6 +346,7 @@ void Game::render()
 
     window.setView(window.getDefaultView()); // HUD must be static and not move with the camera
     hud.draw(window);
+    wave.draw(window);
     window.display();
 
 

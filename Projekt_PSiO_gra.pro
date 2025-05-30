@@ -24,6 +24,7 @@ SOURCES += main.cpp \
     player.cpp \
     projectile.cpp \
     range.cpp \
+    waves.cpp \
     weapon.cpp
 
 INCLUDEPATH += C:/SFML/include
@@ -57,4 +58,5 @@ HEADERS += \
     player.h \
     projectile.h \
     range.h \
+    waves.h \
     weapon.h
