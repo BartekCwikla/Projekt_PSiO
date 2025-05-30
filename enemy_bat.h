@@ -2,7 +2,7 @@
 #define ENEMY_BAT_H
 #include "enemies.h"
 #include <SFML/Graphics.hpp>
-
+#include "animation.h"
 //The bat moves sinusoidally about the selected Y axis
 class Enemy_Bat : public Enemies
 {
@@ -17,6 +17,10 @@ private:
     float amplitude;
     float frequency;
     float timePassed;
+
+    Animation animation;
+    bool facingRight;
+
 
 public:
 Enemy_Bat( sf::Vector2f startPos);
