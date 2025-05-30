@@ -4,6 +4,10 @@
 #include <iostream>
 #include <sstream> //To convert variables of class sf::Fonts to ostream
 
+const sf::Font& HUD::getFont() const {
+    return font;
+}
+
 HUD::HUD() {
     //HP and EXP bars color settings. back bars are transparent
     hpBarFront.setFillColor(sf::Color::Red);

@@ -1,16 +1,22 @@
 #include "double_gun.h"
 #include "bullet.h"
-
+#include <iostream>
 
 DoubleGun::DoubleGun(float initRange, float initDamage, float initCooldown)
     : Gun(initRange, initDamage, initCooldown)
 {
+    name="Double Gun";
     setVelocity(2000);
     setRange(initRange);
     damage     = initDamage;
     level      = 1;
 
+    if (!texture.loadFromFile("./assets/weapons/double_gun.png")){
+        std::cerr << "Unable to load double gun texture" << std::endl;
+    }
+
 }
+
 
 
 std::vector<std::unique_ptr<Projectile>> DoubleGun::fire(sf::Vector2f position, sf::Vector2f direction) {

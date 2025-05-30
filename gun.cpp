@@ -1,15 +1,21 @@
 #include "gun.h"
 #include "bullet.h"
 #include "exploding_projectile.h"
+#include <iostream>
 
 
 Gun::Gun(float initRange, float initDamage, float initCooldown)
     : cooldownTime(initCooldown)
 {
+    name="Gun";
     setVelocity(1000);
     setRange(initRange);
     damage     = initDamage;
     level      = 1;
+
+    if (!texture.loadFromFile("./assets/weapons/gun.png")) {
+        std::cerr << "Failed to load gun.png\n";
+    }
 
 }
 
@@ -22,7 +28,7 @@ std::vector<std::unique_ptr<Projectile>> Gun::fire(sf::Vector2f position, sf::Ve
     coolDown.restart();
 
     // shots.push_back(std::make_unique<Bullet>(direction, position, getVelocity(), getRange(), getDamage()));
-    shots.push_back(std::make_unique<ExplodingProjectile>(direction, position, getVelocity(), getRange(), getDamage(), 200.0f));
+    shots.push_back(std::make_unique<Bullet>(direction, position, getVelocity(), getRange(), getDamage()));
 
     return shots;
 }

@@ -3,17 +3,23 @@
 #include "projectile.h"
 #include "gun.h"
 #include "double_gun.h"
+#include "exploding_gun.h"
+
+
+
 
 Player::Player()
     : body(sf::Vector2f(100, 100)), position(sf::Vector2f(1200, 750)),
     speed(300.f), hp(100.f), maxHp(100.f), exp(0.f), ExpNextLvl(100.f)
 {
-
-    auto g = std::make_unique<Gun>();
-
+    auto g = std::make_unique<DoubleGun>();
+    auto g1 = std::make_unique<Gun>();
+    auto g2 = std::make_unique<ExplodingGun>();
 
     current_weapon = g.get();
     weapons.push_back(std::move(g));
+    weapons.push_back(std::move(g1));
+    weapons.push_back(std::move(g2));
 
     direction = {0,0};
     last_direction = {1,0};
@@ -125,4 +131,13 @@ Weapon* Player::getCurrentWeapon() {
     return current_weapon;
 }
 
+const std::vector<std::unique_ptr<Weapon>>& Player::getWeapons() const {
+    return weapons;
+}
+
+void Player::selectWeapon(std::size_t index) {
+    if (index < weapons.size()) {
+        current_weapon = weapons[index].get();
+    }
+}
 

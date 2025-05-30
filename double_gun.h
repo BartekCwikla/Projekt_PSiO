@@ -5,7 +5,7 @@
 #include "gun.h"
 #include "projectile.h"
 
-class DoubleGun : public Gun {
+class DoubleGun : public Gun {    
 public:
    DoubleGun(float initRange = 1000.f, float initDamage = 10.f, float initCooldown = 0.1f);
    ~DoubleGun() override = default;
