@@ -4,6 +4,7 @@
 #include "enemy_bat.h"
 #include "enemy_ghostgroup.h"
 #include "enemyboss.h"
+#include "enemyvortex.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <memory>
@@ -73,14 +74,6 @@ void Game::update(sf::Time& dt) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) player.setDirectionX(-1);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) player.setDirectionX(+1);
 
-    // Weapon hotkeys
-    for (int i = 0; i < static_cast<int>(player.getWeapons().size()) && i < 9; ++i) {
-        sf::Keyboard::Key key = static_cast<sf::Keyboard::Key>(sf::Keyboard::Num1 + i);
-        if (sf::Keyboard::isKeyPressed(key)) {
-            player.selectWeapon(i);
-        }
-    }
-
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
         // if fire function is called before cooldown time it returns nullptr. This code is required to push only valid projectiles
@@ -118,15 +111,17 @@ void Game::update(sf::Time& dt) {
 
     }
 
-    for (auto it = enemies.begin(); it != enemies.end(); ) {
-        const auto& eBody = (*it)->getBounds();
-        if (eBody.intersects(player.getBody().getGlobalBounds())) {
-            if (auto boss = dynamic_cast<EnemyBoss*>(it->get())) {
-                if (boss->canAttack()) {
+
+    for (auto it =enemies.begin(); it != enemies.end();){
+        const auto& eBody=(*it)->getBounds();
+        if(eBody.intersects(player.getBody().getGlobalBounds())){
+            //division into enemy types: boss and common
+            if(auto boss = dynamic_cast<EnemyBoss*>(it->get())){ //dynamic cast recognizes if enemy is a boss
+                if (boss->canAttack()) { //Boss has cooldown in attack
                     player.takeDamage(boss->getDamage());
                 }
-            } else {
-                player.takeDamage((*it)->getDamage());
+            }else{
+                player.takeDamage((*it)->getDamage());// Other enemies are attacking everytime
                 it = enemies.erase(it);
                 continue;
             }
@@ -154,7 +149,12 @@ void Game::update(sf::Time& dt) {
     // Enemy actualization
     for (auto& enemy : enemies){
         enemy->update(dt, player.getPosition());
+        if (auto vortex = dynamic_cast<EnemyVortex*>(enemy.get())){ //If enemies are vortex then assign a pointer to the vortex variable
+            sf::Vector2f repulsion = vortex->recoilForce(player.getPosition());//pushes the player away with dynamically increasing force
+            player.setPosition(player.getPosition() + repulsion * dt.asSeconds()); //changing the actual position of a player
+        }
     }
+
 
 
 //************************************************************************
@@ -172,6 +172,8 @@ void Game::update(sf::Time& dt) {
         for(int i=0; i < RandomMonsterNumber; i++){
             sf::Vector2f demonSpawnPos = generateSpawnPositionNear(player.getPosition(), map.getBounds(), 200.f, 400.f);
             enemies.push_back(std::make_unique<Enemy_Demon>(demonSpawnPos));
+            //Vortex enemy testing - the wave logic MUST INCLUDE
+            enemies.push_back(std::make_unique<EnemyVortex>(demonSpawnPos));
 
         }
         //MUST INCLUDE WAVE LOGIC
@@ -222,6 +224,8 @@ void Game::update(sf::Time& dt) {
         enemyspawnClock.restart();
     }
 
+    //ONLY FOR TESTING MUST INCLUDE WAVE LOGIC
+    //Boss will spawn after few waves
     if (!bossSpawned && bossSpawnClock.getElapsedTime().asSeconds() > 10.f) {
         sf::Vector2f bossSpawnPos = generateSpawnPositionNear(player.getPosition(), map.getBounds(), 300.f, 500.f);
         enemies.push_back(std::make_unique<EnemyBoss>(bossSpawnPos));
@@ -311,6 +315,7 @@ void Game::render()
 {
     window.clear(sf::Color::Black);
 
+
     window.setView(view);
     map.draw(window);
 
@@ -324,56 +329,15 @@ void Game::render()
         window.draw(p->getBody());
     }
 
+
+     //std::cout << "[DEBUG] View Center: " << view.getCenter().x << ", " << view.getCenter().y << "\n";
+    //std::cout << "[DEBUG] Boss Position: " << EnemyBoss->getPosition().x << ", " << boss->getPosition().y << "\n";
+
+
     window.draw(player.getBody());
 
 
-
-    window.setView(window.getDefaultView());
-
-    float padding = 10.f;
-    float yOffset = window.getSize().y - padding;
-    int slot = 1;
-
-    for (auto& wptr : player.getWeapons()) {
-        bool isCurrent = (wptr.get() == player.getCurrentWeapon());
-
-        // text label
-        std::string label = std::to_string(slot++) + ". " + wptr->getName();
-        sf::Text weaponText(label, hud.getFont(), 24);
-        weaponText.setFillColor(isCurrent ? sf::Color::Yellow : sf::Color::White);
-
-        // position text
-        auto tb = weaponText.getLocalBounds();
-        float tx = window.getSize().x - tb.width - padding;
-        float ty = yOffset - tb.height;
-        weaponText.setPosition(tx, ty);
-
-        // sprite icon
-        sf::Sprite icon;
-        icon.setTexture(wptr->getTexture());
-        icon.setScale(1.5f, 1.5f);
-
-        auto ib = icon.getGlobalBounds();
-        // setting placement of an icon to be above the text
-        icon.setPosition(tx, ty - ib.height - 5.f);
-
-        // drawing a box around the current weapon
-        if (isCurrent) {
-            sf::RectangleShape highlight;
-            highlight.setSize({ ib.width + tb.width + 15.f, std::max(ib.height, tb.height) + 10.f });
-            highlight.setFillColor(sf::Color(255, 255, 0, 50)); // yellow color
-            highlight.setPosition(tx - ib.width - 10.f, ty - (ib.height + tb.height)/2.f);
-            window.draw(highlight);
-        }
-
-        // 4) draw sprite & text
-        window.draw(icon);
-        window.draw(weaponText);
-
-        // 5) advance yOffset
-        yOffset -= std::max(tb.height, ib.height) + padding;
-    }
-
+    window.setView(window.getDefaultView()); // HUD must be static and not move with the camera
     hud.draw(window);
     window.display();
 

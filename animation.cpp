@@ -39,7 +39,7 @@ void Animation::update(float dt) {
     timer += dt;
     if (timer>= frameTime) {
         timer =0.0f;
-        currentFrame = (currentFrame + 1) % frames.size();
+        currentFrame=(currentFrame+1)%frames.size();
     }
 }
 
