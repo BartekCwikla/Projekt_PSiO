@@ -54,3 +54,8 @@ sf::Vector2f EnemySkeleton::getPosition() const {
 float EnemySkeleton::getHP() const {
     return hp;
 }
+
+
+void EnemySkeleton::setHP(float& hp_) {
+    hp_ = hp;
+}

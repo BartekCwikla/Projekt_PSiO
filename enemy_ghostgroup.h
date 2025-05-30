@@ -25,6 +25,7 @@ public:
     sf::FloatRect getBounds() const override;
     sf::Vector2f getPosition() const override;
     float getHP() const override;
+    void setHP(float& hp_) override;
     void update(sf::Time& dt, const sf::Vector2f& playerPos) override;
 };
 

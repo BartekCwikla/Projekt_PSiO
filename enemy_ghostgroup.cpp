@@ -51,3 +51,7 @@ float Enemy_GhostGroup::getHP() const
 {
     return hp;
 }
+
+void Enemy_GhostGroup::setHP(float& hp_) {
+    hp = hp_;
+}

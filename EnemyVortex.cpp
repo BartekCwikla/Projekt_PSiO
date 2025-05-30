@@ -69,3 +69,8 @@ sf::Vector2f EnemyVortex::getPosition() const {
 float EnemyVortex::getHP() const {
     return hp;
 }
+
+
+void EnemyVortex::setHP(float& hp_) {
+    hp_ = hp;
+}
