@@ -6,6 +6,7 @@
 #include "enemyboss.h"
 #include "enemyvortex.h"
 #include "enemyknight.h"
+#include "enemyskeleton.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <memory>
@@ -176,6 +177,7 @@ void Game::update(sf::Time& dt) {
             //Vortex enemy testing - the wave logic MUST INCLUDE
             enemies.push_back(std::make_unique<EnemyVortex>(demonSpawnPos));
             enemies.push_back(std::make_unique<EnemyKnight>(demonSpawnPos));
+            enemies.push_back(std::make_unique<EnemySkeleton>(demonSpawnPos));
 
         }
         //MUST INCLUDE WAVE LOGIC
