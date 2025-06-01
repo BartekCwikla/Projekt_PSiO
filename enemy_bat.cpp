@@ -3,12 +3,15 @@
 #include <cmath>
 
 Enemy_Bat::Enemy_Bat(sf::Vector2f startPos)
-    : Enemies(10.f, 50.f, 5.f), position(startPos), constY(startPos.y),
+    : Enemies(20.f, 50.f, 15.f, startPos), constY(startPos.y),
      amplitude(60.f), frequency(6.f), timePassed(0.f),
-    animation("./assets/Bat", "Bat", 4, 0.14f, 1)
+    animation("./assets/Bat", "Bat", 4, 0.14f, 1), facingRight(true)
 {
     setDamage(damage);
-    body.setRadius(20.f);
+    setHP(hp);
+    setSpeed(speed);
+    setPosition(position);
+
     animation.setScale(1.f, 1.f);
     animation.setPosition(position.x, position.y);
 }
@@ -17,7 +20,7 @@ void Enemy_Bat::render(sf::RenderWindow& window) {
     animation.draw(window);
 }
 
-void Enemy_Bat::update(sf::Time& time, const sf::Vector2f& player) {
+void Enemy_Bat::update(sf::Time& time, const sf::Vector2f&) {
     float dt = time.asSeconds();
     timePassed += dt;
     //X asix is constans
@@ -62,4 +65,8 @@ float Enemy_Bat::getSpeed() const{
 }
 void Enemy_Bat::setSpeed(float spd) {
     this->speed = spd;
+}
+void Enemy_Bat::setPosition(sf::Vector2f pos){
+    position=pos;
+    animation.setPosition(pos.x, pos.y);
 }

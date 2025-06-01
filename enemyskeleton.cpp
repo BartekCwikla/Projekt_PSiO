@@ -1,11 +1,16 @@
 #include "enemyskeleton.h"
 #include "cmath"
 EnemySkeleton::EnemySkeleton(const sf::Vector2f& startPos)
-    : Enemies(80.f, 100.f, 10.f), position(startPos),
+    : Enemies(100.f, 80.f, 10.f, startPos),
     animationLeft("assets/Skeleton/SkeletonLeft", "SkeletonLeft", 12, 0.12f, 1),
-    animationRight("assets/Skeleton/SkeletonRight", "SkeletonRight", 12, 0.12f, 1)
+    animationRight("assets/Skeleton/SkeletonRight", "SkeletonRight", 12, 0.12f, 1),
+    facingRight(true)
 {
     setDamage(damage);
+    setHP(hp);
+    setSpeed(speed);
+    setPosition(position);
+
     animationLeft.setScale(2.f, 2.f);
     animationRight.setScale(2.f, 2.f);
     animationLeft.setPosition(position.x, position.y);
@@ -73,3 +78,8 @@ void EnemySkeleton::setSpeed(float spd) {
     this->speed = spd;
 }
 
+void EnemySkeleton::setPosition(sf::Vector2f pos){
+    position=pos;
+    animationLeft.setPosition(pos.x, pos.y);
+    animationRight.setPosition(pos.x, pos.y);
+}

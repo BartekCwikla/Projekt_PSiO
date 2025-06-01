@@ -6,8 +6,9 @@ class Enemies
 {
 protected:
     float hp, speed, damage;
+    sf::Vector2f position;
 public:
-    Enemies(float h, float s, float d);
+    Enemies(float h, float s, float d, sf::Vector2f p);
     virtual ~Enemies() = default;
     virtual void render(sf::RenderWindow& monsters)=0; //draw enemies
     virtual void update(sf::Time& dt, const sf::Vector2f& playerPos) = 0;   // enemies movement, AI logic
@@ -20,6 +21,7 @@ public:
     virtual void setDamage(float dmg)=0;
     virtual float getSpeed() const = 0;
     virtual void setSpeed(float spd) =0;
+    virtual void setPosition(sf::Vector2f pos) =0;
 
 
 

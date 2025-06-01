@@ -10,7 +10,7 @@ private:
     Animation animationRight;
     Animation animationLeft;
     std::string currentDirection;
-    sf::Vector2f position;
+
 
     sf::Clock attackCooldown;
     float attackCooldownTime = 0.5f;
@@ -30,6 +30,7 @@ public:
     void setDamage(float dmg) override;
     float getSpeed() const override;
     void setSpeed(float spd) override;
+    void setPosition(sf::Vector2f pos) override;
     bool canAttack();
 };
 #endif // ENEMYBOSS_H

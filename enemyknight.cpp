@@ -1,77 +1,90 @@
 #include "enemyknight.h"
 #include <SFML/Graphics.hpp>
 #include <cmath>
+#include <iostream>
 
 EnemyKnight::EnemyKnight(const sf::Vector2f& startPos)
-    : Enemies(100.f, 60.f, 15.f), position(startPos),
-    animationLeft("assets/Knight/KnightLeft", "KnightLeft", 8, 0.1f, 1),
-    animationRight("assets/Knight/KnightRight", "KnightRight", 8, 0.1f, 1)
+    : Enemies(30.f, 100.f, 15.f, startPos),
+    animLeft("./assets/Knight/KnightLeft", "KnightLeft", 8, 0.14f, 1),
+    animRight("./assets/Knight/KnightRight", "KnightRight", 8, 0.14f, 1),
+    facingLeft(true)
 {
     setDamage(damage);
-    animationLeft.setScale(2.f, 2.f);
-    animationRight.setScale(2.f, 2.f);
-    animationLeft.setPosition(position.x, position.y);
-    animationRight.setPosition(position.x, position.y);
+    setHP(hp);
+    setSpeed(speed);
+    setPosition(position);
+
+    animLeft.setScale(2.f, 2.f);
+    animRight.setScale(2.f, 2.f);
+    animLeft.setPosition(position.x, position.y);
+    animRight.setPosition(position.x, position.y);
 }
 
-void EnemyKnight::render(sf::RenderWindow& window) {
-    if (facingRight)
-        animationRight.draw(window);
+void EnemyKnight::render(sf::RenderWindow& window){
+    if(facingLeft)
+        animLeft.draw(window);
     else
-        animationLeft.draw(window);
+        animRight.draw(window);
 }
 
-void EnemyKnight::update(sf::Time& dt, const sf::Vector2f& playerPos) {
+void EnemyKnight::update(sf::Time& dt, const sf::Vector2f& playerPos){
     float delta = dt.asSeconds();
 
-    sf::Vector2f dir = playerPos - position;
-    float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
-    if (len != 0)
-        dir /= len;
+    sf::Vector2f dir=playerPos-position;
+    float len = std::sqrt(dir.x*dir.x+ dir.y* dir.y);
+    if(len != 0)
+        dir /=len;
 
-    position += dir * speed * delta;
-    facingRight = (dir.x >= 0);
+    position +=dir *speed*delta;
+    facingLeft=dir.x < 0;
 
-    if (facingRight) {
-        animationRight.setPosition(position.x, position.y);
-        animationRight.update(delta);
-    } else {
-        animationLeft.setPosition(position.x, position.y);
-        animationLeft.update(delta);
+    if(facingLeft){
+        animLeft.setPosition(position.x, position.y);
+        animLeft.update(delta);
+    }else{
+        animRight.setPosition(position.x, position.y);
+        animRight.update(delta);
     }
 }
 
-void EnemyKnight::takeDamage(float dmg) {
+void EnemyKnight::takeDamage(float dmg){
     hp -= dmg;
 }
+
 void EnemyKnight::setDamage(float dmg){
-    this->damage=dmg;
+    this->damage = dmg;
 }
+
 float EnemyKnight::getDamage() const{
     return this->damage;
 }
 
-sf::FloatRect EnemyKnight::getBounds() const {
-    return facingRight ? animationRight.getGlobalBounds() : animationLeft.getGlobalBounds();
+sf::FloatRect EnemyKnight::getBounds() const{
+    return facingLeft ? animLeft.getGlobalBounds() : animRight.getGlobalBounds();
 }
 
-sf::Vector2f EnemyKnight::getPosition() const {
+sf::Vector2f EnemyKnight::getPosition() const{
     return position;
 }
 
-float EnemyKnight::getHP() const {
+float EnemyKnight::getHP() const{
     return hp;
 }
 
-
-void EnemyKnight::setHP(float hp_) {
+void EnemyKnight::setHP(float hp_){
     hp = hp_;
 }
 
 float EnemyKnight::getSpeed() const{
     return speed;
 }
-void EnemyKnight::setSpeed(float spd) {
+
+void EnemyKnight::setSpeed(float spd){
     this->speed = spd;
 }
 
+void EnemyKnight::setPosition(sf::Vector2f pos){
+    position = pos;
+    animLeft.setPosition(pos.x, pos.y);
+    animRight.setPosition(pos.x, pos.y);
+}

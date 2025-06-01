@@ -8,7 +8,7 @@ const sf::Font& HUD::getFont() const {
     return font;
 }
 
-HUD::HUD() {
+HUD::HUD() : currentWave(1){
     //HP and EXP bars color settings. back bars are transparent
     hpBarFront.setFillColor(sf::Color::Red);
     hpBarBack.setFillColor(sf::Color(80, 80, 80, 150));
@@ -35,9 +35,17 @@ HUD::HUD() {
     lvlText.setFont(font);
     lvlText.setCharacterSize(24);
     lvlText.setFillColor(sf::Color::White);
+
+    waveText.setFont(font);
+    waveText.setCharacterSize(24);
+    waveText.setFillColor(sf::Color::White);
+
+    timerText.setFont(font);
+    timerText.setCharacterSize(24);
+    waveText.setFillColor(sf::Color::White);
 }
 
-void HUD::update(const Player& player, const sf::RenderWindow& window) {
+void HUD::update(const Player& player, const sf::RenderWindow& window, int currentWave, float waveTime) {
     float screenWidth = static_cast<float>(window.getSize().x);
     float screenHeight = static_cast<float>(window.getSize().y);
 
@@ -89,6 +97,31 @@ void HUD::update(const Player& player, const sf::RenderWindow& window) {
     lvlText.setString(lvlStream.str());
     lvlText.setPosition(xCenter, lvlY);
 
+
+    //Game clock and waves counter
+    waveTime = waveClock.getElapsedTime().asSeconds();
+    std::stringstream ss;
+    ss<<"Wave: "<< currentWave;
+    waveText.setString(ss.str());
+
+    // Timer text
+    int minutes = static_cast<int>(waveTime) / 60;
+    int seconds = static_cast<int>(waveTime) % 60;
+    std::stringstream tt;
+    tt<<minutes<<":"<<(seconds < 10 ? "0" : "")<<seconds;
+    timerText.setString(tt.str());
+
+
+    //Setting timer and wave counter text messages positions
+    float timeY = window.getSize().y*0.2f ;
+    float waveY = timeY+30.f;
+
+    waveText.setPosition(screenWidth *0.125f, waveY);
+    timerText.setPosition((screenWidth - timerText.getLocalBounds().width)/2.f, timeY);
+
+
+
+
 }
 float HUD::getWavesInformationPosition() const {
     return lvlText.getPosition().y + lvlText.getLocalBounds().height;
@@ -103,4 +136,7 @@ void HUD::draw(sf::RenderWindow& window) {
     window.draw(hpText);
     window.draw(expText);
     window.draw(lvlText);
+
+    window.draw(timerText);
+    window.draw(waveText);
 }

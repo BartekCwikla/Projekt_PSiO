@@ -3,11 +3,15 @@
 #include <iostream>
 
 EnemyBoss::EnemyBoss(const sf::Vector2f& startPos)
-    : Enemies(1000.f, 100.f, 10.f), animationRight("assets/Boss/WormRight", "WormRight", 9, 0.1f), //Loading boss texture files
+    : Enemies(1000.f, 100.f, 10.f, startPos), animationRight("assets/Boss/WormRight", "WormRight", 9, 0.1f), //Loading boss texture files
     animationLeft("assets/Boss/WormLeft", "WormLeft", 9, 0.1f),
-    currentDirection("right"),
-    position(startPos)
+    currentDirection("right")
 {
+
+    setDamage(damage);
+    setHP(hp);
+    setSpeed(speed);
+    setPosition(position);
 
     animationRight.setPosition(position.x, position.y);
     animationLeft.setPosition(position.x, position.y);
@@ -15,7 +19,7 @@ EnemyBoss::EnemyBoss(const sf::Vector2f& startPos)
     animationRight.setScale(4.f, 4.f);
     animationLeft.setScale(4.f, 4.f);
 
-    setDamage(damage);
+
 }
 
 void EnemyBoss::render(sf::RenderWindow& window) {
@@ -99,3 +103,8 @@ void EnemyBoss::setSpeed(float spd) {
     this->speed = spd;
 }
 
+void EnemyBoss::setPosition(sf::Vector2f pos){
+    position=pos;
+    animationLeft.setPosition(pos.x, pos.y);
+    animationRight.setPosition(pos.x, pos.y);
+}
