@@ -1,7 +1,7 @@
 #include "enemies.h"
 #include <SFML/Graphics.hpp>
 
-Enemies::Enemies() : hp(0), speed(0) {}
+Enemies::Enemies(float h, float s, float d) : hp(h), speed(s), damage(d){}
 
 
 float Enemies::getDamage() const {

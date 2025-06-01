@@ -2,9 +2,9 @@
 #include <cmath>
 
 Enemy_Demon::Enemy_Demon(const sf::Vector2f& startPos)
-    : hp(10.f), speed(100.f)
+    : Enemies(10.f, 80.f, 10.f)
 {
-    setDamage(10.f);
+    setDamage(damage);
     bodyDemon.setSize(sf::Vector2f(40.f, 40.f));
     bodyDemon.setFillColor(sf::Color::Red);
     bodyDemon.setPosition(startPos);
@@ -28,6 +28,12 @@ void Enemy_Demon::update(sf::Time& dt, const sf::Vector2f& playerPos) {
 void Enemy_Demon::takeDamage(float dmg) {
     hp -= dmg;
 }
+void Enemy_Demon::setDamage(float dmg){
+    this->damage=dmg;
+}
+float Enemy_Demon::getDamage() const{
+    return this->damage;
+}
 
 sf::FloatRect Enemy_Demon::getBounds() const {
     return bodyDemon.getGlobalBounds();
@@ -41,6 +47,13 @@ float Enemy_Demon::getHP() const {
     return hp;
 }
 
-void Enemy_Demon::setHP(float& hp_) {
-    hp_ = hp;
+void Enemy_Demon::setHP(float hp_) {
+    hp = hp_;
 }
+float Enemy_Demon::getSpeed() const{
+    return speed;
+}
+void Enemy_Demon::setSpeed(float spd) {
+    this->speed = spd;
+}
+

@@ -1,11 +1,11 @@
 #include "enemyskeleton.h"
 #include "cmath"
 EnemySkeleton::EnemySkeleton(const sf::Vector2f& startPos)
-    : hp(10.f), speed(150.f), position(startPos),
+    : Enemies(80.f, 100.f, 10.f), position(startPos),
     animationLeft("assets/Skeleton/SkeletonLeft", "SkeletonLeft", 12, 0.12f, 1),
     animationRight("assets/Skeleton/SkeletonRight", "SkeletonRight", 12, 0.12f, 1)
 {
-    setDamage(5.f);
+    setDamage(damage);
     animationLeft.setScale(2.f, 2.f);
     animationRight.setScale(2.f, 2.f);
     animationLeft.setPosition(position.x, position.y);
@@ -42,6 +42,13 @@ void EnemySkeleton::update(sf::Time& dt, const sf::Vector2f& playerPos) {
 void EnemySkeleton::takeDamage(float dmg) {
     hp -= dmg;
 }
+void EnemySkeleton::setDamage(float dmg){
+    this->damage=dmg;
+}
+
+float EnemySkeleton::getDamage() const{
+    return this->damage;
+}
 
 sf::FloatRect EnemySkeleton::getBounds() const {
     return facingRight ? animationRight.getGlobalBounds() : animationLeft.getGlobalBounds();
@@ -56,6 +63,13 @@ float EnemySkeleton::getHP() const {
 }
 
 
-void EnemySkeleton::setHP(float& hp_) {
-    hp_ = hp;
+void EnemySkeleton::setHP(float hp_) {
+    hp = hp_;
 }
+float EnemySkeleton::getSpeed() const{
+    return speed;
+}
+void EnemySkeleton::setSpeed(float spd) {
+    this->speed = spd;
+}
+

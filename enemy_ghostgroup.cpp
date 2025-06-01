@@ -2,9 +2,9 @@
 #include <cmath>
 
 Enemy_GhostGroup::Enemy_GhostGroup(const sf::Vector2f& startPos, const sf::Vector2f& dir)
-    :  direction(dir), constY(startPos.y), speed(1000.f), hp(5.f), amplitude(20.f), frequency(2.f), timePassed(0.f)
+    : Enemies(4.f, 200.f, 2.f), direction(dir), constY(startPos.y), amplitude(20.f), frequency(2.f), timePassed(0.f)
 {
-    setDamage(2.f);
+    setDamage(damage);
     body.setSize(sf::Vector2f(20.f, 20.f));
     body.setFillColor(sf::Color::Blue);
     body.setOrigin(10.f, 10.f);
@@ -35,7 +35,12 @@ void Enemy_GhostGroup::takeDamage(float dmg)
 {
     hp -= dmg;
 }
-
+void Enemy_GhostGroup::setDamage(float dmg){
+    this->damage=dmg;
+}
+float Enemy_GhostGroup::getDamage() const{
+    return this->damage;
+}
 //Getters
 sf::FloatRect Enemy_GhostGroup::getBounds() const
 {
@@ -52,6 +57,13 @@ float Enemy_GhostGroup::getHP() const
     return hp;
 }
 
-void Enemy_GhostGroup::setHP(float& hp_) {
+void Enemy_GhostGroup::setHP(float hp_) {
     hp = hp_;
 }
+float Enemy_GhostGroup::getSpeed() const{
+    return speed;
+}
+void Enemy_GhostGroup::setSpeed(float spd) {
+    this->speed = spd;
+}
+

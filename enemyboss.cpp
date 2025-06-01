@@ -3,14 +3,11 @@
 #include <iostream>
 
 EnemyBoss::EnemyBoss(const sf::Vector2f& startPos)
-    : animationRight("assets/Boss/WormRight", "WormRight", 9, 0.1f), //Loading boss texture files
+    : Enemies(1000.f, 100.f, 10.f), animationRight("assets/Boss/WormRight", "WormRight", 9, 0.1f), //Loading boss texture files
     animationLeft("assets/Boss/WormLeft", "WormLeft", 9, 0.1f),
     currentDirection("right"),
     position(startPos)
 {
-    hp = 1000.f;
-    speed = 100.f;
-    damage = 5.f;
 
     animationRight.setPosition(position.x, position.y);
     animationLeft.setPosition(position.x, position.y);
@@ -63,7 +60,12 @@ void EnemyBoss::takeDamage(float dmg) {
         attackCooldown.restart();
     }
 }
-
+void EnemyBoss::setDamage(float dmg){
+    this->damage=dmg;
+}
+float EnemyBoss::getDamage() const{
+    return this->damage;
+}
 sf::FloatRect EnemyBoss::getBounds() const {
     return (currentDirection == "left")? animationLeft.getGlobalBounds(): animationRight.getGlobalBounds();
 
@@ -86,6 +88,14 @@ bool EnemyBoss::canAttack() {
 }
 
 
-void EnemyBoss::setHP(float& hp_) {
-    hp_ = hp;
+void EnemyBoss::setHP(float hp_) {
+    hp = hp_;
 }
+
+float EnemyBoss::getSpeed() const{
+    return speed;
+}
+void EnemyBoss::setSpeed(float spd) {
+    this->speed = spd;
+}
+
