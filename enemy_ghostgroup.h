@@ -1,23 +1,26 @@
 #ifndef ENEMY_GHOSTGROUP_H
 #define ENEMY_GHOSTGROUP_H
 #include "enemies.h"
+#include "animation.h"
 #include <SFML/Graphics.hpp>
 
 class Enemy_GhostGroup : public Enemies
 {
 private:
 
-    sf::RectangleShape body;
+
     sf::Vector2f direction;
     float constY;
-    float speed;
-    float hp;
-    float damage;
 
     //Variables that are responsible for the sine wave
     float amplitude;
     float frequency;
     float timePassed;
+    Animation animationLeft;
+    Animation animationRight;
+    bool facingLeft;
+    sf::Vector2f position;
+
 public:
     Enemy_GhostGroup(const sf::Vector2f& startPos, const sf::Vector2f& dir);
 

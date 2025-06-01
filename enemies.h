@@ -21,6 +21,8 @@ public:
     virtual float getSpeed() const = 0;
     virtual void setSpeed(float spd) =0;
 
+
+
 };
 
 #endif // ENEMIES_H

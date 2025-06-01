@@ -7,8 +7,7 @@
 
 class EnemyKnight : public Enemies {
 private:
-    float hp;
-    float speed;
+
     sf::Vector2f position;
     Animation animationLeft;
     Animation animationRight;
