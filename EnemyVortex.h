@@ -24,8 +24,12 @@ public:
     void takeDamage(float dmg) override;
     sf::FloatRect getBounds() const override;
     sf::Vector2f getPosition() const override;
-    void setHP(float& hp_) override;
+    void setHP(float hp_) override;
     float getHP() const override;
+    float getDamage() const override;
+    void setDamage(float dmg) override;
+    float getSpeed() const override;
+    void setSpeed(float spd) override;
 };
 
 #endif // ENEMYVORTEX_H

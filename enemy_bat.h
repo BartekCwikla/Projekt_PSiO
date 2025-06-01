@@ -10,10 +10,7 @@ private:
     sf::CircleShape body;
     sf::Vector2f position;
     float constY;
-    float speed;
-    float hp;
-
-    //Variables that are responsible for the sine wave
+        //Variables that are responsible for the sine wave
     float amplitude;
     float frequency;
     float timePassed;
@@ -31,7 +28,11 @@ void takeDamage(float dmg) override;
 sf::FloatRect getBounds() const override;
 sf::Vector2f getPosition() const override;
 float getHP() const override;
-void setHP(float& hp_) override;
+void setHP(float hp_) override;
+void setDamage(float dmg) override;
+float getDamage() const override;
+float getSpeed() const override;
+void setSpeed(float spd) override;
 };
 
 #endif // ENEMY_BAT_H

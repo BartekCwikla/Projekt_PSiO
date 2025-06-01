@@ -3,11 +3,11 @@
 #include <cmath>
 
 EnemyKnight::EnemyKnight(const sf::Vector2f& startPos)
-    : hp(200.f), speed(150.f), position(startPos),
+    : Enemies(100.f, 60.f, 15.f), position(startPos),
     animationLeft("assets/Knight/KnightLeft", "KnightLeft", 8, 0.1f, 1),
     animationRight("assets/Knight/KnightRight", "KnightRight", 8, 0.1f, 1)
 {
-    setDamage(10.f);
+    setDamage(damage);
     animationLeft.setScale(2.f, 2.f);
     animationRight.setScale(2.f, 2.f);
     animationLeft.setPosition(position.x, position.y);
@@ -44,6 +44,12 @@ void EnemyKnight::update(sf::Time& dt, const sf::Vector2f& playerPos) {
 void EnemyKnight::takeDamage(float dmg) {
     hp -= dmg;
 }
+void EnemyKnight::setDamage(float dmg){
+    this->damage=dmg;
+}
+float EnemyKnight::getDamage() const{
+    return this->damage;
+}
 
 sf::FloatRect EnemyKnight::getBounds() const {
     return facingRight ? animationRight.getGlobalBounds() : animationLeft.getGlobalBounds();
@@ -58,6 +64,14 @@ float EnemyKnight::getHP() const {
 }
 
 
-void EnemyKnight::setHP(float& hp_) {
-    hp_ = hp;
+void EnemyKnight::setHP(float hp_) {
+    hp = hp_;
 }
+
+float EnemyKnight::getSpeed() const{
+    return speed;
+}
+void EnemyKnight::setSpeed(float spd) {
+    this->speed = spd;
+}
+

@@ -12,6 +12,7 @@ private:
     float constY;
     float speed;
     float hp;
+    float damage;
 
     //Variables that are responsible for the sine wave
     float amplitude;
@@ -25,7 +26,11 @@ public:
     sf::FloatRect getBounds() const override;
     sf::Vector2f getPosition() const override;
     float getHP() const override;
-    void setHP(float& hp_) override;
+    void setHP(float hp_) override;
+    float getDamage() const override;
+    void setDamage(float dmg) override;
+    float getSpeed() const override;
+    void setSpeed(float spd) override;
     void update(sf::Time& dt, const sf::Vector2f& playerPos) override;
 };
 

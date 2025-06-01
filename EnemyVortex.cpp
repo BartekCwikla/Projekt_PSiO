@@ -5,12 +5,9 @@
 #include <iostream>
 
 EnemyVortex::EnemyVortex(const sf::Vector2f& startPos)
-    : position(startPos), angle(0.f), angleSpeed(180.f),
+    : Enemies(25.f, 80.f, 0.f),position(startPos), angle(0.f), angleSpeed(180.f),
     vortex("assets/Vortex", "vortex", 4, 0.1f), phaseDifference(rand()%360)
 {
-    hp = 25.f;
-    speed = 80.f;
-    damage = 0.f;
     setDamage(damage); //Only force. Vortex does not taking any damage
 
     vortex.setPosition(position.x, position.y);
@@ -57,6 +54,13 @@ void EnemyVortex::render(sf::RenderWindow& window) {
 void EnemyVortex::takeDamage(float dmg) {
     hp -= dmg;
 }
+void EnemyVortex::setDamage(float dmg){
+    this->damage=dmg;
+}
+
+float EnemyVortex::getDamage() const{
+    return this->damage;
+}
 
 sf::FloatRect EnemyVortex::getBounds() const {
     return vortex.getGlobalBounds();
@@ -71,6 +75,13 @@ float EnemyVortex::getHP() const {
 }
 
 
-void EnemyVortex::setHP(float& hp_) {
-    hp_ = hp;
+void EnemyVortex::setHP(float hp_) {
+    hp = hp_;
 }
+float EnemyVortex::getSpeed() const{
+    return speed;
+}
+void EnemyVortex::setSpeed(float spd) {
+    this->speed = spd;
+}
+
