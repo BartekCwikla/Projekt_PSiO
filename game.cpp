@@ -27,6 +27,15 @@ Game::Game() : window(sf::VideoMode(2400, 1500), "Window"),
     view.setCenter(player.getPosition());
 
 }
+GameState Game::getState() const{
+    return this->currentState;
+}
+void Game::setState(GameState state){
+    currentState = state;
+}
+bool Game::isWindowOpen() const{
+    return window.isOpen();
+}
 
 void Game::run() {
     window.setFramerateLimit(60);
@@ -373,5 +382,58 @@ void Game::wavesLogic() {
 
         ghostSpawnClock.restart();
         ghostR = 30 + rand() % 31; // Group of ghosts spawn from 30 to 60
+    }
+}
+
+void Game::showMenu() {
+    sf::Texture menuBackgroundTexture;
+    if (!menuBackgroundTexture.loadFromFile("assets/Background/Background.png")) {
+        std::cerr << "Nie udało się załadować tła menu\n";
+    }
+    sf::Sprite menuBackground(menuBackgroundTexture);
+
+    sf::Font font;
+    if (!font.loadFromFile("assets/fonts/MinimalPixel.ttf")) {
+        std::cerr << "Nie udało się załadować czcionki\n";
+        return;
+    }
+
+    sf::Text option1("1. ", font, 32);
+    sf::Text option2("2.", font, 32);
+
+
+    option1.setString("1. Start the Mayhem...");
+    option2.setString("2. Get away");
+
+    sf::FloatRect bounds1 = option1.getLocalBounds();
+    option1.setOrigin(bounds1.left + bounds1.width / 2.f,
+                      bounds1.top + bounds1.height / 2.f);
+    option1.setPosition(window.getSize().x / 2.f, window.getSize().y * 0.65f);
+
+    sf::FloatRect bounds2 = option2.getLocalBounds();
+    option2.setOrigin(bounds2.left + bounds2.width / 2.f,
+                      bounds2.top + bounds2.height / 2.f);
+    option2.setPosition(window.getSize().x / 2.f, window.getSize().y * 0.75f);
+
+    while (window.isOpen() && currentState == GameState::MENU) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed)
+                window.close();
+
+            if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::Num1)
+                    currentState = GameState::PLAYING;
+                else if (event.key.code == sf::Keyboard::Num2)
+                    currentState = GameState::EXIT;
+            }
+        }
+
+        window.clear();
+        window.draw(menuBackground);
+       // window.draw(title);
+        window.draw(option1);
+        window.draw(option2);
+        window.display();
     }
 }
