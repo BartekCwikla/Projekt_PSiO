@@ -5,12 +5,12 @@
 #include "double_gun.h"
 #include "exploding_gun.h"
 
-
+#include <iostream>
 
 
 Player::Player()
     : body(sf::Vector2f(100, 100)), position(sf::Vector2f(1200, 750)),
-    speed(300.f), hp(100.f), maxHp(100.f), exp(0.f), ExpNextLvl(100.f)
+    speed(300.f), hp(200.f), maxHp(100.f), exp(0.f), ExpNextLvl(100.f)
 {
     auto g = std::make_unique<DoubleGun>();
     auto g1 = std::make_unique<Gun>();

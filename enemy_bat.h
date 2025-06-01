@@ -7,8 +7,7 @@
 class Enemy_Bat : public Enemies
 {
 private:
-    sf::CircleShape body;
-    sf::Vector2f position;
+
     float constY;
         //Variables that are responsible for the sine wave
     float amplitude;
@@ -33,6 +32,7 @@ void setDamage(float dmg) override;
 float getDamage() const override;
 float getSpeed() const override;
 void setSpeed(float spd) override;
+void setPosition(sf::Vector2f pos) override;
 };
 
 #endif // ENEMY_BAT_H

@@ -9,7 +9,7 @@ class EnemyVortex : public Enemies {
 private:
 
 
-    sf::Vector2f position;
+
     sf::Vector2f velocity;
     float angle;
     float angleSpeed; //angle/seconds
@@ -30,6 +30,7 @@ public:
     void setDamage(float dmg) override;
     float getSpeed() const override;
     void setSpeed(float spd) override;
+    void setPosition(sf::Vector2f pos) override;
 };
 
 #endif // ENEMYVORTEX_H

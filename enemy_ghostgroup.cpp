@@ -2,19 +2,21 @@
 #include <cmath>
 
 Enemy_GhostGroup::Enemy_GhostGroup(const sf::Vector2f& startPos, const sf::Vector2f& dir)
-    : Enemies(4.f, 200.f, 2.f), direction(dir), constY(startPos.y), amplitude(20.f),
+    : Enemies(4.f, 700.f, 2.f, startPos), direction(dir), constY(startPos.y), amplitude(20.f),
     frequency(2.f), timePassed(0.f),
     animationLeft("./assets/Ghost/GhostLeft", "GhostLeft", 12, 0.14f, 1),
     animationRight("./assets/Ghost/GhostRight", "GhostRight", 12, 0.14f, 1),
-    facingLeft(true), position(startPos)
+    facingLeft(true)
 {
-    setDamage(damage);
-    setSpeed(speed);
-    setHP(hp);
 
-    animationLeft.setScale(1.f, 1.f);
-    animationRight.setScale(1.f, 1.f);
-    animationLeft.setPosition(position.x, position.y);
+    setDamage(damage);
+    setHP(hp);
+    setSpeed(speed);
+    setPosition(position);
+
+    animationLeft.setScale(0.4f, 0.4f);
+    animationRight.setScale(0.4f, 0.4f);
+    animationLeft.setPosition(startPos.x, position.y);
     animationRight.setPosition(position.x, position.y);
 
 
@@ -81,4 +83,10 @@ float Enemy_GhostGroup::getSpeed() const{
 
 void Enemy_GhostGroup::setSpeed(float spd){
     this->speed = spd;
+}
+
+void Enemy_GhostGroup::setPosition(sf::Vector2f pos){
+    position=pos;
+    animationLeft.setPosition(pos.x, pos.y);
+    animationRight.setPosition(pos.x, pos.y);
 }

@@ -19,7 +19,7 @@ private:
     Animation animationLeft;
     Animation animationRight;
     bool facingLeft;
-    sf::Vector2f position;
+
 
 public:
     Enemy_GhostGroup(const sf::Vector2f& startPos, const sf::Vector2f& dir);
@@ -34,6 +34,7 @@ public:
     void setDamage(float dmg) override;
     float getSpeed() const override;
     void setSpeed(float spd) override;
+    void setPosition(sf::Vector2f pos) override;
     void update(sf::Time& dt, const sf::Vector2f& playerPos) override;
 };
 
