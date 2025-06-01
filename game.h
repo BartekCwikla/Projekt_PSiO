@@ -13,10 +13,18 @@
 #include "map.h"
 #include "exporb.h"
 
+
+enum class GameState {
+    MENU,
+    PLAYING,
+    EXIT
+};
+
 // Main class
 class Game
 {
 private:
+    GameState currentState = GameState::MENU;
     sf::RenderWindow window;
     sf::View view;
     sf::View defaultView; //HUD render
@@ -65,6 +73,10 @@ public:
     sf::Vector2f generateSpawnPositionNear(const sf::Vector2f& playerPos, const sf::FloatRect& mapBounds, float minDist, float maxDist);
     void EnemiesBoundsColision ();
     void FPSlimiter();
+    void showMenu();
+    GameState getState() const;
+    void setState(GameState state);
+    bool isWindowOpen() const;
 
 
 

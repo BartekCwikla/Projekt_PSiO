@@ -5,10 +5,23 @@
 
 
 int main() {
-    std::srand(std::time(NULL)); //To randomize monster spawner
+
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
     Game* GameObj = new Game();
-    GameObj->run();
+
+    while (GameObj->isWindowOpen()) {
+        GameObj->setState(GameState::MENU);
+        GameObj->showMenu();
+
+        if (GameObj->getState() == GameState::PLAYING) {
+            GameObj->run(); // uruchom grę
+        }
+        else if (GameObj->getState() == GameState::EXIT) {
+            break;
+        }
+    }
+
     delete GameObj;
     return 0;
 }
