@@ -39,6 +39,10 @@ bool Game::isWindowOpen() const{
 
 void Game::run() {
     window.setFramerateLimit(60);
+    if(!audio.playMusic("assets/Sounds/Music/MasterOfPuppets.wav", 70.f, true)) {
+        std::cerr << "Music don't play!" << std::endl;
+    }
+
     sf::Clock clock;
 
     while(window.isOpen()) {
