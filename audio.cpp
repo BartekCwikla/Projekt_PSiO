@@ -6,7 +6,6 @@ Audio::Audio() {}
 
 bool Audio::playMusic(const std::string& filepath, float volume, bool loop) {
     if (!backgroundMusic.openFromFile(filepath)) {
-        std::cerr << "Nie udało się załadować muzyki: " << filepath << std::endl;
         return false;
     }
     backgroundMusic.setVolume(volume);
