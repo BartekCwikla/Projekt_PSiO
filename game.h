@@ -9,6 +9,7 @@
 #include "weapon.h"
 #include "projectile.h"
 #include "hud.h"
+#include "audio.h"
 
 #include "map.h"
 #include "exporb.h"
@@ -27,6 +28,7 @@ private:
     GameState currentState = GameState::MENU;
     sf::RenderWindow window;
     sf::View view;
+    Audio audio;
     sf::View defaultView; //HUD render
     sf::Clock enemyspawnClock;
     sf::Clock ghostSpawnClock; //New clock to spawns group of ghosts

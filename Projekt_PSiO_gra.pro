@@ -5,6 +5,7 @@ CONFIG -= qt
 SOURCES += main.cpp \
     EnemyVortex.cpp \
     animation.cpp \
+    audio.cpp \
     bullet.cpp \
     double_gun.cpp \
     enemies.cpp \
@@ -38,6 +39,7 @@ LIBS += -LC:/SFML/lib \
 HEADERS += \
     EnemyVortex.h \
     animation.h \
+    audio.h \
     bullet.h \
     double_gun.h \
     enemies.h \
