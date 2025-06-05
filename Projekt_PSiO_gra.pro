@@ -27,6 +27,7 @@ SOURCES += main.cpp \
     piercing_gun.cpp \
     player.cpp \
     projectile.cpp \
+    quad_gun.cpp \
     range.cpp \
     weapon.cpp
 
@@ -64,5 +65,6 @@ HEADERS += \
     piercing_gun.h \
     player.h \
     projectile.h \
+    quad_gun.h \
     range.h \
     weapon.h
