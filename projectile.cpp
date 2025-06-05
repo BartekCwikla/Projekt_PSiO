@@ -5,6 +5,16 @@
 
 
 
+bool Projectile::getIsPiercing() const
+{
+    return isPiercing;
+}
+
+void Projectile::setIsPiercing(bool newIsPiercing)
+{
+    isPiercing = newIsPiercing;
+}
+
 Projectile::Projectile(sf::Vector2f dir, sf::Vector2f initial_position, float speed, float max_distance, float damage)
     : direction(dir), position(initial_position), max_distance(max_distance), damage(damage) {
     body.setRadius(5.f);
@@ -85,3 +95,4 @@ void Projectile::setIsExploding(bool newIsExploding)
 {
     isExploding = newIsExploding;
 }
+

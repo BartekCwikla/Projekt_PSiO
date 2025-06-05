@@ -19,6 +19,10 @@ private:
     // This variable tells whether this projectile has hit the enemy
     bool hit = false;
 
+protected:
+    bool isPiercing = false;
+
+
 public:
     Projectile(sf::Vector2f, sf::Vector2f, float, float, float);
     virtual ~Projectile()=default;
@@ -46,6 +50,8 @@ public:
 
     bool getIsExploding() const;
     void setIsExploding(bool newIsExploding);
+    bool getIsPiercing() const;
+    void setIsPiercing(bool newIsPiercing);
 };
 
 

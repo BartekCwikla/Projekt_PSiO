@@ -4,7 +4,8 @@
 #include "gun.h"
 #include "double_gun.h"
 #include "exploding_gun.h"
-
+#include "piercing_gun.h"
+#include "axe.h"
 #include <iostream>
 
 
@@ -15,11 +16,15 @@ Player::Player()
     auto g = std::make_unique<DoubleGun>();
     auto g1 = std::make_unique<Gun>();
     auto g2 = std::make_unique<ExplodingGun>();
+    auto g3 = std::make_unique<PiercingGun>();
+    auto g4 = std::make_unique<Axe>();
 
     current_weapon = g.get();
     weapons.push_back(std::move(g));
     weapons.push_back(std::move(g1));
     weapons.push_back(std::move(g2));
+    weapons.push_back(std::move(g3));
+    weapons.push_back(std::move(g4));
 
     direction = {0,0};
     last_direction = {1,0};

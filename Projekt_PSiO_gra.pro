@@ -3,6 +3,8 @@ CONFIG += console c++17
 CONFIG -= qt
 
 SOURCES += main.cpp \
+    axe.cpp \
+    axe_projectile.cpp \
     EnemyVortex.cpp \
     animation.cpp \
     audio.cpp \
@@ -22,6 +24,7 @@ SOURCES += main.cpp \
     gun.cpp \
     hud.cpp \
     map.cpp \
+    piercing_gun.cpp \
     player.cpp \
     projectile.cpp \
     range.cpp \
@@ -37,6 +40,8 @@ LIBS += -LC:/SFML/lib \
     -lsfml-network
 
 HEADERS += \
+    axe.h \
+    axe_projectile.h \
     EnemyVortex.h \
     animation.h \
     audio.h \
@@ -56,6 +61,7 @@ HEADERS += \
     gun.h \
     hud.h \
     map.h \
+    piercing_gun.h \
     player.h \
     projectile.h \
     range.h \
