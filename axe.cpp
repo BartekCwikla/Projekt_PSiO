@@ -4,12 +4,11 @@
 
 Axe::Axe() {
     name = "Axe";
-    setVelocity(600.f);  // Slower than bullets
+    setVelocity(600.f);
     setRange(800.f);
     setDamage(15.f);
     setExplosionRange(aoeRadius);
     level = 1;
-
     if (!texture.loadFromFile("./assets/weapons/axe.png")) {
         std::cerr << "Failed to load axe.png\n";
     }

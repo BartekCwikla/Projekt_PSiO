@@ -114,16 +114,6 @@ void Game::update(sf::Time& dt) {
         p->move(dt);
     }
 
-    for (auto &p : projectiles) {
-        if (auto axe = dynamic_cast<AxeProjectile*>(p.get())) {
-            // rotate around center
-            float angleDelta = axe->getRotationSpeed() * dt.asSeconds();
-            axe->getSprite().rotate(angleDelta);
-
-            // sync sprite position to the projectile’s logical position
-            axe->getSprite().setPosition(axe->getPosition());
-        }
-    }
 
     player.move(sf::Vector2f(player.getDirection()) * dt.asSeconds() * player.getSpeed());
 

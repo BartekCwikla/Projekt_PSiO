@@ -12,9 +12,9 @@ public:
     void upgrade() override;
 
 private:
-    float rotationSpeed = 10.f;
+    float rotationSpeed = 75.f;
     float aoeRadius = 50.f;
-    float cooldownTime = 1.5f;
+    float cooldownTime = 3.f;
     sf::Clock coolDown;
 };
 

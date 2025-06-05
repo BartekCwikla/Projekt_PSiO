@@ -1,7 +1,7 @@
 #include "axe_projectile.h"
 #include <iostream>
 
-// Define the static texture
+
 sf::Texture AxeProjectile::axeTexture;
 
 void AxeProjectile::ensureTextureLoaded() {
@@ -10,7 +10,6 @@ void AxeProjectile::ensureTextureLoaded() {
         if (!axeTexture.loadFromFile("./assets/weapons/axe.png")) {
             std::cerr << "Error: could not load axe.png\n";
         }
-        // Center the origin so rotation is around center
         loaded = true;
     }
 }
@@ -26,27 +25,26 @@ AxeProjectile::AxeProjectile(sf::Vector2f direction,
     , rotationSpeed(rotationSpeed)
     , explosionRadius(explosionRadius)
 {
+    setIsPiercing(true);
     ensureTextureLoaded();
     sprite.setTexture(axeTexture);
+    sprite.setScale(sf::Vector2f(5,5));
     // Center origin on the sprite
     auto bounds = sprite.getLocalBounds();
     sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
     sprite.setPosition(position);
 }
 
-void AxeProjectile::update() {
-    // Move as base class does
-    Projectile::move(sf::seconds(1.f / 60.f));  // or pass your actual dt
-    // Spin
-    sprite.rotate(rotationSpeed);
-    // Sync position
+
+
+void AxeProjectile::move(sf::Time dt) {
+    Projectile::move(dt);
+    float angleDelta = rotationSpeed * dt.asSeconds();
+    sprite.rotate(angleDelta);
     sprite.setPosition(getPosition());
 }
 
-bool AxeProjectile::checkColision(const Enemies& colision) {
-    // Your AoE logic here...
-    return false;
-}
+
 
 sf::Sprite& AxeProjectile::getSprite() {
     return sprite;
