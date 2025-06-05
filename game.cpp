@@ -11,6 +11,7 @@
 #include <ctime>
 #include <cmath>
 #include "exploding_projectile.h"
+#include "axe_projectile.h"
 
 Game::Game() : window(sf::VideoMode(2400, 1500), "Window"),
     view(window.getDefaultView()),ghostsDelay(static_cast<float>(rand()%15) + 30.f),  player()
@@ -97,6 +98,16 @@ void Game::update(sf::Time& dt) {
         p->move(dt);
     }
 
+    for (auto &p : projectiles) {
+        if (auto axe = dynamic_cast<AxeProjectile*>(p.get())) {
+            // rotate around center
+            float angleDelta = axe->getRotationSpeed() * dt.asSeconds();
+            axe->getSprite().rotate(angleDelta);
+
+            // sync sprite position to the projectile’s logical position
+            axe->getSprite().setPosition(axe->getPosition());
+        }
+    }
 
 
 
@@ -307,10 +318,15 @@ void Game::render()
     for (auto& orb : expOrbs)
         orb->render(window);
 
-    for (auto & p: projectiles) {
-        window.draw(p->getBody());
+    for (auto &p : projectiles) {
+        // If it's axe, draw it's sprite
+        if (auto axe = dynamic_cast<AxeProjectile*>(p.get())) {
+            window.draw(axe->getSprite());
+        } else {
+            // all other projectiles
+            window.draw(p->getBody());
+        }
     }
-
 
     window.draw(player.getBody());
 

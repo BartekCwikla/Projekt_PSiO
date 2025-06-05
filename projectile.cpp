@@ -95,3 +95,4 @@ void Projectile::setIsExploding(bool newIsExploding)
 {
     isExploding = newIsExploding;
 }
+
