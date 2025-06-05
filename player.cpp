@@ -6,7 +6,7 @@
 #include "exploding_gun.h"
 #include "piercing_gun.h"
 #include "axe.h"
-
+#include <iostream>
 
 
 Player::Player()

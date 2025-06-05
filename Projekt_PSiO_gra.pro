@@ -5,12 +5,18 @@ CONFIG -= qt
 SOURCES += main.cpp \
     axe.cpp \
     axe_projectile.cpp \
+    EnemyVortex.cpp \
+    animation.cpp \
+    audio.cpp \
     bullet.cpp \
     double_gun.cpp \
     enemies.cpp \
     enemy_bat.cpp \
     enemy_demon.cpp \
     enemy_ghostgroup.cpp \
+    enemyboss.cpp \
+    enemyknight.cpp \
+    enemyskeleton.cpp \
     exploding_gun.cpp \
     exploding_projectile.cpp \
     exporb.cpp \
@@ -36,12 +42,18 @@ LIBS += -LC:/SFML/lib \
 HEADERS += \
     axe.h \
     axe_projectile.h \
+    EnemyVortex.h \
+    animation.h \
+    audio.h \
     bullet.h \
     double_gun.h \
     enemies.h \
     enemy_bat.h \
     enemy_demon.h \
     enemy_ghostgroup.h \
+    enemyboss.h \
+    enemyknight.h \
+    enemyskeleton.h \
     exploding_gun.h \
     exploding_projectile.h \
     exporb.h \

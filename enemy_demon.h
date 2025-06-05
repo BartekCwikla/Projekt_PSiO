@@ -1,14 +1,16 @@
 #ifndef ENEMY_DEMON_H
 #define ENEMY_DEMON_H
 #include "enemies.h"
+#include "animation.h"
 #include<SFML/Graphics.hpp>
 
 
 class Enemy_Demon : public Enemies
 {
 private:
-    sf::RectangleShape bodyDemon;
-    float hp, speed;
+
+    Animation animLeft, animRight;
+    bool facingLeft;
 public:
     Enemy_Demon(const sf::Vector2f& startPos);
 
@@ -17,7 +19,12 @@ public:
     sf::FloatRect getBounds() const override;
     sf::Vector2f getPosition() const override;
     float getHP() const override;
-
+    void setHP(float hp_) override;
+    float getSpeed() const override;
+    void setSpeed(float spd) override;
+    float getDamage() const override;
+    void setDamage(float dmg) override;
+    void setPosition(sf::Vector2f pos) override;
     void update(sf::Time& dt, const sf::Vector2f& playerPos) override;
 };
 

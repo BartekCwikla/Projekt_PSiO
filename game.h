@@ -9,26 +9,57 @@
 #include "weapon.h"
 #include "projectile.h"
 #include "hud.h"
+#include "audio.h"
+
 #include "map.h"
 #include "exporb.h"
+
+
+enum class GameState {
+    MENU,
+    PLAYING,
+    EXIT
+};
 
 // Main class
 class Game
 {
 private:
+    GameState currentState = GameState::MENU;
     sf::RenderWindow window;
     sf::View view;
+    Audio audio;
     sf::View defaultView; //HUD render
     sf::Clock enemyspawnClock;
     sf::Clock ghostSpawnClock; //New clock to spawns group of ghosts
+    sf::Clock bossSpawnClock;
+    sf::Clock waveClock;
+    sf::Clock currentWaveClock;
+    sf::Clock FPS;
+    bool bossSpawned = false;
+    bool testWaveSpawned = false;
     float ghostsDelay;
+    int ghostR = 30.f;
     Player player;
     std::vector<std::unique_ptr<Enemies>> enemies;
     std::vector<std::unique_ptr<Projectile>> projectiles;
     std::vector<std::unique_ptr<ExpOrb>> expOrbs;
     HUD hud;
     Map map;
-    int waveNumber;
+;
+  //  Waves waves;
+    int frameCounter;
+    int lastWaveNumber = 0;
+
+
+    int currentWave = 1;
+    int enemiesSpawnedInWave = 0;
+    int totalEnemiesThisWave = 0;
+    float waveDuration = 30.f; // czas trwania jednej fali
+
+
+    //Private method, which is responsible or wave managment
+    void wavesLogic();
 
 
 public:
@@ -40,7 +71,15 @@ public:
     void spawnEnemies();
     void updateWave();
     void handleShot(std::vector<std::unique_ptr<Projectile>>);
+    void spawnEnemyForCurrentWave(int wave);
     sf::Vector2f generateSpawnPositionNear(const sf::Vector2f& playerPos, const sf::FloatRect& mapBounds, float minDist, float maxDist);
+    void EnemiesBoundsColision ();
+    void FPSlimiter();
+    void showMenu();
+    GameState getState() const;
+    void setState(GameState state);
+    bool isWindowOpen() const;
+
 
 
 
