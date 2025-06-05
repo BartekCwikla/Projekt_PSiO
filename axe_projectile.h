@@ -3,15 +3,16 @@
 
 #include "projectile.h"
 #include <SFML/Graphics.hpp>
+#include "animation.h"
 
 class AxeProjectile : public Projectile {
 private:
-    static sf::Texture axeTexture;    // shared among all axes
+    static sf::Texture axeTexture;
     sf::Sprite sprite;
     float rotationSpeed;
     float explosionRadius;
 
-    // Helper to load texture once
+
     static void ensureTextureLoaded();
 
 public:
@@ -23,14 +24,14 @@ public:
                   float rotationSpeed,
                   float explosionRadius);
 
-    void update() override;
-    bool checkColision(const Enemies& colision) override;
+    void update() override {};
 
-    // Override to return sprite for rendering
+
     sf::Sprite& getSprite();
     float getRotationSpeed() const { return rotationSpeed; }
-
     float getExplosionRadius() const;
+
+    void move(sf::Time dt) override;
 };
 
 #endif // AXE_PROJECTILE_H

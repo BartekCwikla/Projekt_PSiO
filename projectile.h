@@ -1,5 +1,6 @@
 #ifndef PROJECTILE_H
 #define PROJECTILE_H
+#include <cmath>
 #include <SFML/Graphics.hpp>
 
 class Enemies;
@@ -27,8 +28,13 @@ public:
     Projectile(sf::Vector2f, sf::Vector2f, float, float, float);
     virtual ~Projectile()=default;
     virtual void update()=0;
-    virtual bool checkColision(const Enemies& colision)=0;
-    virtual void move(sf::Time);
+    virtual bool checkColision(const Enemies& colision) {return false;};
+    virtual void move(sf::Time dt) {
+        position += velocity * dt.asSeconds();
+        float normalised_velocity = std::sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
+        distance_traveled += normalised_velocity * dt.asSeconds();
+        body.setPosition(position);
+    }
     sf::CircleShape& getBody();
 
     // Check if the projectile is within allowed range

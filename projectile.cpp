@@ -27,12 +27,7 @@ Projectile::Projectile(sf::Vector2f dir, sf::Vector2f initial_position, float sp
 
 
 
-void Projectile::move(sf::Time dt) {
-    position += velocity * dt.asSeconds();
-    float normalised_velocity = sqrt(pow(velocity.x, 2) + pow(velocity.y, 2));
-    distance_traveled += normalised_velocity * dt.asSeconds();
-    body.setPosition(position);
-}
+
 
 
 sf::CircleShape& Projectile::getBody() {
