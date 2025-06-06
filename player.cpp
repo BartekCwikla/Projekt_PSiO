@@ -8,7 +8,6 @@
 #include "quad_gun.h"
 #include "axe.h"
 #include "boomerang.h"
-#include <iostream>
 #include "meteor_rain.h"
 
 

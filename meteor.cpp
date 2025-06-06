@@ -4,11 +4,10 @@
 Meteor::Meteor(float damage, float initialHeight, sf::Vector2f position)
     : initialHeight(initialHeight), damage(damage), shouldExplode(false), distanceTraveled(0.f), explosionRadius(200.f)
 {
-    std::cout << "Meteor created" << std::endl;
     speed = (rand()%500)+300;
 
 
-    if (!texture.loadFromFile("./assets/weapons/gun.png")) {
+    if (!texture.loadFromFile("./assets/SuperPowers/meteor.png")) {
         std::cerr << "Couldn't load meteor texture!" << std::endl;
     }
     setMaxDistance(500.f);
@@ -60,8 +59,6 @@ void Meteor::setDamage(float newDamage)
 }
 
 void Meteor::move(sf::Time dt) {
-    std::cout << "moving meteor" << std::endl;
-    std::cout << "x: " << getPosition().x << "y: " << getPosition().y << std::endl;
     if (getDistanceTraveled() > getMaxDistance()) {
         shouldExplode = true;
         return;

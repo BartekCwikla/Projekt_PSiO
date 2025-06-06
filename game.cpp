@@ -129,12 +129,8 @@ void Game::update(sf::Time& dt) {
         }
     }
 
-    int i=0;
-
     for (auto& mPtr : meteors) {
-        std::cout << "meteor count: " << i << std::endl;
         mPtr->move(dt);
-        i++;
     }
 
     player.move(sf::Vector2f(player.getDirection()) * dt.asSeconds() * player.getSpeed());
