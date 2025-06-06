@@ -26,11 +26,14 @@ SOURCES += main.cpp \
     gun.cpp \
     hud.cpp \
     map.cpp \
+    meteor.cpp \
+    meteor_rain.cpp \
     piercing_gun.cpp \
     player.cpp \
     projectile.cpp \
     quad_gun.cpp \
     range.cpp \
+    superpower.cpp \
     weapon.cpp
 
 INCLUDEPATH += C:/SFML/include
@@ -43,6 +46,7 @@ LIBS += -LC:/SFML/lib \
     -lsfml-network
 
 HEADERS += \
+    ActionResult.h \
     axe.h \
     axe_projectile.h \
     EnemyVortex.h \
@@ -66,9 +70,12 @@ HEADERS += \
     gun.h \
     hud.h \
     map.h \
+    meteor.h \
+    meteor_rain.h \
     piercing_gun.h \
     player.h \
     projectile.h \
     quad_gun.h \
     range.h \
+    superpower.h \
     weapon.h

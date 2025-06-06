@@ -10,7 +10,7 @@
 #include "projectile.h"
 #include "hud.h"
 #include "audio.h"
-
+#include "meteor.h"
 #include "map.h"
 #include "exporb.h"
 
@@ -44,6 +44,7 @@ private:
     std::vector<std::unique_ptr<Enemies>> enemies;
     std::vector<std::unique_ptr<Projectile>> projectiles;
     std::vector<std::unique_ptr<ExpOrb>> expOrbs;
+    std::vector<std::unique_ptr<Meteor>> meteors;
     HUD hud;
     Map map;
 ;
