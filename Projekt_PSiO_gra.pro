@@ -8,6 +8,8 @@ SOURCES += main.cpp \
     EnemyVortex.cpp \
     animation.cpp \
     audio.cpp \
+    boomerang.cpp \
+    boomerang_projectile.cpp \
     bullet.cpp \
     double_gun.cpp \
     enemies.cpp \
@@ -46,6 +48,8 @@ HEADERS += \
     EnemyVortex.h \
     animation.h \
     audio.h \
+    boomerang.h \
+    boomerang_projectile.h \
     bullet.h \
     double_gun.h \
     enemies.h \
