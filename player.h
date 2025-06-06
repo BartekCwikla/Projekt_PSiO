@@ -5,6 +5,7 @@
 #include <memory>
 //#include "enemies.h"
 //#include "projectile.h"
+#include "superpower.h"
 
 class Weapon;
 class Projectile;
@@ -19,6 +20,7 @@ private:
     float speed;
     std::vector<std::unique_ptr<Weapon>> weapons;
     Weapon* current_weapon = nullptr;
+    std::vector<std::unique_ptr<SuperPower>> super_powers;
     sf::Clock attackClock;
     sf::RectangleShape body; // temporarily, later sf::Sprite
     sf::Vector2f position;
@@ -59,6 +61,8 @@ public:
 
     float getExp() const;
     float getExpNextLvl() const;
+
+    const std::vector<std::unique_ptr<SuperPower>>& getSuperPowers() const;
 
     //addExp method changes the ExpNextLvl variable after reaching new level
     void addMaxLevelTreshold(float amount);

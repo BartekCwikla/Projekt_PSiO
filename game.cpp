@@ -100,6 +100,16 @@ void Game::update(sf::Time& dt) {
         }
     }
 
+
+    // Superpower hotkeys
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+        ActionResult ar = player.getSuperPowers()[0]->activate(player.getPosition());
+
+        meteors.reserve(meteors.size() + ar.newMeteors.size());
+        for (auto& meteor : ar.newMeteors) {
+            meteors.push_back(std::move(meteor));
+        }
+    }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
         // if fire function is called before cooldown time it returns nullptr. This code is required to push only valid projectiles
         auto shots = player.fire();
@@ -119,7 +129,9 @@ void Game::update(sf::Time& dt) {
         }
     }
 
-
+    for (auto& mPtr : meteors) {
+        mPtr->move(dt);
+    }
 
     player.move(sf::Vector2f(player.getDirection()) * dt.asSeconds() * player.getSpeed());
 
@@ -230,6 +242,22 @@ void Game::update(sf::Time& dt) {
         }
     }
 
+
+    for (auto &meteor: meteors) {
+        if (meteor->getShouldExplode()) {
+            auto* exploding = dynamic_cast<Meteor*>(meteor.get());
+            float radius = exploding->getExplosionRadius();
+            sf::Vector2f explosionCenter = exploding->getPosition();
+            for (auto& e : enemies) {
+                float dist = std::hypot(explosionCenter.x - e->getPosition().x,
+                                        explosionCenter.y - e->getPosition().y);
+                if (dist <= radius) {
+                    e->takeDamage(exploding->getDamage());
+                }
+            }
+        }
+    }
+
     // Check whether the projectile has not exceeded it's maximum range or hit an enemy, if yes remove it
     projectiles.erase(std::remove_if(
                           projectiles.begin(),
@@ -242,6 +270,15 @@ void Game::update(sf::Time& dt) {
                               }
                           }
                           ), projectiles.end());
+
+    meteors.erase(
+        std::remove_if(meteors.begin(), meteors.end(),
+                       [&](const std::unique_ptr<Meteor>& m){
+                           return m && m->getShouldExplode();
+                       }
+                       ),
+        meteors.end()
+        );
 
 
     //Camera
@@ -274,6 +311,10 @@ void Game::render()
 
     for (auto& orb : expOrbs)
         orb->render(window);
+
+    for (auto& mPtr : meteors) {
+        window.draw(mPtr->getSprite());
+    }
 
     for (auto &p : projectiles) {
         // If it's axe, draw it's sprite
@@ -323,20 +364,55 @@ void Game::render()
         if (isCurrent) {
             sf::RectangleShape highlight;
             highlight.setSize({ ib.width + tb.width + 15.f, std::max(ib.height, tb.height) + 10.f });
-            highlight.setFillColor(sf::Color(255, 255, 0, 50)); // yellow color
+            highlight.setFillColor(sf::Color(255, 255, 0, 50));
             highlight.setPosition(tx - ib.width - 10.f, ty - (ib.height + tb.height)/2.f);
             window.draw(highlight);
         }
 
-        // 4) draw sprite & text
+        // draw sprite and text
         window.draw(icon);
         window.draw(weaponText);
 
-        // 5) advance yOffset
+
         yOffset -= std::max(tb.height, ib.height) + padding;
     }
 
 
+    float superPowerYOffset = window.getSize().y - padding;
+    int spSlot = 1;
+
+    for (auto& spw : player.getSuperPowers()) {
+        std::string label = std::to_string(spSlot++) + ". " + spw->getName();
+        sf::Text superText(label, hud.getFont(), 24);
+        superText.setFillColor(sf::Color::Cyan);
+
+        auto tb = superText.getLocalBounds();
+        float tx = padding;
+        float ty = superPowerYOffset - tb.height;
+        superText.setPosition(tx, ty);
+
+        // Sprite icon
+        sf::Sprite icon;
+        icon.setTexture(spw->getIcon());
+        icon.setScale(1.5f, 1.5f);
+
+        auto ib = icon.getGlobalBounds();
+        icon.setPosition(tx, ty - ib.height - 5.f);
+
+        // Optional: Draw highlight if this is an active superpower (if applicable)
+        // if (player.getCurrentSuperPower() == spw.get()) {
+        //     sf::RectangleShape highlight;
+        //     highlight.setSize({ ib.width + tb.width + 15.f, std::max(ib.height, tb.height) + 10.f });
+        //     highlight.setFillColor(sf::Color(0, 255, 255, 50));
+        //     highlight.setPosition(tx - 5.f, ty - (ib.height + tb.height)/2.f);
+        //     window.draw(highlight);
+        // }
+
+        window.draw(icon);
+        window.draw(superText);
+
+        superPowerYOffset -= std::max(tb.height, ib.height) + padding;
+    }
 
 
     hud.draw(window);

@@ -8,7 +8,7 @@
 #include "quad_gun.h"
 #include "axe.h"
 #include "boomerang.h"
-#include <iostream>
+#include "meteor_rain.h"
 
 
 Player::Player()
@@ -31,6 +31,10 @@ Player::Player()
     weapons.push_back(std::move(g4));
     weapons.push_back(std::move(g5));
     weapons.push_back(std::move(g6));
+
+    auto spwr1 = std::make_unique<MeteorRain>(3.f, 100.f, 15);
+
+    super_powers.push_back(std::move(spwr1));
 
     direction = {0,0};
     last_direction = {1,0};
@@ -105,6 +109,11 @@ float Player::getExp() const {
 
 float Player::getExpNextLvl() const {
     return ExpNextLvl;
+}
+
+const std::vector<std::unique_ptr<SuperPower>>& Player::getSuperPowers() const
+{
+    return super_powers;
 }
 
 int Player::getLvl() const {

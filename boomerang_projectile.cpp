@@ -43,7 +43,6 @@ sf::Sprite& BoomerangProjectile::getSprite() {
 
 
 void BoomerangProjectile::move(sf::Time dt, sf::Vector2f playerPos) {
-    std::cout << getDistanceTraveled() << std::endl;
     if (getDistanceTraveled() > getMaxDistance()-50) {
         setIsComingBack(true);
     }
