@@ -9,7 +9,6 @@ class Projectile
 {
 private:
     sf::CircleShape body;
-    sf::Vector2f velocity;
     float damage;
     sf::Vector2f direction;
     sf::Vector2f position;
@@ -22,6 +21,8 @@ private:
 
 protected:
     bool isPiercing = false;
+    sf::Vector2f velocity;
+    float speed = 5.f;
 
 
 public:
@@ -38,7 +39,7 @@ public:
     sf::CircleShape& getBody();
 
     // Check if the projectile is within allowed range
-    bool distanceExceeded() const;
+    virtual bool distanceExceeded() const;
 
     void setDamage(float);
     float getDamage() const;
@@ -53,11 +54,14 @@ public:
     bool getHit() const;
 
     sf::Vector2f getPosition() const;
+    void setPosition(sf::Vector2f pos);
 
     bool getIsExploding() const;
     void setIsExploding(bool newIsExploding);
     bool getIsPiercing() const;
     void setIsPiercing(bool newIsPiercing);
+    float getSpeed() const;
+    void setSpeed(float newSpeed);
 };
 
 

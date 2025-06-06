@@ -7,6 +7,7 @@
 #include "enemyvortex.h"
 #include "enemyknight.h"
 #include "enemyskeleton.h"
+#include "boomerang_projectile.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <memory>
@@ -111,8 +112,13 @@ void Game::update(sf::Time& dt) {
     }
 
     for (auto &p: projectiles) {
-        p->move(dt);
+        if (auto boomerang = dynamic_cast<BoomerangProjectile*>(p.get())) {
+            boomerang->move(dt, player.getPosition());
+        } else {
+            p->move(dt);
+        }
     }
+
 
 
     player.move(sf::Vector2f(player.getDirection()) * dt.asSeconds() * player.getSpeed());
@@ -225,11 +231,17 @@ void Game::update(sf::Time& dt) {
     }
 
     // Check whether the projectile has not exceeded it's maximum range or hit an enemy, if yes remove it
-    projectiles.erase(std::remove_if(projectiles.begin(), projectiles.end(), [](const std::unique_ptr<Projectile>& p)
-                                     {
-                                         return (p->distanceExceeded() || p->getHit());
-                                     }
-                                     ), projectiles.end());
+    projectiles.erase(std::remove_if(
+                          projectiles.begin(),
+                          projectiles.end(),
+                          [&](const std::unique_ptr<Projectile>& p) {
+                              if (auto boom = dynamic_cast<BoomerangProjectile*>(p.get())) {
+                                  return boom->getExpired();
+                              } else {
+                                  return (p->distanceExceeded() || p->getHit());
+                              }
+                          }
+                          ), projectiles.end());
 
 
     //Camera
@@ -267,7 +279,11 @@ void Game::render()
         // If it's axe, draw it's sprite
         if (auto axe = dynamic_cast<AxeProjectile*>(p.get())) {
             window.draw(axe->getSprite());
-        } else {
+        } else if (auto boomerang = dynamic_cast<BoomerangProjectile*>(p.get())) {
+            window.draw(boomerang->getSprite());
+        }
+
+        else {
             // all other projectiles
             window.draw(p->getBody());
         }
