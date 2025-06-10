@@ -15,6 +15,7 @@ private:
     float angleSpeed; //angle/seconds
     Animation vortex;
     float phaseDifference;
+    Animation* currentAnimation = nullptr;
 
 public:
     EnemyVortex(const sf::Vector2f& startPos);
@@ -31,6 +32,11 @@ public:
     float getSpeed() const override;
     void setSpeed(float spd) override;
     void setPosition(sf::Vector2f pos) override;
+     void applyKnockback(const sf::Vector2f& direction, float strength) override;
+    void flashHit(float duration) override;
+   void updateKnockFlash(float dt) override;
+
+  void setColor(const sf::Color& color) override;
 };
 
 #endif // ENEMYVORTEX_H

@@ -67,5 +67,11 @@ sf::FloatRect Animation::getGlobalBounds() const {
     return sf::FloatRect();
 }
 
+void Animation::setColor(const sf::Color& color){
+    for(auto& frame : frames){
+        frame.setColor(color);
+    }
+}
+
 
 

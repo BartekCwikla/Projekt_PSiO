@@ -1,4 +1,4 @@
-#ifndef ENEMY_BAT_H
+ #ifndef ENEMY_BAT_H
 #define ENEMY_BAT_H
 #include "enemies.h"
 #include <SFML/Graphics.hpp>
@@ -15,6 +15,7 @@ private:
     float timePassed;
 
     Animation animation;
+    Animation* currentAnimation = nullptr;
     bool facingRight;
 
 
@@ -33,6 +34,12 @@ float getDamage() const override;
 float getSpeed() const override;
 void setSpeed(float spd) override;
 void setPosition(sf::Vector2f pos) override;
+
+void applyKnockback(const sf::Vector2f& direction, float strength) override;
+void flashHit(float duration) override;
+void updateKnockFlash(float dt) override;
+void setColor(const sf::Color& color) override;
+
 };
 
 #endif // ENEMY_BAT_H

@@ -44,6 +44,8 @@ void Enemy_Demon::update(sf::Time& dt, const sf::Vector2f& playerPos){
         animRight.setPosition(position.x, position.y);
         animRight.update(delta);
     }
+
+    updateKnockFlash(dt.asSeconds());
 }
 
 void Enemy_Demon::takeDamage(float dmg){
@@ -87,3 +89,39 @@ void Enemy_Demon::setPosition(sf::Vector2f pos){
     animLeft.setPosition(pos.x, pos.y);
     animRight.setPosition(pos.x, pos.y);
 }
+
+void Enemy_Demon::setColor(const sf::Color &color){
+    animLeft.setColor(color);
+    animRight.setColor(color);
+
+}
+void Enemy_Demon::applyKnockback(const sf::Vector2f& direction, float strength) {
+    knockbackVelocity = direction * strength;
+    knockTimer = 0.1f;
+}
+
+// flash on hit
+void Enemy_Demon::flashHit(float duration) {
+    isFlashActive = true;
+    FlashTimer = duration;
+    setColor(sf::Color::Red);
+}
+
+
+void Enemy_Demon::updateKnockFlash(float dt) {
+    if (knockTimer > 0.f) {
+        setPosition(getPosition()+knockbackVelocity*dt);
+        knockTimer -= dt;
+    }
+
+    if (isFlashActive) {
+        FlashTimer-=dt;
+        if (FlashTimer<=0.f) {
+            isFlashActive=false;
+            setColor(originalColor);
+        }
+    }
+}
+
+
+

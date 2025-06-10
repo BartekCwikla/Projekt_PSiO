@@ -50,15 +50,7 @@ private:
   //  Waves waves;
     int frameCounter;
     int lastWaveNumber = 0;
-
-
     int currentWave = 1;
-    int enemiesSpawnedInWave = 0;
-    int totalEnemiesThisWave = 0;
-    float waveDuration = 30.f; // czas trwania jednej fali
-
-
-    //Private method, which is responsible or wave managment
     void wavesLogic();
 
 

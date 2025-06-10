@@ -15,7 +15,7 @@ int main() {
         GameObj->showMenu();
 
         if (GameObj->getState() == GameState::PLAYING) {
-            GameObj->run(); // uruchom grę
+            GameObj->run();
         }
         else if (GameObj->getState() == GameState::EXIT) {
             break;
