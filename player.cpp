@@ -4,8 +4,11 @@
 #include "gun.h"
 #include "double_gun.h"
 #include "exploding_gun.h"
-
-#include <iostream>
+#include "piercing_gun.h"
+#include "quad_gun.h"
+#include "axe.h"
+#include "boomerang.h"
+#include "meteor_rain.h"
 
 
 Player::Player()
@@ -15,11 +18,23 @@ Player::Player()
     auto g = std::make_unique<DoubleGun>();
     auto g1 = std::make_unique<Gun>();
     auto g2 = std::make_unique<ExplodingGun>();
+    auto g3 = std::make_unique<PiercingGun>();
+    auto g4 = std::make_unique<Axe>();
+    auto g5 = std::make_unique<QuadGun>();
+    auto g6 = std::make_unique<Boomerang>();
 
     current_weapon = g.get();
     weapons.push_back(std::move(g));
     weapons.push_back(std::move(g1));
     weapons.push_back(std::move(g2));
+    weapons.push_back(std::move(g3));
+    weapons.push_back(std::move(g4));
+    weapons.push_back(std::move(g5));
+    weapons.push_back(std::move(g6));
+
+    auto spwr1 = std::make_unique<MeteorRain>(3.f, 100.f, 15);
+
+    super_powers.push_back(std::move(spwr1));
 
     direction = {0,0};
     last_direction = {1,0};
@@ -94,6 +109,11 @@ float Player::getExp() const {
 
 float Player::getExpNextLvl() const {
     return ExpNextLvl;
+}
+
+const std::vector<std::unique_ptr<SuperPower>>& Player::getSuperPowers() const
+{
+    return super_powers;
 }
 
 int Player::getLvl() const {

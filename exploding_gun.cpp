@@ -9,7 +9,7 @@ ExplodingGun::ExplodingGun(float initRange, float initDamage, float initCooldown
     setRange(initRange);
     damage     = initDamage;
     level      = 1;
-    setExplosionRange(150.0f);
+    setExplosionRange(300.0f);
 
     if (!texture.loadFromFile("./assets/weapons/exploding_gun.png")){
         std::cerr << "Unable to load double gun texture" << std::endl;

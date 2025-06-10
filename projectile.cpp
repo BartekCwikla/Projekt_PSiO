@@ -5,8 +5,29 @@
 
 
 
+bool Projectile::getIsPiercing() const
+{
+    return isPiercing;
+}
+
+void Projectile::setIsPiercing(bool newIsPiercing)
+{
+    isPiercing = newIsPiercing;
+}
+
+float Projectile::getSpeed() const
+{
+    return speed;
+}
+
+void Projectile::setSpeed(float newSpeed)
+{
+    speed = newSpeed;
+}
+
 Projectile::Projectile(sf::Vector2f dir, sf::Vector2f initial_position, float speed, float max_distance, float damage)
-    : direction(dir), position(initial_position), max_distance(max_distance), damage(damage) {
+
+    : direction(dir), position(initial_position), max_distance(max_distance), damage(damage), speed(speed) {
     //direction vector normalization in Projectile class constructor
     float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
     if (len != 0.f)
@@ -24,12 +45,7 @@ Projectile::Projectile(sf::Vector2f dir, sf::Vector2f initial_position, float sp
 
 
 
-void Projectile::move(sf::Time dt) {
-    position += velocity * dt.asSeconds();
-    float normalised_velocity = sqrt(pow(velocity.x, 2) + pow(velocity.y, 2));
-    distance_traveled += normalised_velocity * dt.asSeconds();
-    body.setPosition(position);
-}
+
 
 
 sf::CircleShape& Projectile::getBody() {
@@ -83,6 +99,11 @@ sf::Vector2f Projectile::getPosition() const
     return position;
 }
 
+void Projectile::setPosition(sf::Vector2f pos) {
+    position = pos;
+}
+
+
 bool Projectile::getIsExploding() const
 {
     return isExploding;
@@ -93,6 +114,10 @@ void Projectile::setIsExploding(bool newIsExploding)
     isExploding = newIsExploding;
 }
 
+
 sf::Vector2f Projectile::getDirection() const{
     return direction;
 }
+
+
+

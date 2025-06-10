@@ -3,9 +3,13 @@ CONFIG += console c++17
 CONFIG -= qt
 
 SOURCES += main.cpp \
+    axe.cpp \
+    axe_projectile.cpp \
     EnemyVortex.cpp \
     animation.cpp \
     audio.cpp \
+    boomerang.cpp \
+    boomerang_projectile.cpp \
     bullet.cpp \
     double_gun.cpp \
     enemies.cpp \
@@ -22,9 +26,14 @@ SOURCES += main.cpp \
     gun.cpp \
     hud.cpp \
     map.cpp \
+    meteor.cpp \
+    meteor_rain.cpp \
+    piercing_gun.cpp \
     player.cpp \
     projectile.cpp \
+    quad_gun.cpp \
     range.cpp \
+    superpower.cpp \
     weapon.cpp
 
 INCLUDEPATH += C:/SFML/include
@@ -37,9 +46,14 @@ LIBS += -LC:/SFML/lib \
     -lsfml-network
 
 HEADERS += \
+    ActionResult.h \
+    axe.h \
+    axe_projectile.h \
     EnemyVortex.h \
     animation.h \
     audio.h \
+    boomerang.h \
+    boomerang_projectile.h \
     bullet.h \
     double_gun.h \
     enemies.h \
@@ -56,7 +70,12 @@ HEADERS += \
     gun.h \
     hud.h \
     map.h \
+    meteor.h \
+    meteor_rain.h \
+    piercing_gun.h \
     player.h \
     projectile.h \
+    quad_gun.h \
     range.h \
+    superpower.h \
     weapon.h

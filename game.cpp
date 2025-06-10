@@ -7,6 +7,7 @@
 #include "EnemyVortex.h"'
 #include "enemyknight.h"
 #include "enemyskeleton.h"
+#include "boomerang_projectile.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <memory>
@@ -15,6 +16,7 @@
 #include <ctime>
 #include <cmath>
 #include "exploding_projectile.h"
+#include "axe_projectile.h"
 
 Game::Game() : window(sf::VideoMode(2400, 1500), "Window"),
     view(window.getDefaultView()),ghostsDelay(static_cast<float>(rand()%15) + 30.f),  player(), frameCounter(0)
@@ -89,6 +91,25 @@ void Game::update(sf::Time& dt) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) player.setDirectionX(+1);
 
 
+
+    // Weapon hotkeys
+    for (int i = 0; i < static_cast<int>(player.getWeapons().size()) && i < 9; ++i) {
+        sf::Keyboard::Key key = static_cast<sf::Keyboard::Key>(sf::Keyboard::Num1 + i);
+        if (sf::Keyboard::isKeyPressed(key)) {
+            player.selectWeapon(i);
+        }
+    }
+
+
+    // Superpower hotkeys
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+        ActionResult ar = player.getSuperPowers()[0]->activate(player.getPosition());
+
+        meteors.reserve(meteors.size() + ar.newMeteors.size());
+        for (auto& meteor : ar.newMeteors) {
+            meteors.push_back(std::move(meteor));
+        }
+    }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
         // if fire function is called before cooldown time it returns nullptr. This code is required to push only valid projectiles
         auto shots = player.fire();
@@ -101,9 +122,16 @@ void Game::update(sf::Time& dt) {
     }
 
     for (auto &p: projectiles) {
-        p->move(dt);
+        if (auto boomerang = dynamic_cast<BoomerangProjectile*>(p.get())) {
+            boomerang->move(dt, player.getPosition());
+        } else {
+            p->move(dt);
+        }
     }
 
+    for (auto& mPtr : meteors) {
+        mPtr->move(dt);
+    }
 
     player.move(sf::Vector2f(player.getDirection()) * dt.asSeconds() * player.getSpeed());
 
@@ -119,7 +147,10 @@ void Game::update(sf::Time& dt) {
                 e->applyKnockback(knockDirect, 600.f); // force of knockback
                 e->flashHit(0.15f); // time duration of white flash
                 e->takeDamage(p->getDamage());
-                p->setHit(true);
+                if (!(p->getIsPiercing())){
+                    p->setHit(true);
+                }
+
             }
         }
 
@@ -210,16 +241,50 @@ void Game::update(sf::Time& dt) {
             }
 
             // Mark projectile as hit so it can be erased later
-            p->setHit(true);
+            if (!(p->getIsPiercing())) {
+                p->setHit(true);
+            }
+
+        }
+    }
+
+
+    for (auto &meteor: meteors) {
+        if (meteor->getShouldExplode()) {
+            auto* exploding = dynamic_cast<Meteor*>(meteor.get());
+            float radius = exploding->getExplosionRadius();
+            sf::Vector2f explosionCenter = exploding->getPosition();
+            for (auto& e : enemies) {
+                float dist = std::hypot(explosionCenter.x - e->getPosition().x,
+                                        explosionCenter.y - e->getPosition().y);
+                if (dist <= radius) {
+                    e->takeDamage(exploding->getDamage());
+                }
+            }
         }
     }
 
     // Check whether the projectile has not exceeded it's maximum range or hit an enemy, if yes remove it
-    projectiles.erase(std::remove_if(projectiles.begin(), projectiles.end(), [](const std::unique_ptr<Projectile>& p)
-                                     {
-                                         return (p->distanceExceeded() || p->getHit());
-                                     }
-                                     ), projectiles.end());
+    projectiles.erase(std::remove_if(
+                          projectiles.begin(),
+                          projectiles.end(),
+                          [&](const std::unique_ptr<Projectile>& p) {
+                              if (auto boom = dynamic_cast<BoomerangProjectile*>(p.get())) {
+                                  return boom->getExpired();
+                              } else {
+                                  return (p->distanceExceeded() || p->getHit());
+                              }
+                          }
+                          ), projectiles.end());
+
+    meteors.erase(
+        std::remove_if(meteors.begin(), meteors.end(),
+                       [&](const std::unique_ptr<Meteor>& m){
+                           return m && m->getShouldExplode();
+                       }
+                       ),
+        meteors.end()
+        );
 
 
     //Camera
@@ -253,11 +318,109 @@ void Game::render()
     for (auto& orb : expOrbs)
         orb->render(window);
 
-    for (auto & p: projectiles) {
-        window.draw(p->getBody());
+    for (auto& mPtr : meteors) {
+        window.draw(mPtr->getSprite());
+    }
+
+    for (auto &p : projectiles) {
+        // If it's axe, draw it's sprite
+        if (auto axe = dynamic_cast<AxeProjectile*>(p.get())) {
+            window.draw(axe->getSprite());
+        } else if (auto boomerang = dynamic_cast<BoomerangProjectile*>(p.get())) {
+            window.draw(boomerang->getSprite());
+        }
+
+        else {
+            // all other projectiles
+            window.draw(p->getBody());
+        }
     }
     window.draw(player.getBody());
     window.setView(window.getDefaultView()); // HUD must be static and not move with the camera
+
+
+    float padding = 10.f;
+    float yOffset = window.getSize().y - padding;
+    int slot = 1;
+
+    for (auto& wptr : player.getWeapons()) {
+        bool isCurrent = (wptr.get() == player.getCurrentWeapon());
+
+        // text label
+        std::string label = std::to_string(slot++) + ". " + wptr->getName();
+        sf::Text weaponText(label, hud.getFont(), 24);
+        weaponText.setFillColor(isCurrent ? sf::Color::Yellow : sf::Color::White);
+
+        // position text
+        auto tb = weaponText.getLocalBounds();
+        float tx = window.getSize().x - tb.width - padding;
+        float ty = yOffset - tb.height;
+        weaponText.setPosition(tx, ty);
+
+        // sprite icon
+        sf::Sprite icon;
+        icon.setTexture(wptr->getTexture());
+        icon.setScale(1.5f, 1.5f);
+
+        auto ib = icon.getGlobalBounds();
+        // setting placement of an icon to be above the text
+        icon.setPosition(tx, ty - ib.height - 5.f);
+
+        // drawing a box around the current weapon
+        if (isCurrent) {
+            sf::RectangleShape highlight;
+            highlight.setSize({ ib.width + tb.width + 15.f, std::max(ib.height, tb.height) + 10.f });
+            highlight.setFillColor(sf::Color(255, 255, 0, 50));
+            highlight.setPosition(tx - ib.width - 10.f, ty - (ib.height + tb.height)/2.f);
+            window.draw(highlight);
+        }
+
+        // draw sprite and text
+        window.draw(icon);
+        window.draw(weaponText);
+
+
+        yOffset -= std::max(tb.height, ib.height) + padding;
+    }
+
+
+    float superPowerYOffset = window.getSize().y - padding;
+    int spSlot = 1;
+
+    for (auto& spw : player.getSuperPowers()) {
+        std::string label = std::to_string(spSlot++) + ". " + spw->getName();
+        sf::Text superText(label, hud.getFont(), 24);
+        superText.setFillColor(sf::Color::Cyan);
+
+        auto tb = superText.getLocalBounds();
+        float tx = padding;
+        float ty = superPowerYOffset - tb.height;
+        superText.setPosition(tx, ty);
+
+        // Sprite icon
+        sf::Sprite icon;
+        icon.setTexture(spw->getIcon());
+        icon.setScale(1.5f, 1.5f);
+
+        auto ib = icon.getGlobalBounds();
+        icon.setPosition(tx, ty - ib.height - 5.f);
+
+        // Optional: Draw highlight if this is an active superpower (if applicable)
+        // if (player.getCurrentSuperPower() == spw.get()) {
+        //     sf::RectangleShape highlight;
+        //     highlight.setSize({ ib.width + tb.width + 15.f, std::max(ib.height, tb.height) + 10.f });
+        //     highlight.setFillColor(sf::Color(0, 255, 255, 50));
+        //     highlight.setPosition(tx - 5.f, ty - (ib.height + tb.height)/2.f);
+        //     window.draw(highlight);
+        // }
+
+        window.draw(icon);
+        window.draw(superText);
+
+        superPowerYOffset -= std::max(tb.height, ib.height) + padding;
+    }
+
+
     hud.draw(window);
     window.display();
 }
