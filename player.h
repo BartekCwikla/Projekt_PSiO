@@ -6,6 +6,7 @@
 //#include "enemies.h"
 //#include "projectile.h"
 #include "superpower.h"
+#include "animation.h"
 
 class Weapon;
 class Projectile;
@@ -27,6 +28,9 @@ private:
     sf::Vector2f direction;
     sf::Vector2f last_direction;
 
+    Animation N, E, S, W, NE, NW, SE, SW;
+    Animation* currentAnimation = nullptr;
+
 
 public:
     Player();
@@ -40,6 +44,7 @@ public:
     const sf::RectangleShape& getBody() const;
     const sf::Vector2f getPosition() const;
     sf::FloatRect getGlobalBounds() const;
+    void playerAnimation(float dt);
 
     // This specifies a direction, that player should move in. There are eigth general directions, that can be achieved,
     // by pressing different combinations of 'WSAD'
@@ -48,6 +53,9 @@ public:
     void setDirectionY(float);
     void setDirectionX(float);
     void setLastDirection(sf::Vector2f);
+    void keyboardMovement();
+    void draw(sf::RenderWindow& window);
+
 
     //Getter methods for any float or integer variables:
     float getSpeed() const;

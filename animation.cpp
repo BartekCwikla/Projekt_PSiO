@@ -19,9 +19,12 @@ Animation::Animation(const std::string& folder, const std::string& filename, int
         if (!tex->loadFromFile(ss.str())){ //Trying to load the file that includes texture frame
             continue;
         }
+
         //Setting textures to sprite
         sf::Sprite sprite;
         sprite.setTexture(*tex);
+
+        sprite.setOrigin( sprite.getLocalBounds().width * 0.5f, sprite.getLocalBounds().height*0.5f);
 
         textures.push_back(tex);
         frames.push_back(sprite);
@@ -71,6 +74,11 @@ void Animation::setColor(const sf::Color& color){
     for(auto& frame : frames){
         frame.setColor(color);
     }
+}
+
+void Animation::setFrame(size_t frameInd){
+    if (!frames.empty() && frameInd < frames.size())
+        currentFrame=frameInd;
 }
 
 

@@ -10,10 +10,18 @@
 #include "boomerang.h"
 #include "meteor_rain.h"
 
-
+//("./assets/Bat", "Bat", 4, 0.14f, 1)
 Player::Player()
-    : body(sf::Vector2f(100, 100)), position(sf::Vector2f(1200, 750)),
-    speed(300.f), hp(100.f), maxHp(100.f), exp(0.f), ExpNextLvl(100.f)
+    : body(sf::Vector2f(70, 70)),
+    speed(300.f), hp(100.f), maxHp(100.f), exp(0.f), ExpNextLvl(100.f),
+    N("./assets/PlayerCharacter/N", "N", 14, 0.08f,1),
+    S("./assets/PlayerCharacter/S", "S", 14, 0.08f,1),
+    W("./assets/PlayerCharacter/W", "W", 14, 0.08f,1),
+    E("./assets/PlayerCharacter/E", "E", 14, 0.08f,1),
+    NE("./assets/PlayerCharacter/NE", "NE", 14, 0.08f,1),
+    NW("./assets/PlayerCharacter/NW", "NW", 14, 0.08f,1),
+    SE("./assets/PlayerCharacter/SE", "SE", 14, 0.08f,1),
+    SW("./assets/PlayerCharacter/SW", "SW", 14, 0.08f,1)
 {
     auto g = std::make_unique<DoubleGun>();
     auto g1 = std::make_unique<Gun>();
@@ -23,6 +31,8 @@ Player::Player()
     auto g5 = std::make_unique<QuadGun>();
     auto g6 = std::make_unique<Boomerang>();
 
+    body.setPosition(sf::Vector2f(1200, 750));
+
     current_weapon = g.get();
     weapons.push_back(std::move(g));
     weapons.push_back(std::move(g1));
@@ -31,6 +41,16 @@ Player::Player()
     weapons.push_back(std::move(g4));
     weapons.push_back(std::move(g5));
     weapons.push_back(std::move(g6));
+
+    N.setScale(2.f,2.f);
+    S.setScale(2.f, 2.f);
+    E.setScale(2.f,2.f);
+    S.setScale(2.f,2.f);
+    SE.setScale(2.f,2.f);
+    SW.setScale(2.f,2.f);
+    NW.setScale(2.f,2.f);
+    NE.setScale(2.f,2.f);
+    W.setScale(2.f,2.f);
 
     auto spwr1 = std::make_unique<MeteorRain>(3.f, 100.f, 15);
 
@@ -42,6 +62,43 @@ Player::Player()
 
 
 Player::~Player() = default;
+
+
+void Player::update(sf::Time dt){
+    playerAnimation(dt.asSeconds());
+}
+
+void Player::playerAnimation(float dt){
+    if (direction == sf::Vector2f(0.f, 0.f)) {
+        if (currentAnimation)
+            currentAnimation->setFrame(0);
+        return;
+    }
+
+
+    last_direction = direction;
+
+
+    if (direction.x == 0.f && direction.y < 0.f) currentAnimation = &N;
+    else if (direction.x > 0.f && direction.y < 0.f) currentAnimation = &NE;
+    else if (direction.x > 0.f && direction.y == 0.f) currentAnimation = &E;
+    else if (direction.x > 0.f && direction.y > 0.f) currentAnimation = &SE;
+    else if (direction.x == 0.f && direction.y > 0.f) currentAnimation = &S;
+    else if (direction.x < 0.f && direction.y > 0.f) currentAnimation = &SW;
+    else if (direction.x < 0.f && direction.y == 0.f) currentAnimation = &W;
+    else if (direction.x < 0.f && direction.y < 0.f) currentAnimation = &NW;
+
+    if (currentAnimation) {
+        currentAnimation->setPosition(getPosition().x, getPosition().y);
+        currentAnimation->update(dt);
+    }
+}
+
+void Player::draw(sf::RenderWindow &window){
+    if (currentAnimation) {
+        currentAnimation->draw(window);
+    }
+}
 
 const sf::RectangleShape& Player::getBody() const {
     return body;
@@ -83,6 +140,15 @@ void Player::setDirectionY(float y) {
 
 void Player::setLastDirection(sf::Vector2f dir) {
     last_direction = dir;
+}
+
+void Player::keyboardMovement(){
+    sf::Vector2f input(0.f, 0.f);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) input.y -= 1.f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) input.y += 1.f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) input.x -= 1.f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) input.x += 1.f;
+    setDirection(input);
 }
 
 
@@ -142,6 +208,12 @@ void Player::addMaxLevelTreshold(float amount) {
         if(lvl%10 == 0){ //When player reach levels: 10,20,30,40,50, his HP will increased;
             maxHp+=increasedHp;
             hp=maxHp;
+        }
+        else if(lvl++){
+            hp += 20.f;
+            if(hp >= maxHp)
+                hp=maxHp;
+
         }
 
     }

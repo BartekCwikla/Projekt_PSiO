@@ -13,6 +13,7 @@ private:
     float timer;
     size_t currentFrame;
 
+
 public:
     Animation(const std::string& folderPath, const std::string& baseName, int frameCount, float frameDuration, int startIndex=1);
     void update(float deltaTime);
@@ -20,6 +21,7 @@ public:
     void setPosition(float x, float y);
     void setScale(float x, float y);
     sf::FloatRect getGlobalBounds() const;
+    void setFrame(size_t frameInd);
     void setColor(const sf::Color& color);
 };
 

@@ -79,17 +79,11 @@ void Game::handleEvents() {
 
 
 void Game::update(sf::Time& dt) {
-    //Movement logic
 
-    // Defaulting direction to {0,0}
-    player.setDirection(sf::Vector2f(0.f,0.f));
+   // Added movement logic to Player class
+    player.keyboardMovement();
 
-    // Setting direction based on keyboard input
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) player.setDirectionY(-1);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) player.setDirectionY(+1);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) player.setDirectionX(-1);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) player.setDirectionX(+1);
-
+    player.update(dt);
 
 
     // Weapon hotkeys
@@ -335,7 +329,8 @@ void Game::render()
             window.draw(p->getBody());
         }
     }
-    window.draw(player.getBody());
+
+    player.draw(window);
     window.setView(window.getDefaultView()); // HUD must be static and not move with the camera
 
 
