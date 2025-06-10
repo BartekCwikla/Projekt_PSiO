@@ -5,7 +5,7 @@
 #include <iostream>
 
 EnemyVortex::EnemyVortex(const sf::Vector2f& startPos)
-    : Enemies(10.f, 80.f, 0.f, startPos), angle(0.f), angleSpeed(180.f),
+    : Enemies(50.f, 80.f, 0.f, startPos), angle(0.f), angleSpeed(180.f),
     vortex("assets/Vortex", "vortex", 4, 0.1f), phaseDifference(rand()%360)
 {
     setDamage(damage); //0 Damage
@@ -29,6 +29,7 @@ void EnemyVortex::update(sf::Time& dt, const sf::Vector2f& playerPos) {
 
     vortex.setPosition(position.x, position.y);
     vortex.update(time);
+    updateKnockFlash(dt.asSeconds());
 }
 
 sf::Vector2f EnemyVortex::recoilForce(const sf::Vector2f& playerPos) const{
@@ -91,4 +92,33 @@ float EnemyVortex::getSpeed() const{
 void EnemyVortex::setSpeed(float spd) {
     this->speed = spd;
 }
+void EnemyVortex::setColor(const sf::Color &color){
+   vortex.setColor(color);
 
+}
+
+void EnemyVortex::applyKnockback(const sf::Vector2f& direction, float strength) {
+    knockbackVelocity = direction * strength;
+    knockTimer = 0.1f;
+}
+
+void EnemyVortex::flashHit(float duration) {
+    isFlashActive = true;
+    FlashTimer = duration;
+    setColor(sf::Color::White);
+}
+
+void EnemyVortex::updateKnockFlash(float dt) {
+    if (knockTimer > 0.f) {
+        setPosition(getPosition() + knockbackVelocity * dt);
+        knockTimer -= dt;
+    }
+
+    if (isFlashActive) {
+        FlashTimer -= dt;
+        if (FlashTimer <= 0.f) {
+            isFlashActive = false;
+            setColor(originalColor);
+        }
+    }
+}

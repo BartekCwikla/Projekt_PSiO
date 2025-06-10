@@ -16,6 +16,8 @@ private:
     float max_distance;
     bool isExploding = false;
 
+
+
     // This variable tells whether this projectile has hit the enemy
     bool hit = false;
 
@@ -58,10 +60,14 @@ public:
 
     bool getIsExploding() const;
     void setIsExploding(bool newIsExploding);
+
+    sf::Vector2f getDirection() const;
+
     bool getIsPiercing() const;
     void setIsPiercing(bool newIsPiercing);
     float getSpeed() const;
     void setSpeed(float newSpeed);
+
 };
 
 

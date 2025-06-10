@@ -4,7 +4,7 @@
 #include "enemy_bat.h"
 #include "enemy_ghostgroup.h"
 #include "enemyboss.h"
-#include "enemyvortex.h"
+#include "EnemyVortex.h"'
 #include "enemyknight.h"
 #include "enemyskeleton.h"
 #include "boomerang_projectile.h"
@@ -41,8 +41,8 @@ bool Game::isWindowOpen() const{
 
 void Game::run() {
     window.setFramerateLimit(60);
-    if(!audio.playMusic("assets/Sounds/Music/MasterOfPuppets.wav", 70.f, true)) {
-        std::cerr << "Music don't play!" << std::endl;
+    if(!audio.playMusic("assets/Sounds/Music/MasterOfPuppets.wav", 30.f, true)) {
+        return;
     }
 
     sf::Clock clock;
@@ -140,6 +140,12 @@ void Game::update(sf::Time& dt) {
         const auto& pBody = p->getBody();
         for (auto &e: enemies) {
             if (pBody.getGlobalBounds().intersects(e->getBounds())) {
+                sf::Vector2f knockDirect = p->getDirection();
+                float len = std::sqrt(knockDirect.x*knockDirect.x + knockDirect.y*knockDirect.y);
+                if(len!= 0.f) knockDirect /=len; // Direction vector normalization
+                //Hit effects:
+                e->applyKnockback(knockDirect, 600.f); // force of knockback
+                e->flashHit(0.15f); // time duration of white flash
                 e->takeDamage(p->getDamage());
                 if (!(p->getIsPiercing())){
                     p->setHit(true);
@@ -502,7 +508,7 @@ void Game::wavesLogic() {
                 enemies.push_back(std::make_unique<EnemyKnight>(offset));
             }
             else if(currentWave == 5){
-                enemies.push_back(std::make_unique<EnemyVortex>(offset));
+                //enemies.push_back(std::make_unique<EnemyVortex>(offset));
                 enemies.push_back(std::make_unique<EnemyKnight>(offset));
                 enemies.push_back(std::make_unique<Enemy_Bat>(offset));
             }
@@ -555,13 +561,12 @@ void Game::wavesLogic() {
 void Game::showMenu() {
     sf::Texture menuBackgroundTexture;
     if (!menuBackgroundTexture.loadFromFile("assets/Background/Background.png")) {
-        std::cerr << "Nie udało się załadować tła menu\n";
+        return;
     }
     sf::Sprite menuBackground(menuBackgroundTexture);
 
     sf::Font font;
     if (!font.loadFromFile("assets/fonts/MinimalPixel.ttf")) {
-        std::cerr << "Nie udało się załadować czcionki\n";
         return;
     }
 
@@ -598,7 +603,6 @@ void Game::showMenu() {
 
         window.clear();
         window.draw(menuBackground);
-       // window.draw(title);
         window.draw(option1);
         window.draw(option2);
         window.display();

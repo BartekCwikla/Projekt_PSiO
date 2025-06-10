@@ -11,3 +11,4 @@ float Enemies::getDamage() const {
 void Enemies::setDamage(float dmg) {
     damage = dmg;
 }
+

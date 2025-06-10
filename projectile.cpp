@@ -26,7 +26,15 @@ void Projectile::setSpeed(float newSpeed)
 }
 
 Projectile::Projectile(sf::Vector2f dir, sf::Vector2f initial_position, float speed, float max_distance, float damage)
+
     : direction(dir), position(initial_position), max_distance(max_distance), damage(damage), speed(speed) {
+    //direction vector normalization in Projectile class constructor
+    float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+    if (len != 0.f)
+        direction = dir / len;
+    else
+        direction = sf::Vector2f(0.f, 0.f);
+
     body.setRadius(5.f);
     body.setOrigin(5.f, 5.f);
     body.setPosition(position);
@@ -105,5 +113,11 @@ void Projectile::setIsExploding(bool newIsExploding)
 {
     isExploding = newIsExploding;
 }
+
+
+sf::Vector2f Projectile::getDirection() const{
+    return direction;
+}
+
 
 

@@ -18,6 +18,7 @@ private:
     float timePassed;
     Animation animationLeft;
     Animation animationRight;
+    Animation* currentAnimation = nullptr;
     bool facingLeft;
 
 
@@ -36,6 +37,11 @@ public:
     void setSpeed(float spd) override;
     void setPosition(sf::Vector2f pos) override;
     void update(sf::Time& dt, const sf::Vector2f& playerPos) override;
+
+    void applyKnockback(const sf::Vector2f& direction, float strength) override;
+    void flashHit(float duration) override;
+    void updateKnockFlash(float dt) override;
+    void setColor(const sf::Color& color) override;
 };
 
 #endif // ENEMY_GHOSTGROUP_H

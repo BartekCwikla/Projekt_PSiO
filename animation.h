@@ -20,6 +20,7 @@ public:
     void setPosition(float x, float y);
     void setScale(float x, float y);
     sf::FloatRect getGlobalBounds() const;
+    void setColor(const sf::Color& color);
 };
 
 #endif // ANIMATION_H

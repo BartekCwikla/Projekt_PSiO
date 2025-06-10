@@ -13,7 +13,7 @@ std::map<std::string, sf::Sound> sounds; //
 public:
 Audio();
 
-bool playMusic(const std::string& filepath, float volume = 70.f, bool loop = true);
+bool playMusic(const std::string& filepath, float volume, bool loop = true);
 void stopMusic();
 
 bool loadSoundEffect(const std::string& name, const std::string& filepath);

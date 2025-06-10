@@ -9,6 +9,7 @@ class EnemyKnight : public Enemies {
 private:
 
     Animation animLeft, animRight;
+    Animation* currentAnimation = nullptr;
     bool facingLeft;
 public:
     EnemyKnight(const sf::Vector2f& startPos);
@@ -25,5 +26,10 @@ public:
     void setDamage(float dmg) override;
     void setPosition(sf::Vector2f pos) override;
     void update(sf::Time& dt, const sf::Vector2f& playerPos) override;
+
+    void applyKnockback(const sf::Vector2f& direction, float strength) override;
+    void flashHit(float duration) override;
+    void updateKnockFlash(float dt) override;
+    void setColor(const sf::Color& color) override;
 };
 #endif // ENEMYKNIGHT_H

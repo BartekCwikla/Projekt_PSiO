@@ -29,6 +29,8 @@ void Enemy_Bat::update(sf::Time& time, const sf::Vector2f&) {
 
     animation.setPosition(position.x, position.y);
     animation.update(dt);
+
+    updateKnockFlash(dt);
 }
 
 //Damage
@@ -70,3 +72,41 @@ void Enemy_Bat::setPosition(sf::Vector2f pos){
     position=pos;
     animation.setPosition(pos.x, pos.y);
 }
+
+
+
+void Enemy_Bat::setColor(const sf::Color &color){
+    animation.setColor(color);
+
+}
+
+void Enemy_Bat::applyKnockback(const sf::Vector2f& direction, float strength) {
+    knockbackVelocity = direction * strength;
+    knockTimer = 0.1f;
+}
+
+// flash on hit
+void Enemy_Bat::flashHit(float duration){
+    isFlashActive = true;
+    FlashTimer = duration;
+    setColor(sf::Color::Red);
+}
+
+
+void Enemy_Bat::updateKnockFlash(float dt) {
+    if (knockTimer > 0.f) {
+        setPosition(getPosition()+knockbackVelocity*dt);
+        knockTimer -= dt;
+    }
+
+    if (isFlashActive) {
+        FlashTimer-=dt;
+        if (FlashTimer<=0.f) {
+            isFlashActive=false;
+            setColor(originalColor);
+        }
+    }
+}
+
+
+
