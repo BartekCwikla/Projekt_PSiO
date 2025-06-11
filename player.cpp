@@ -10,7 +10,8 @@
 #include "boomerang.h"
 #include "meteor_rain.h"
 
-//("./assets/Bat", "Bat", 4, 0.14f, 1)
+
+
 Player::Player()
     : body(sf::Vector2f(70, 70)),
     speed(300.f), hp(100.f), maxHp(100.f), exp(0.f), ExpNextLvl(100.f),
@@ -21,7 +22,8 @@ Player::Player()
     NE("./assets/PlayerCharacter/NE", "NE", 14, 0.08f,1),
     NW("./assets/PlayerCharacter/NW", "NW", 14, 0.08f,1),
     SE("./assets/PlayerCharacter/SE", "SE", 14, 0.08f,1),
-    SW("./assets/PlayerCharacter/SW", "SW", 14, 0.08f,1)
+    SW("./assets/PlayerCharacter/SW", "SW", 14, 0.08f,1),
+    shooting_direction(sf::Vector2f(1,1))
 {
     auto g = std::make_unique<DoubleGun>();
     auto g1 = std::make_unique<Gun>();
@@ -87,6 +89,7 @@ void Player::playerAnimation(float dt){
     else if (direction.x < 0.f && direction.y > 0.f) currentAnimation = &SW;
     else if (direction.x < 0.f && direction.y == 0.f) currentAnimation = &W;
     else if (direction.x < 0.f && direction.y < 0.f) currentAnimation = &NW;
+    else if (direction.x == 0.f && direction.y == 0.f) currentAnimation = &NW;
 
     if (currentAnimation) {
         currentAnimation->setPosition(getPosition().x, getPosition().y);
@@ -152,13 +155,49 @@ void Player::keyboardMovement(){
 }
 
 
+// This function determines shooting direction and replaces the old approach using movement direction for shooting.
+// It takes delta time as a parameter to wait for a second possible input not to shoot immediately after one key is pressed,
+// as direction can be defined after pressing two.
+void Player::determineShootingDirection(sf::Time dt) {
+    sf::Vector2f currentInput(0.f, 0.f);
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) currentInput.y -= 1.f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) currentInput.y += 1.f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) currentInput.x -= 1.f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) currentInput.x += 1.f;
+
+    if (currentInput != sf::Vector2f(0.f, 0.f)) {
+        if (!shootInputActive) {
+            shootInputActive = true;
+            pendingShootDirection = currentInput;
+            shootDelayTimer.restart();
+        } else {
+            // Update pending direction with new input
+            pendingShootDirection = currentInput;
+        }
+    } else {
+        // if no keys pressed, reset
+        shootInputActive = false;
+    }
+
+    // Set shooting direction if buffer time elapsed
+    if (shootInputActive && shootDelayTimer.getElapsedTime().asSeconds() >= inputBufferTime) {
+        setShootingDirection(pendingShootDirection);
+        shootInputActive = false; // Reset for next input
+    } else {
+        // Don't shoot during buffer time
+        setShootingDirection(sf::Vector2f(0.f, 0.f));
+    }
+}
+
+
 float Player::getSpeed() const {
     return speed;
 }
 
 
 std::vector<std::unique_ptr<Projectile>> Player::fire() {
-    return current_weapon->fire(getPosition(), last_direction);
+    return current_weapon->fire(getPosition(), shooting_direction);
 }
 
 float Player::getHP() const {
@@ -233,3 +272,13 @@ void Player::selectWeapon(std::size_t index) {
     }
 }
 
+
+sf::Vector2f Player::getShootingDirection() const
+{
+    return shooting_direction;
+}
+
+void Player::setShootingDirection(const sf::Vector2f &newShootingDirection)
+{
+    shooting_direction = newShootingDirection;
+}

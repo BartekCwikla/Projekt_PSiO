@@ -82,6 +82,7 @@ void Game::update(sf::Time& dt) {
 
    // Added movement logic to Player class
     player.keyboardMovement();
+   player.determineShootingDirection(dt);
 
     player.update(dt);
 
@@ -104,7 +105,7 @@ void Game::update(sf::Time& dt) {
             meteors.push_back(std::move(meteor));
         }
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+    if (player.getShootingDirection() != sf::Vector2f(0.f,0.f)) {
         // if fire function is called before cooldown time it returns nullptr. This code is required to push only valid projectiles
         auto shots = player.fire();
         if (!shots.empty()) {
@@ -399,15 +400,6 @@ void Game::render()
 
         auto ib = icon.getGlobalBounds();
         icon.setPosition(tx, ty - ib.height - 5.f);
-
-        // Optional: Draw highlight if this is an active superpower (if applicable)
-        // if (player.getCurrentSuperPower() == spw.get()) {
-        //     sf::RectangleShape highlight;
-        //     highlight.setSize({ ib.width + tb.width + 15.f, std::max(ib.height, tb.height) + 10.f });
-        //     highlight.setFillColor(sf::Color(0, 255, 255, 50));
-        //     highlight.setPosition(tx - 5.f, ty - (ib.height + tb.height)/2.f);
-        //     window.draw(highlight);
-        // }
 
         window.draw(icon);
         window.draw(superText);
