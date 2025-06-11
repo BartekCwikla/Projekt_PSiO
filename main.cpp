@@ -10,6 +10,7 @@ int main() {
 
     Game* GameObj = new Game();
 
+
     while (GameObj->isWindowOpen()) {
         GameObj->setState(GameState::MENU);
         GameObj->showMenu();
@@ -23,5 +24,6 @@ int main() {
     }
 
     delete GameObj;
+
     return 0;
 }

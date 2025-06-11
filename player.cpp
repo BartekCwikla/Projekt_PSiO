@@ -21,7 +21,8 @@ Player::Player()
     NE("./assets/PlayerCharacter/NE", "NE", 14, 0.08f,1),
     NW("./assets/PlayerCharacter/NW", "NW", 14, 0.08f,1),
     SE("./assets/PlayerCharacter/SE", "SE", 14, 0.08f,1),
-    SW("./assets/PlayerCharacter/SW", "SW", 14, 0.08f,1)
+    SW("./assets/PlayerCharacter/SW", "SW", 14, 0.08f,1),
+    isalive(true)
 {
     auto g = std::make_unique<DoubleGun>();
     auto g1 = std::make_unique<Gun>();
@@ -233,3 +234,13 @@ void Player::selectWeapon(std::size_t index) {
     }
 }
 
+bool Player::isAlive(){
+    if(hp > 0 && hp <= maxHp)
+        isalive = true;
+    else if(hp<=0)
+        isalive = false;
+}
+
+void Player::GameOverStopMove(){
+    this->direction = sf::Vector2f{0.f,0.f};
+}

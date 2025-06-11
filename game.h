@@ -18,7 +18,9 @@
 enum class GameState {
     MENU,
     PLAYING,
-    EXIT
+    EXIT,
+    GAMEOVER,
+    WIN
 };
 
 // Main class
@@ -47,6 +49,8 @@ private:
     std::vector<std::unique_ptr<Meteor>> meteors;
     HUD hud;
     Map map;
+
+    bool gameOver = false;
 ;
   //  Waves waves;
     int frameCounter;
@@ -72,6 +76,8 @@ public:
     GameState getState() const;
     void setState(GameState state);
     bool isWindowOpen() const;
+    void GameOver();
+    void resetGame();
 
 
 

@@ -30,6 +30,7 @@ private:
 
     Animation N, E, S, W, NE, NW, SE, SW;
     Animation* currentAnimation = nullptr;
+    bool isalive;
 
 
 public:
@@ -83,6 +84,9 @@ public:
     const std::vector<std::unique_ptr<Weapon>>& getWeapons() const;
 
     void selectWeapon(std::size_t index);
+
+    bool isAlive();
+    void GameOverStopMove();
 };
 
 #endif // PLAYER_H
