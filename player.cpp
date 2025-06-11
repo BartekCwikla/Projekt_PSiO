@@ -12,6 +12,7 @@
 
 
 
+
 Player::Player()
     : body(sf::Vector2f(70, 70)),
     speed(300.f), hp(100.f), maxHp(100.f), exp(0.f), ExpNextLvl(100.f),
@@ -35,14 +36,15 @@ Player::Player()
 
     body.setPosition(sf::Vector2f(1200, 750));
 
-    current_weapon = g.get();
-    weapons.push_back(std::move(g));
+    current_weapon = g1.get();
     weapons.push_back(std::move(g1));
-    weapons.push_back(std::move(g2));
-    weapons.push_back(std::move(g3));
-    weapons.push_back(std::move(g4));
-    weapons.push_back(std::move(g5));
-    weapons.push_back(std::move(g6));
+    available_weapons.push_back(std::move(g));
+    available_weapons.push_back(std::move(g1));
+    available_weapons.push_back(std::move(g2));
+    available_weapons.push_back(std::move(g3));
+    available_weapons.push_back(std::move(g4));
+    available_weapons.push_back(std::move(g5));
+    available_weapons.push_back(std::move(g6));
 
     N.setScale(2.f,2.f);
     S.setScale(2.f, 2.f);
@@ -266,6 +268,16 @@ const std::vector<std::unique_ptr<Weapon>>& Player::getWeapons() const {
     return weapons;
 }
 
+// Add weapon for a player and make it active immediately
+void Player::addWeapon(std::unique_ptr<Weapon> w) {
+    weapons.push_back(std::move(w));
+    current_weapon = weapons.back().get();
+}
+
+void Player::addSuperPower(std::unique_ptr<SuperPower> sp) {
+    super_powers.push_back(std::move(sp));
+}
+
 void Player::selectWeapon(std::size_t index) {
     if (index < weapons.size()) {
         current_weapon = weapons[index].get();
@@ -282,3 +294,5 @@ void Player::setShootingDirection(const sf::Vector2f &newShootingDirection)
 {
     shooting_direction = newShootingDirection;
 }
+
+
