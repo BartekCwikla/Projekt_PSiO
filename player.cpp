@@ -24,7 +24,11 @@ Player::Player()
     NW("./assets/PlayerCharacter/NW", "NW", 14, 0.08f,1),
     SE("./assets/PlayerCharacter/SE", "SE", 14, 0.08f,1),
     SW("./assets/PlayerCharacter/SW", "SW", 14, 0.08f,1),
+
+    isalive(true)
+
     shooting_direction(sf::Vector2f(1,1))
+
 {
     auto g = std::make_unique<DoubleGun>();
     auto g1 = std::make_unique<Gun>();
@@ -285,6 +289,18 @@ void Player::selectWeapon(std::size_t index) {
 }
 
 
+bool Player::isAlive(){
+    if(hp > 0 && hp <= maxHp)
+        isalive = true;
+    else if(hp<=0)
+        isalive = false;
+}
+
+void Player::GameOverStopMove(){
+    this->direction = sf::Vector2f{0.f,0.f};
+}
+
+
 sf::Vector2f Player::getShootingDirection() const
 {
     return shooting_direction;
@@ -294,5 +310,6 @@ void Player::setShootingDirection(const sf::Vector2f &newShootingDirection)
 {
     shooting_direction = newShootingDirection;
 }
+
 
 

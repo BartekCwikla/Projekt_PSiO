@@ -39,24 +39,34 @@ bool Game::isWindowOpen() const{
     return window.isOpen();
 }
 
-void Game::run() {
+void Game::run(){
     window.setFramerateLimit(60);
-    if(!audio.playMusic("assets/Sounds/Music/MasterOfPuppets.wav", 30.f, true)) {
+    if(!audio.playMusic("assets/Sounds/Music/MasterOfPuppets.wav", 20.f, true)) {
         return;
     }
 
     clock.restart();
 
-    while(window.isOpen()) {
-
+    while(window.isOpen()){
         sf::Time dt = clock.restart();
 
         handleEvents();
+
+        if(currentState == GameState::PLAYING)
+            update(dt);
+
+        render();
+
+
+        if(currentState == GameState::EXIT)
+            window.close();
+
 
         if (!isPaused) {
             update(dt);
             render();
         }
+
 
     }
 }
@@ -70,9 +80,21 @@ void Game::handleShot(std::vector<std::unique_ptr<Projectile>> v) {
 
 void Game::handleEvents() {
     sf::Event event;
-    while (window.pollEvent(event)) {
-        if(event.type == sf::Event::Closed)
+
+
+    while (window.pollEvent(event)){
+        if (event.type == sf::Event::Closed)
             window.close();
+
+        if (currentState == GameState::GAMEOVER){
+            if (event.type == sf::Event::KeyPressed){
+
+                    currentState = GameState::EXIT;
+
+            }
+        }
+
+
     }
     //Only for testing
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
@@ -84,6 +106,8 @@ void Game::handleEvents() {
 
 
 void Game::update(sf::Time& dt) {
+
+
 
     int lvl = player.getLvl();
     if (lvl % 4 == 0 && lvl != last_level_weapon) {
@@ -110,7 +134,7 @@ void Game::update(sf::Time& dt) {
     player.keyboardMovement();
    player.determineShootingDirection(dt);
 
-    player.update(dt);
+
 
 
     // Weapon hotkeys
@@ -120,6 +144,19 @@ void Game::update(sf::Time& dt) {
             player.selectWeapon(i);
         }
     }
+    if (player.getHP()<= 0.f && currentState != GameState::GAMEOVER){
+        currentState = GameState::GAMEOVER;
+         gameOver = false;
+        return;
+    }
+
+    if(currentState == GameState::PLAYING){
+        player.keyboardMovement();
+        player.update(dt);
+        player.move(sf::Vector2f(player.getDirection()) * dt.asSeconds() * player.getSpeed());
+    }
+
+
 
 
     // Superpower hotkeys
@@ -154,7 +191,7 @@ void Game::update(sf::Time& dt) {
         mPtr->move(dt);
     }
 
-    player.move(sf::Vector2f(player.getDirection()) * dt.asSeconds() * player.getSpeed());
+
 
     // Damage enemies if the bullet intersects them, change hit flag to true if yes
     for (auto &p: projectiles) {
@@ -327,6 +364,15 @@ void Game::update(sf::Time& dt) {
 
 void Game::render()
 {
+    if (currentState == GameState::GAMEOVER) {
+        if (!gameOver) {
+            window.clear(sf::Color::Black);
+            GameOver();
+            window.display();
+            gameOver= true;
+        }
+        return;
+    }
     window.clear(sf::Color::Black);
 
 
@@ -626,6 +672,49 @@ void Game::showMenu() {
 
 
 
+
+void Game::GameOver(){
+    static sf::Texture gameOverTexture;
+    static sf::Sprite gameOverSprite;
+    static sf::Font font;
+    static sf::Text text;
+    static bool initialized = false;
+
+    //Game Over background loadding and font loading
+    if (!initialized) {
+        if (!gameOverTexture.loadFromFile("assets/Background/GameOver.png")) {
+            return;
+        }
+        gameOverSprite.setTexture(gameOverTexture);
+        gameOverSprite.setScale(static_cast<float>(window.getSize().x)/gameOverTexture.getSize().x,static_cast<float>(window.getSize().y) / gameOverTexture.getSize().y);
+
+        if (!font.loadFromFile("assets/fonts/MinimalPixel.ttf")) {
+            return;
+        }
+
+        text.setFont(font);
+        text.setString("Get away...");
+        text.setCharacterSize(48);
+        text.setFillColor(sf::Color::Red);
+        sf::FloatRect bounds = text.getLocalBounds();
+        text.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+        text.setPosition(window.getSize().x / 2.f, window.getSize().y * 0.8f);
+
+        initialized = true;
+    }
+
+    //Little darkening
+    sf::RectangleShape overlay(sf::Vector2f(window.getSize()));
+    overlay.setFillColor(sf::Color(0, 0, 0, 150));
+
+
+    window.draw(gameOverSprite);
+    window.draw(overlay);
+    window.draw(text);
+
+}
+
+
 // This function is not being used right now, but in the future it can be adjusted to work. Right now it gives duplicate weapons. Fix required
 void Game::showWeaponChoiceScreen() {
     isPaused = true;
@@ -728,5 +817,6 @@ void Game::showWeaponChoiceScreen() {
         window.display();
     }
 }
+
 
 

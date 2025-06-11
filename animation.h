@@ -13,7 +13,6 @@ private:
     float timer;
     size_t currentFrame;
 
-
 public:
     Animation(const std::string& folderPath, const std::string& baseName, int frameCount, float frameDuration, int startIndex=1);
     void update(float deltaTime);
