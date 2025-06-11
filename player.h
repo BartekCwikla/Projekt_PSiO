@@ -21,6 +21,7 @@ private:
     float exp=100.f, ExpNextLvl=100.f;
     float speed;
     std::vector<std::unique_ptr<Weapon>> weapons;
+    std::vector<std::unique_ptr<Weapon>> available_weapons;
     Weapon* current_weapon = nullptr;
     std::vector<std::unique_ptr<SuperPower>> super_powers;
     sf::Clock attackClock;

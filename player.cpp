@@ -12,6 +12,7 @@
 
 
 
+
 Player::Player()
     : body(sf::Vector2f(70, 70)),
     speed(300.f), hp(100.f), maxHp(100.f), exp(0.f), ExpNextLvl(100.f),
@@ -25,24 +26,25 @@ Player::Player()
     SW("./assets/PlayerCharacter/SW", "SW", 14, 0.08f,1),
     shooting_direction(sf::Vector2f(1,1))
 {
-    // auto g = std::make_unique<DoubleGun>();
+    auto g = std::make_unique<DoubleGun>();
     auto g1 = std::make_unique<Gun>();
-    // auto g2 = std::make_unique<ExplodingGun>();
-    // auto g3 = std::make_unique<PiercingGun>();
-    // auto g4 = std::make_unique<Axe>();
-    // auto g5 = std::make_unique<QuadGun>();
-    // auto g6 = std::make_unique<Boomerang>();
+    auto g2 = std::make_unique<ExplodingGun>();
+    auto g3 = std::make_unique<PiercingGun>();
+    auto g4 = std::make_unique<Axe>();
+    auto g5 = std::make_unique<QuadGun>();
+    auto g6 = std::make_unique<Boomerang>();
 
     body.setPosition(sf::Vector2f(1200, 750));
 
     current_weapon = g1.get();
     weapons.push_back(std::move(g1));
-    // weapons.push_back(std::move(g1));
-    // weapons.push_back(std::move(g2));
-    // weapons.push_back(std::move(g3));
-    // weapons.push_back(std::move(g4));
-    // weapons.push_back(std::move(g5));
-    // weapons.push_back(std::move(g6));
+    available_weapons.push_back(std::move(g));
+    available_weapons.push_back(std::move(g1));
+    available_weapons.push_back(std::move(g2));
+    available_weapons.push_back(std::move(g3));
+    available_weapons.push_back(std::move(g4));
+    available_weapons.push_back(std::move(g5));
+    available_weapons.push_back(std::move(g6));
 
     N.setScale(2.f,2.f);
     S.setScale(2.f, 2.f);
@@ -292,3 +294,5 @@ void Player::setShootingDirection(const sf::Vector2f &newShootingDirection)
 {
     shooting_direction = newShootingDirection;
 }
+
+

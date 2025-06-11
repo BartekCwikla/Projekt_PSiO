@@ -19,7 +19,7 @@
 #include "axe_projectile.h"
 
 Game::Game() : window(sf::VideoMode(2400, 1500), "Window"),
-    view(window.getDefaultView()),ghostsDelay(static_cast<float>(rand()%15) + 30.f),  player(), frameCounter(0), isPaused(false)
+    view(window.getDefaultView()),ghostsDelay(static_cast<float>(rand()%15) + 30.f),  player(), isPaused(false), frameCounter(0), availableWeapons({"DoubleGun", "QuadGun", "ExplodingGun", "Axe", "Boomerang", "PiercingGun"})
 {
     map.load("./assets/map/ground_stone.png", 256, 64, 64); //Map size is 16 384 x 16 384 pixels
     view.setSize(2400,1500);
@@ -85,12 +85,26 @@ void Game::handleEvents() {
 
 void Game::update(sf::Time& dt) {
 
-    if ((player.getLvl() % 4 == 0) && (player.getLvl() != last_level_weapon)) {
-        last_level_weapon = player.getLvl();
-        showWeaponChoiceScreen();
-        return;
-    }
+    int lvl = player.getLvl();
+    if (lvl % 4 == 0 && lvl != last_level_weapon) {
+        last_level_weapon = lvl;
 
+        // Give player a new weapon every four levels (This is a workaround. Weapon choosing screen went beyond earlier predicted scope. Might be implemented in the future)
+        switch (lvl) {
+        case 4:
+            player.addWeapon(std::make_unique<Axe>());         break;
+        case 8:
+            player.addWeapon(std::make_unique<PiercingGun>()); break;
+        case 12:
+            player.addWeapon(std::make_unique<DoubleGun>());   break;
+        case 16:
+            player.addWeapon(std::make_unique<ExplodingGun>()); break;
+        case 20:
+            player.addWeapon(std::make_unique<QuadGun>());     break;
+        default:
+          break;
+        }
+    }
 
    // Added movement logic to Player class
     player.keyboardMovement();
@@ -611,34 +625,52 @@ void Game::showMenu() {
 }
 
 
+
+// This function is not being used right now, but in the future it can be adjusted to work. Right now it gives duplicate weapons. Fix required
 void Game::showWeaponChoiceScreen() {
     isPaused = true;
 
-    // Does the player already own a weapon named "n". Comparison is being done between weapon names.
-    auto alreadyHas = [&](const std::string& n){
-        for (auto& w : player.getWeapons())
-            if (w->getName() == n)
-                return true;
-        return false;
-    };
-    // This function is required to pick a weapon a player doesn't have
-    auto pickNew = [&](){
-        std::unique_ptr<Weapon> w;
-        do {
-            w = WeaponFactory::createRandom();
-        } while (alreadyHas(w->getName()));
-        return w;
-    };
+    // Get list of all available weapons
+    std::vector<std::string> allWeapons = {"DoubleGun", "QuadGun", "ExplodingGun", "Axe", "Boomerang", "PiercingGun"};
 
+    // list of weapons player doesn't have yet
+    std::vector<std::string> missingWeapons;
+    for (const auto& weaponName : allWeapons) {
+        bool hasWeapon = false;
+        for (const auto& ownedWeapon : player.getWeapons()) {
+            if (ownedWeapon->getName() == weaponName) {
+                hasWeapon = true;
+                break;
+            }
+        }
+        if (!hasWeapon) {
+            missingWeapons.push_back(weaponName);
+        }
+    }
 
+    // If no missing weapons, return
+    if (missingWeapons.empty()) {
+        isPaused = false;
+        return;
+    }
 
-    // Get two distinct new weapons
-    auto w1 = pickNew();
-    std::unique_ptr<Weapon> w2;
+    // If only one missing weapon, give it automatically
+    if (missingWeapons.size() == 1) {
+        player.addWeapon(WeaponFactory::createByName(missingWeapons[0]));
+        isPaused = false;
+        return;
+    }
+
+    // Select two distinct random weapons from missing weapons
+    std::srand(std::time(nullptr));
+    int idx1 = std::rand() % missingWeapons.size();
+    int idx2;
     do {
-        w2 = pickNew();
-    } while (w2->getName() == w1->getName());
+        idx2 = std::rand() % missingWeapons.size();
+    } while (idx2 == idx1);
 
+    auto w1 = WeaponFactory::createByName(missingWeapons[idx1]);
+    auto w2 = WeaponFactory::createByName(missingWeapons[idx2]);
 
     sf::Sprite s1{ w1->getTexture() };
     sf::Sprite s2{ w2->getTexture() };
@@ -696,7 +728,5 @@ void Game::showWeaponChoiceScreen() {
         window.display();
     }
 }
-
-
 
 

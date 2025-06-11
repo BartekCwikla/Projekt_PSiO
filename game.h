@@ -52,7 +52,7 @@ private:
     int last_level_weapon = 0;
     bool isPaused = false;
     sf::Clock clock;
-
+    std::vector<std::string> availableWeapons;
 
 ;
   //  Waves waves;
