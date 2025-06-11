@@ -19,7 +19,7 @@
 #include "axe_projectile.h"
 
 Game::Game() : window(sf::VideoMode(2400, 1500), "Window"),
-    view(window.getDefaultView()),ghostsDelay(static_cast<float>(rand()%15) + 30.f),  player(), frameCounter(0)
+    view(window.getDefaultView()),ghostsDelay(static_cast<float>(rand()%15) + 30.f),  player(), isPaused(false), frameCounter(0), availableWeapons({"DoubleGun", "QuadGun", "ExplodingGun", "Axe", "Boomerang", "PiercingGun"})
 {
     map.load("./assets/map/ground_stone.png", 256, 64, 64); //Map size is 16 384 x 16 384 pixels
     view.setSize(2400,1500);
@@ -45,11 +45,13 @@ void Game::run(){
         return;
     }
 
-    sf::Clock clock;
+    clock.restart();
 
     while(window.isOpen()){
         sf::Time dt = clock.restart();
+
         handleEvents();
+
         if(currentState == GameState::PLAYING)
             update(dt);
 
@@ -58,6 +60,14 @@ void Game::run(){
 
         if(currentState == GameState::EXIT)
             window.close();
+
+
+        if (!isPaused) {
+            update(dt);
+            render();
+        }
+
+
     }
 }
 
@@ -99,6 +109,33 @@ void Game::update(sf::Time& dt) {
 
 
 
+    int lvl = player.getLvl();
+    if (lvl % 4 == 0 && lvl != last_level_weapon) {
+        last_level_weapon = lvl;
+
+        // Give player a new weapon every four levels (This is a workaround. Weapon choosing screen went beyond earlier predicted scope. Might be implemented in the future)
+        switch (lvl) {
+        case 4:
+            player.addWeapon(std::make_unique<Axe>());         break;
+        case 8:
+            player.addWeapon(std::make_unique<PiercingGun>()); break;
+        case 12:
+            player.addWeapon(std::make_unique<DoubleGun>());   break;
+        case 16:
+            player.addWeapon(std::make_unique<ExplodingGun>()); break;
+        case 20:
+            player.addWeapon(std::make_unique<QuadGun>());     break;
+        default:
+          break;
+        }
+    }
+
+   // Added movement logic to Player class
+    player.keyboardMovement();
+   player.determineShootingDirection(dt);
+
+
+
 
     // Weapon hotkeys
     for (int i = 0; i < static_cast<int>(player.getWeapons().size()) && i < 9; ++i) {
@@ -131,7 +168,7 @@ void Game::update(sf::Time& dt) {
             meteors.push_back(std::move(meteor));
         }
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+    if (player.getShootingDirection() != sf::Vector2f(0.f,0.f)) {
         // if fire function is called before cooldown time it returns nullptr. This code is required to push only valid projectiles
         auto shots = player.fire();
         if (!shots.empty()) {
@@ -436,15 +473,6 @@ void Game::render()
         auto ib = icon.getGlobalBounds();
         icon.setPosition(tx, ty - ib.height - 5.f);
 
-        // Optional: Draw highlight if this is an active superpower (if applicable)
-        // if (player.getCurrentSuperPower() == spw.get()) {
-        //     sf::RectangleShape highlight;
-        //     highlight.setSize({ ib.width + tb.width + 15.f, std::max(ib.height, tb.height) + 10.f });
-        //     highlight.setFillColor(sf::Color(0, 255, 255, 50));
-        //     highlight.setPosition(tx - 5.f, ty - (ib.height + tb.height)/2.f);
-        //     window.draw(highlight);
-        // }
-
         window.draw(icon);
         window.draw(superText);
 
@@ -625,8 +653,10 @@ void Game::showMenu() {
                 window.close();
 
             if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == sf::Keyboard::Num1)
+                if (event.key.code == sf::Keyboard::Num1){
+                    isPaused = false;
                     currentState = GameState::PLAYING;
+                }
                 else if (event.key.code == sf::Keyboard::Num2)
                     currentState = GameState::EXIT;
             }
@@ -639,6 +669,7 @@ void Game::showMenu() {
         window.display();
     }
 }
+
 
 
 
@@ -682,4 +713,110 @@ void Game::GameOver(){
     window.draw(text);
 
 }
+
+
+// This function is not being used right now, but in the future it can be adjusted to work. Right now it gives duplicate weapons. Fix required
+void Game::showWeaponChoiceScreen() {
+    isPaused = true;
+
+    // Get list of all available weapons
+    std::vector<std::string> allWeapons = {"DoubleGun", "QuadGun", "ExplodingGun", "Axe", "Boomerang", "PiercingGun"};
+
+    // list of weapons player doesn't have yet
+    std::vector<std::string> missingWeapons;
+    for (const auto& weaponName : allWeapons) {
+        bool hasWeapon = false;
+        for (const auto& ownedWeapon : player.getWeapons()) {
+            if (ownedWeapon->getName() == weaponName) {
+                hasWeapon = true;
+                break;
+            }
+        }
+        if (!hasWeapon) {
+            missingWeapons.push_back(weaponName);
+        }
+    }
+
+    // If no missing weapons, return
+    if (missingWeapons.empty()) {
+        isPaused = false;
+        return;
+    }
+
+    // If only one missing weapon, give it automatically
+    if (missingWeapons.size() == 1) {
+        player.addWeapon(WeaponFactory::createByName(missingWeapons[0]));
+        isPaused = false;
+        return;
+    }
+
+    // Select two distinct random weapons from missing weapons
+    std::srand(std::time(nullptr));
+    int idx1 = std::rand() % missingWeapons.size();
+    int idx2;
+    do {
+        idx2 = std::rand() % missingWeapons.size();
+    } while (idx2 == idx1);
+
+    auto w1 = WeaponFactory::createByName(missingWeapons[idx1]);
+    auto w2 = WeaponFactory::createByName(missingWeapons[idx2]);
+
+    sf::Sprite s1{ w1->getTexture() };
+    sf::Sprite s2{ w2->getTexture() };
+    s1.setScale(4.f, 4.f);
+    s2.setScale(4.f, 4.f);
+    float centerX = window.getSize().x / 2.f;
+    float iconY   = window.getSize().y * 0.35f;
+    s1.setPosition(centerX - s1.getGlobalBounds().width - 30.f, iconY);
+    s2.setPosition(centerX +  30.f,                      iconY);
+
+    const sf::Font& font = hud.getFont();
+    sf::Text header("Choose Your New Weapon", font, 48);
+    header.setFillColor(sf::Color::White);
+    header.setPosition(
+        (window.getSize().x - header.getLocalBounds().width) / 2.f,
+        window.getSize().y * 0.15f
+        );
+
+    sf::Text t1("1", font, 48), t2("2", font, 48);
+    t1.setPosition(
+        s1.getPosition().x + s1.getGlobalBounds().width/2.f - 12.f,
+        iconY + s1.getGlobalBounds().height + 10.f
+        );
+    t2.setPosition(
+        s2.getPosition().x + s2.getGlobalBounds().width/2.f - 12.f,
+        iconY + s2.getGlobalBounds().height + 10.f
+        );
+
+    // Checking for an input (1/2)
+    while (window.isOpen()) {
+        sf::Event ev;
+        while (window.pollEvent(ev)) {
+            if (ev.type == sf::Event::Closed) window.close();
+            if (ev.type == sf::Event::KeyPressed) {
+                if (ev.key.code == sf::Keyboard::Num1) {
+                    player.addWeapon(std::move(w1));
+                    isPaused = false;
+                    clock.restart();
+                    return;
+                }
+                if (ev.key.code == sf::Keyboard::Num2) {
+                    player.addWeapon(std::move(w2));
+                    isPaused = false;
+                    clock.restart();
+                    return;
+                }
+            }
+        }
+        window.clear(sf::Color(0,0,0,180));
+        window.draw(header);
+        window.draw(s1);
+        window.draw(s2);
+        window.draw(t1);
+        window.draw(t2);
+        window.display();
+    }
+}
+
+
 

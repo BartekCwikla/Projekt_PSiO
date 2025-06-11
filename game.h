@@ -13,6 +13,8 @@
 #include "meteor.h"
 #include "map.h"
 #include "exporb.h"
+#include "weapon_factory.h"
+#include "superpower_factory.h"
 
 
 enum class GameState {
@@ -50,7 +52,15 @@ private:
     HUD hud;
     Map map;
 
+
     bool gameOver = false;
+
+    int last_level_weapon = 0;
+    bool isPaused = false;
+    sf::Clock clock;
+    std::vector<std::string> availableWeapons;
+
+
 ;
   //  Waves waves;
     int frameCounter;
@@ -79,7 +89,7 @@ public:
     void GameOver();
     void resetGame();
 
-
+    void showWeaponChoiceScreen();
 
 
 };
