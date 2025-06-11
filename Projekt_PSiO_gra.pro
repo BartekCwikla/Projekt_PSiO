@@ -34,7 +34,9 @@ SOURCES += main.cpp \
     quad_gun.cpp \
     range.cpp \
     superpower.cpp \
-    weapon.cpp
+    superpower_factory.cpp \
+    weapon.cpp \
+    weapon_factory.cpp
 
 INCLUDEPATH += C:/SFML/include
 
@@ -78,4 +80,6 @@ HEADERS += \
     quad_gun.h \
     range.h \
     superpower.h \
-    weapon.h
+    superpower_factory.h \
+    weapon.h \
+    weapon_factory.h

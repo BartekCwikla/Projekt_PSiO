@@ -7,6 +7,7 @@
 //#include "projectile.h"
 #include "superpower.h"
 #include "animation.h"
+#include "weapon_factory.h"
 
 class Weapon;
 class Projectile;
@@ -77,6 +78,7 @@ public:
     float getExpNextLvl() const;
 
     const std::vector<std::unique_ptr<SuperPower>>& getSuperPowers() const;
+    void addSuperPower(std::unique_ptr<SuperPower> s);
 
     //addExp method changes the ExpNextLvl variable after reaching new level
     void addMaxLevelTreshold(float amount);
@@ -87,10 +89,14 @@ public:
     std::vector<std::unique_ptr<Projectile>> fire();
 
     const std::vector<std::unique_ptr<Weapon>>& getWeapons() const;
+    void addWeapon(std::unique_ptr<Weapon> w);
 
     void selectWeapon(std::size_t index);
+
     sf::Vector2f getShootingDirection() const;
     void setShootingDirection(const sf::Vector2f &newShooting_direction);
+
+    friend WeaponFactory;
 };
 
 #endif // PLAYER_H

@@ -13,6 +13,8 @@
 #include "meteor.h"
 #include "map.h"
 #include "exporb.h"
+#include "weapon_factory.h"
+#include "superpower_factory.h"
 
 
 enum class GameState {
@@ -47,6 +49,11 @@ private:
     std::vector<std::unique_ptr<Meteor>> meteors;
     HUD hud;
     Map map;
+    int last_level_weapon = 0;
+    bool isPaused = false;
+    sf::Clock clock;
+
+
 ;
   //  Waves waves;
     int frameCounter;
@@ -73,7 +80,7 @@ public:
     void setState(GameState state);
     bool isWindowOpen() const;
 
-
+    void showWeaponChoiceScreen();
 
 
 };

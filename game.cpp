@@ -19,7 +19,7 @@
 #include "axe_projectile.h"
 
 Game::Game() : window(sf::VideoMode(2400, 1500), "Window"),
-    view(window.getDefaultView()),ghostsDelay(static_cast<float>(rand()%15) + 30.f),  player(), frameCounter(0)
+    view(window.getDefaultView()),ghostsDelay(static_cast<float>(rand()%15) + 30.f),  player(), frameCounter(0), isPaused(false)
 {
     map.load("./assets/map/ground_stone.png", 256, 64, 64); //Map size is 16 384 x 16 384 pixels
     view.setSize(2400,1500);
@@ -45,14 +45,19 @@ void Game::run() {
         return;
     }
 
-    sf::Clock clock;
+    clock.restart();
 
     while(window.isOpen()) {
 
         sf::Time dt = clock.restart();
+
         handleEvents();
-        update(dt);
-        render();
+
+        if (!isPaused) {
+            update(dt);
+            render();
+        }
+
     }
 }
 
@@ -79,6 +84,13 @@ void Game::handleEvents() {
 
 
 void Game::update(sf::Time& dt) {
+
+    if ((player.getLvl() % 4 == 0) && (player.getLvl() != last_level_weapon)) {
+        last_level_weapon = player.getLvl();
+        showWeaponChoiceScreen();
+        return;
+    }
+
 
    // Added movement logic to Player class
     player.keyboardMovement();
@@ -581,8 +593,10 @@ void Game::showMenu() {
                 window.close();
 
             if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == sf::Keyboard::Num1)
+                if (event.key.code == sf::Keyboard::Num1){
+                    isPaused = false;
                     currentState = GameState::PLAYING;
+                }
                 else if (event.key.code == sf::Keyboard::Num2)
                     currentState = GameState::EXIT;
             }
@@ -595,3 +609,94 @@ void Game::showMenu() {
         window.display();
     }
 }
+
+
+void Game::showWeaponChoiceScreen() {
+    isPaused = true;
+
+    // Does the player already own a weapon named "n". Comparison is being done between weapon names.
+    auto alreadyHas = [&](const std::string& n){
+        for (auto& w : player.getWeapons())
+            if (w->getName() == n)
+                return true;
+        return false;
+    };
+    // This function is required to pick a weapon a player doesn't have
+    auto pickNew = [&](){
+        std::unique_ptr<Weapon> w;
+        do {
+            w = WeaponFactory::createRandom();
+        } while (alreadyHas(w->getName()));
+        return w;
+    };
+
+
+
+    // Get two distinct new weapons
+    auto w1 = pickNew();
+    std::unique_ptr<Weapon> w2;
+    do {
+        w2 = pickNew();
+    } while (w2->getName() == w1->getName());
+
+
+    sf::Sprite s1{ w1->getTexture() };
+    sf::Sprite s2{ w2->getTexture() };
+    s1.setScale(4.f, 4.f);
+    s2.setScale(4.f, 4.f);
+    float centerX = window.getSize().x / 2.f;
+    float iconY   = window.getSize().y * 0.35f;
+    s1.setPosition(centerX - s1.getGlobalBounds().width - 30.f, iconY);
+    s2.setPosition(centerX +  30.f,                      iconY);
+
+    const sf::Font& font = hud.getFont();
+    sf::Text header("Choose Your New Weapon", font, 48);
+    header.setFillColor(sf::Color::White);
+    header.setPosition(
+        (window.getSize().x - header.getLocalBounds().width) / 2.f,
+        window.getSize().y * 0.15f
+        );
+
+    sf::Text t1("1", font, 48), t2("2", font, 48);
+    t1.setPosition(
+        s1.getPosition().x + s1.getGlobalBounds().width/2.f - 12.f,
+        iconY + s1.getGlobalBounds().height + 10.f
+        );
+    t2.setPosition(
+        s2.getPosition().x + s2.getGlobalBounds().width/2.f - 12.f,
+        iconY + s2.getGlobalBounds().height + 10.f
+        );
+
+    // Checking for an input (1/2)
+    while (window.isOpen()) {
+        sf::Event ev;
+        while (window.pollEvent(ev)) {
+            if (ev.type == sf::Event::Closed) window.close();
+            if (ev.type == sf::Event::KeyPressed) {
+                if (ev.key.code == sf::Keyboard::Num1) {
+                    player.addWeapon(std::move(w1));
+                    isPaused = false;
+                    clock.restart();
+                    return;
+                }
+                if (ev.key.code == sf::Keyboard::Num2) {
+                    player.addWeapon(std::move(w2));
+                    isPaused = false;
+                    clock.restart();
+                    return;
+                }
+            }
+        }
+        window.clear(sf::Color(0,0,0,180));
+        window.draw(header);
+        window.draw(s1);
+        window.draw(s2);
+        window.draw(t1);
+        window.draw(t2);
+        window.display();
+    }
+}
+
+
+
+
