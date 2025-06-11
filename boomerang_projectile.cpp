@@ -15,6 +15,16 @@ void BoomerangProjectile::setExpired(bool newExpired)
     expired = newExpired;
 }
 
+float BoomerangProjectile::getRotationSpeed() const
+{
+    return rotationSpeed;
+}
+
+void BoomerangProjectile::setRotationSpeed(float newRotationSpeed)
+{
+    rotationSpeed = newRotationSpeed;
+}
+
 void BoomerangProjectile::ensureTextureLoaded() {
     static bool loaded = false;
     if (!loaded) {
@@ -26,7 +36,7 @@ void BoomerangProjectile::ensureTextureLoaded() {
 }
 
 BoomerangProjectile::BoomerangProjectile(sf::Vector2f direction, sf::Vector2f position, float speed, float maxDistance, float damage)
-    : Projectile(direction, position, speed, maxDistance, damage), expired(false) {
+    : Projectile(direction, position, speed, maxDistance, damage), expired(false), rotationSpeed(220.f) {
     ensureTextureLoaded();
     sprite.setTexture(boomerangTexture);
     sprite.setScale(sf::Vector2f(5,5));
@@ -67,6 +77,8 @@ void BoomerangProjectile::move(sf::Time dt, sf::Vector2f playerPos) {
     else {
         Projectile::move(dt);
     }
+    float angleDelta = rotationSpeed * dt.asSeconds();
+    sprite.rotate(angleDelta);
     sprite.setPosition(getPosition());
 }
 

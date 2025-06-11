@@ -27,6 +27,11 @@ private:
     sf::Vector2f position;
     sf::Vector2f direction;
     sf::Vector2f last_direction;
+    sf::Vector2f shooting_direction;
+    sf::Clock shootDelayTimer;
+    bool shootInputActive = false;
+    sf::Vector2f pendingShootDirection;
+    float inputBufferTime = 0.1f; // 100 ms time to wait for a second input for shooting direction
 
     Animation N, E, S, W, NE, NW, SE, SW;
     Animation* currentAnimation = nullptr;
@@ -54,6 +59,7 @@ public:
     void setDirectionX(float);
     void setLastDirection(sf::Vector2f);
     void keyboardMovement();
+    void determineShootingDirection(sf::Time dt);
     void draw(sf::RenderWindow& window);
 
 
@@ -83,6 +89,8 @@ public:
     const std::vector<std::unique_ptr<Weapon>>& getWeapons() const;
 
     void selectWeapon(std::size_t index);
+    sf::Vector2f getShootingDirection() const;
+    void setShootingDirection(const sf::Vector2f &newShooting_direction);
 };
 
 #endif // PLAYER_H
