@@ -20,7 +20,9 @@
 enum class GameState {
     MENU,
     PLAYING,
-    EXIT
+    EXIT,
+    GAMEOVER,
+    WIN
 };
 
 // Main class
@@ -49,10 +51,15 @@ private:
     std::vector<std::unique_ptr<Meteor>> meteors;
     HUD hud;
     Map map;
+
+
+    bool gameOver = false;
+
     int last_level_weapon = 0;
     bool isPaused = false;
     sf::Clock clock;
     std::vector<std::string> availableWeapons;
+
 
 ;
   //  Waves waves;
@@ -79,6 +86,8 @@ public:
     GameState getState() const;
     void setState(GameState state);
     bool isWindowOpen() const;
+    void GameOver();
+    void resetGame();
 
     void showWeaponChoiceScreen();
 

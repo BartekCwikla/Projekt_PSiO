@@ -37,6 +37,7 @@ private:
 
     Animation N, E, S, W, NE, NW, SE, SW;
     Animation* currentAnimation = nullptr;
+    bool isalive;
 
 
 public:
@@ -94,11 +95,17 @@ public:
 
     void selectWeapon(std::size_t index);
 
+
+    bool isAlive();
+    void GameOverStopMove();
+
     sf::Vector2f getShootingDirection() const;
     void setShootingDirection(const sf::Vector2f &newShooting_direction);
 
     friend WeaponFactory;
+  
     sf::Vector2f getLastDirection() const;
+
 };
 
 #endif // PLAYER_H
