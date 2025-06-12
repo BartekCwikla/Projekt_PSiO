@@ -11,8 +11,7 @@ private:
     sf::CircleShape body;
     float damage;
     sf::Vector2f direction;
-    sf::Vector2f position;
-    float distance_traveled;
+
     float max_distance;
     bool isExploding = false;
 
@@ -25,7 +24,8 @@ protected:
     bool isPiercing = false;
     sf::Vector2f velocity;
     float speed = 5.f;
-
+    sf::Vector2f position;
+    float distance_traveled;
 
 public:
     Projectile(sf::Vector2f, sf::Vector2f, float, float, float);
@@ -68,6 +68,8 @@ public:
     float getSpeed() const;
     void setSpeed(float newSpeed);
 
+    sf::Vector2f getVelocity() const;
+    void setVelocity(const sf::Vector2f &newVelocity);
 };
 
 

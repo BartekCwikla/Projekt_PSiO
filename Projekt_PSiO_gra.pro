@@ -22,6 +22,8 @@ SOURCES += main.cpp \
     exploding_gun.cpp \
     exploding_projectile.cpp \
     exporb.cpp \
+    fireball.cpp \
+    fireball_projectile.cpp \
     game.cpp \
     gun.cpp \
     hud.cpp \
@@ -68,6 +70,8 @@ HEADERS += \
     exploding_gun.h \
     exploding_projectile.h \
     exporb.h \
+    fireball.h \
+    fireball_projectile.h \
     game.h \
     gun.h \
     hud.h \

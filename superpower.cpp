@@ -11,7 +11,7 @@ void SuperPower::setIcon(const sf::Texture &newIcon)
     icon = newIcon;
 }
 
-SuperPower::SuperPower(std::string iconPath, float cooldown) : cooldown(cooldown) {
+SuperPower::SuperPower(std::string iconPath, float cooldown, std::string name) : cooldown(cooldown), name(name) {
     if (!icon.loadFromFile("./assets/weapons/quad_gun.png")){
         std::cerr << "Unable to load meteor texture" << std::endl;
     }
