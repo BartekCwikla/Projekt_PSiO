@@ -9,9 +9,15 @@
 #include "axe.h"
 #include "boomerang.h"
 #include "meteor_rain.h"
+#include "fireball.h"
 
 
 
+
+sf::Vector2f Player::getLastDirection() const
+{
+    return last_direction;
+}
 
 Player::Player()
     : body(sf::Vector2f(70, 70)),
@@ -57,8 +63,10 @@ Player::Player()
     W.setScale(2.f,2.f);
 
     auto spwr1 = std::make_unique<MeteorRain>(3.f, 100.f, 15);
+    auto spwr2 = std::make_unique<Fireball>(1000.f, 400.f);
 
     super_powers.push_back(std::move(spwr1));
+    super_powers.push_back(std::move(spwr2));
 
     direction = {0,0};
     last_direction = {1,0};

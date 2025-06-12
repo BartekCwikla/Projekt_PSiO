@@ -4,12 +4,11 @@
 #include "enemy_bat.h"
 #include "enemy_ghostgroup.h"
 #include "enemyboss.h"
-#include "EnemyVortex.h"'
+#include "EnemyVortex.h"
 #include "enemyknight.h"
 #include "enemyskeleton.h"
 #include "boomerang_projectile.h"
 #include <SFML/Graphics.hpp>
-#include <iostream>
 #include <memory>
 #include <cmath>
 #include <cstdlib>
@@ -17,6 +16,7 @@
 #include <cmath>
 #include "exploding_projectile.h"
 #include "axe_projectile.h"
+#include "fireball_projectile.h"
 
 Game::Game() : window(sf::VideoMode(2400, 1500), "Window"),
     view(window.getDefaultView()),ghostsDelay(static_cast<float>(rand()%15) + 30.f),  player(), isPaused(false), frameCounter(0), availableWeapons({"DoubleGun", "QuadGun", "ExplodingGun", "Axe", "Boomerang", "PiercingGun"})
@@ -101,6 +101,8 @@ void Game::update(sf::Time& dt) {
             player.addWeapon(std::make_unique<ExplodingGun>()); break;
         case 20:
             player.addWeapon(std::make_unique<QuadGun>());     break;
+        case 24:
+            player.addWeapon(std::make_unique<Boomerang>());    break;
         default:
           break;
         }
@@ -111,7 +113,6 @@ void Game::update(sf::Time& dt) {
    player.determineShootingDirection(dt);
 
     player.update(dt);
-
 
     // Weapon hotkeys
     for (int i = 0; i < static_cast<int>(player.getWeapons().size()) && i < 9; ++i) {
@@ -130,6 +131,11 @@ void Game::update(sf::Time& dt) {
         for (auto& meteor : ar.newMeteors) {
             meteors.push_back(std::move(meteor));
         }
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
+        ActionResult ar = player.getSuperPowers()[1]->activate(player.getPosition(), player.getLastDirection());
+        if (ar.fireball_projectile) {
+            projectiles.push_back(std::move(ar.fireball_projectile));
+        }
     }
     if (player.getShootingDirection() != sf::Vector2f(0.f,0.f)) {
         // if fire function is called before cooldown time it returns nullptr. This code is required to push only valid projectiles
@@ -141,6 +147,7 @@ void Game::update(sf::Time& dt) {
     if (player.getDirection() != sf::Vector2f(0.f, 0.f)) {
         player.setLastDirection(player.getDirection());
     }
+
 
     for (auto &p: projectiles) {
         if (auto boomerang = dynamic_cast<BoomerangProjectile*>(p.get())) {
@@ -349,8 +356,9 @@ void Game::render()
             window.draw(axe->getSprite());
         } else if (auto boomerang = dynamic_cast<BoomerangProjectile*>(p.get())) {
             window.draw(boomerang->getSprite());
+        } else if (auto f = dynamic_cast<FireballProjectile*>(p.get())) {
+            window.draw(f->getSprite());
         }
-
         else {
             // all other projectiles
             window.draw(p->getBody());

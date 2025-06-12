@@ -98,6 +98,7 @@ public:
     void setShootingDirection(const sf::Vector2f &newShooting_direction);
 
     friend WeaponFactory;
+    sf::Vector2f getLastDirection() const;
 };
 
 #endif // PLAYER_H
