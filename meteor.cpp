@@ -2,7 +2,7 @@
 #include <iostream>
 
 Meteor::Meteor(float damage, float initialHeight, sf::Vector2f position)
-    : initialHeight(initialHeight), damage(damage), shouldExplode(false), distanceTraveled(0.f), explosionRadius(200.f)
+    : shouldExplode(false), explosionRadius(200.f), initialHeight(initialHeight), distanceTraveled(0.f), damage(damage)
 {
     speed = (rand()%500)+300;
 

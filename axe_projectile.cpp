@@ -33,6 +33,8 @@ AxeProjectile::AxeProjectile(sf::Vector2f direction,
     auto bounds = sprite.getLocalBounds();
     sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
     sprite.setPosition(position);
+    sound.loadSoundEffect("axe", "./assets/Sounds/Sounds/axe.wav", 35.f, false);
+    sound.playSoundEffect("axe");
 }
 
 

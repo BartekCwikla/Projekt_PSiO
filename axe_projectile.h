@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include "animation.h"
 
+
 class AxeProjectile : public Projectile {
 private:
     static sf::Texture axeTexture;

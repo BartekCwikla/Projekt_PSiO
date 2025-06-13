@@ -180,10 +180,6 @@ void Game::update(sf::Time& dt) {
         auto shots = player.fire();
         if (!shots.empty()) {
 
-                    gunSound.playSoundEffect("gun");
-
-
-
             handleShot(std::move(shots));
         }
     }

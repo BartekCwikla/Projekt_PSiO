@@ -2,6 +2,7 @@
 #define PROJECTILE_H
 #include <cmath>
 #include <SFML/Graphics.hpp>
+#include "audio.h"
 
 class Enemies;
 
@@ -22,6 +23,7 @@ private:
     bool hit = false;
 
 protected:
+    Audio sound;
     bool isPiercing = false;
     sf::Vector2f velocity;
     float speed = 5.f;
