@@ -14,19 +14,30 @@
 #include <cstdlib>
 #include <ctime>
 #include <cmath>
+#include "bullet.h"
 #include "exploding_projectile.h"
 #include "axe_projectile.h"
 #include "fireball_projectile.h"
 
 Game::Game() : window(sf::VideoMode(2400, 1500), "Window"),
+
+    view(window.getDefaultView()),ghostsDelay(static_cast<float>(rand()%15) + 30.f),  player(), isPaused(false), frameCounter(0),
+    availableWeapons({"DoubleGun", "QuadGun", "ExplodingGun", "Axe", "Boomerang", "PiercingGun"}),
     view(window.getDefaultView()),ghostsDelay(static_cast<float>(rand()%15) + 30.f),  player(), isPaused(false), availableWeapons({"DoubleGun", "QuadGun", "ExplodingGun", "Axe", "Boomerang", "PiercingGun"}), frameCounter(0)
+
 {
     map.load("./assets/map/ground_stone.png", 256, 64, 64); //Map size is 16 384 x 16 384 pixels
+    font.loadFromFile("./assets/fonts/MinimalPixel.ttf");
     view.setSize(2400,1500);
     defaultView = window.getDefaultView();
     currentWaveClock.restart();
     player.setPosition(map.getSize()/2.f);
     view.setCenter(player.getPosition());
+    gunSound.loadSoundEffect("gun", "./assets/Sounds/Sounds/gun.wav", 30.f, false);
+    gunSound.loadSoundEffect("axe", "./assets/Sounds/Sounds/axe.wav", 30.f, false);
+    Dead.loadSoundEffect("dead", "./assets/Sounds/Music/Doom.wav", 30.f, true);
+
+
 
 }
 GameState Game::getState() const{
@@ -41,7 +52,7 @@ bool Game::isWindowOpen() const{
 
 void Game::run(){
     window.setFramerateLimit(60);
-    if(!audio.playMusic("assets/Sounds/Music/MasterOfPuppets.wav", 20.f, true)) {
+    if(!audio.playMusic("./assets/Sounds/Music/MasterOfPuppets.wav", 30.f, true)) {
         return;
     }
 
@@ -55,7 +66,7 @@ void Game::run(){
         if(currentState == GameState::PLAYING)
             update(dt);
 
-        render();
+        render(dt.asSeconds());
 
 
         if(currentState == GameState::EXIT)
@@ -64,7 +75,7 @@ void Game::run(){
 
         if (!isPaused) {
             update(dt);
-            render();
+            render(dt.asSeconds());
         }
 
 
@@ -88,7 +99,7 @@ void Game::handleEvents() {
 
         if (currentState == GameState::GAMEOVER){
             if (event.type == sf::Event::KeyPressed){
-
+                if(event.key.code == sf::Keyboard::Num1)
                     currentState = GameState::EXIT;
 
             }
@@ -178,6 +189,11 @@ void Game::update(sf::Time& dt) {
         // if fire function is called before cooldown time it returns nullptr. This code is required to push only valid projectiles
         auto shots = player.fire();
         if (!shots.empty()) {
+
+                    gunSound.playSoundEffect("gun");
+
+
+
             handleShot(std::move(shots));
         }
     }
@@ -268,11 +284,23 @@ void Game::update(sf::Time& dt) {
     enemies.erase(std::remove_if(enemies.begin(), enemies.end(),
                                  [&](const std::unique_ptr<Enemies>& e) {
                                      if (e->getHP() <= 0.f) {
+                                         //To show "You won!" text after killed Boss
+                                         if(dynamic_cast<EnemyBoss*>(e.get())){
+                                             bossKilled=true;
+                                             winClock.restart();
+                                             showWinText = true;
+                                         }
+                                         //if any enemy is killed, it drops an exp orb
                                          expOrbs.push_back(std::make_unique<ExpOrb>(e->getPosition(), 20.f));
                                          return true;
                                      }
                                      return false;
                                  }), enemies.end());
+    //Removing dead enemies if they are 4000 pixels from player position
+    enemies.erase(std::remove_if(enemies.begin(), enemies.end(), [&](const std::unique_ptr<Enemies>& e){
+                        //std::hypot() calculate the shortest distance from enemy to player
+                      float dist = std::hypot(player.getPosition().x-e->getPosition().x, player.getPosition().y-e->getPosition().y);
+                                                return dist>4000.f;}), enemies.end());
 
     expOrbs.erase(std::remove_if(expOrbs.begin(), expOrbs.end(),[&](const std::unique_ptr<ExpOrb>& orb)
                                  {
@@ -300,10 +328,9 @@ void Game::update(sf::Time& dt) {
                             e->takeDamage(exploding->getDamage());
                         }
                     }
-
-                    // TODO sound and visual effects
                 }
             }
+
 
             // Mark projectile as hit so it can be erased later
             if (!(p->getIsPiercing())) {
@@ -369,11 +396,13 @@ void Game::update(sf::Time& dt) {
     view.setCenter(viewCenter);
 }
 
-void Game::render()
+void Game::render(float dt)
 {
     if (currentState == GameState::GAMEOVER) {
         if (!gameOver) {
             window.clear(sf::Color::Black);
+            audio.stopMusic();
+            Dead.playSoundEffect("dead");
             GameOver();
             window.display();
             gameOver= true;
@@ -390,7 +419,7 @@ void Game::render()
         enemy->render(window);
 
     for (auto& orb : expOrbs)
-        orb->render(window);
+        orb->render(window, dt );
 
     for (auto& mPtr : meteors) {
         window.draw(mPtr->getSprite());
@@ -416,7 +445,7 @@ void Game::render()
 
 
     float padding = 10.f;
-    float yOffset = window.getSize().y - padding;
+    float yOffset = window.getSize().y - padding - 250.f;
     int slot = 1;
 
     for (auto& wptr : player.getWeapons()) {
@@ -429,7 +458,7 @@ void Game::render()
 
         // position text
         auto tb = weaponText.getLocalBounds();
-        float tx = window.getSize().x - tb.width - padding;
+        float tx = window.getSize().x - tb.width - padding -250.f;
         float ty = yOffset - tb.height;
         weaponText.setPosition(tx, ty);
 
@@ -460,17 +489,18 @@ void Game::render()
     }
 
 
-    float superPowerYOffset = window.getSize().y - padding;
-    int spSlot = 1;
+    float superPowerYOffset = window.getSize().y - padding - 300.f;
+
 
     for (auto& spw : player.getSuperPowers()) {
-        std::string label = std::to_string(spSlot++) + ". " + spw->getName();
+       // std::string label = std::to_string(spSlot++) + ". " + spw->getName();
+        std::string label = "R. " + spw->getName();
         sf::Text superText(label, hud.getFont(), 24);
         superText.setFillColor(sf::Color::Cyan);
 
         auto tb = superText.getLocalBounds();
-        float tx = padding;
-        float ty = superPowerYOffset - tb.height;
+        float tx = padding + 250.f;
+        float ty = superPowerYOffset - tb.height+ 50.f;
         superText.setPosition(tx, ty);
 
         // Sprite icon
@@ -485,6 +515,22 @@ void Game::render()
         window.draw(superText);
 
         superPowerYOffset -= std::max(tb.height, ib.height) + padding;
+    }
+
+    //The victory text after killing boss
+    if (showWinText && winClock.getElapsedTime().asSeconds() < 5.f) {
+        winText.setFont(font);
+        winText.setString("YOU WON!");
+        winText.setCharacterSize(100);
+        winText.setFillColor(sf::Color::Yellow);
+
+        sf::FloatRect bounds = winText.getLocalBounds();
+        winText.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+        winText.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
+
+        window.draw(winText);
+    } else if (showWinText) {
+        showWinText = false;
     }
 
 
@@ -511,7 +557,6 @@ void Game::EnemiesBoundsColision(){
 
                 sf::Vector2f pushDir = delta/distance;
 
-                // Rozdzielenie o stałą wartość
                 e1->setPosition(pos1 + pushDir*coolisionLimit);
                 e2->setPosition(pos2 - pushDir*coolisionLimit);
             }
@@ -545,21 +590,37 @@ void Game::wavesLogic() {
 
     // Counting wave in relative to time
     int elapsed = static_cast<int>(waveClock.getElapsedTime().asSeconds());
-    currentWave = elapsed/20 + 1;
+    currentWave = elapsed/30 + 1;
 
 
-    if (enemies.size()>200) return; //Maximum number of enemies at the screen
 
     // Enemeis spawn in shorter period of time for each wave
-    if (enemyspawnClock.getElapsedTime().asSeconds() >= std::max(0.7f, 1.8f - currentWave * 0.7f)){
+    if (enemyspawnClock.getElapsedTime().asSeconds() >= std::max(0.7f, 1.8f - currentWave * 0.8f)){
         int enemyCount = 2 + rand() % 3;
-        sf::Vector2f spawnPos = generateSpawnPositionNear(player.getPosition(), map.getBounds(), 500.f, 700.f);
+        sf::Vector2f spawnPos = generateSpawnPositionNear(player.getPosition(), map.getBounds(), 900.f, 1300.f);
+
+        static int lastWave = 0;
+        if (currentWave > lastWave){
+            for(auto& e : enemies){
+                //for every wave the enemies are stronger and have more HP
+                e->setDamage(e->getDamage()*1.2);
+                e->setHP(e->getHP()*1.2);
+                if(auto Demon = dynamic_cast<Enemy_Demon*>(e.get()))
+                {
+                    Demon->setHP(Demon->getHP()*1.1f);
+                    Demon->setSpeed(Demon->getSpeed()*1.2);
+                }
+            }
+
+            lastWave = currentWave;
+        }
 
         for (int i=0; i<enemyCount; i++){
             sf::Vector2f offset = spawnPos + sf::Vector2f(rand()%600-400, rand()%600-400);
 
-            if (currentWave == 1)
+            if (currentWave == 1){
                 enemies.push_back(std::make_unique<Enemy_Demon>(offset));
+            }
             else if (currentWave == 2){
                 enemies.push_back(std::make_unique<Enemy_Bat>(offset));
                 enemies.push_back(std::make_unique<Enemy_Demon>(offset));
@@ -575,27 +636,66 @@ void Game::wavesLogic() {
                 enemies.push_back(std::make_unique<EnemyKnight>(offset));
             }
             else if(currentWave == 5){
-                //enemies.push_back(std::make_unique<EnemyVortex>(offset));
+                enemies.push_back(std::make_unique<EnemyVortex>(offset));
+                enemies.push_back(std::make_unique<EnemyKnight>(offset));
+                enemies.push_back(std::make_unique<Enemy_Demon>(offset));
+            }
+            else if(currentWave == 6){
+                enemies.push_back(std::make_unique<EnemyVortex>(offset));
+                enemies.push_back(std::make_unique<EnemyKnight>(offset));
+                enemies.push_back(std::make_unique<EnemySkeleton>(offset));
+                enemies.push_back(std::make_unique<Enemy_Demon>(offset));
+            }
+            else if(currentWave == 7){
+                enemies.push_back(std::make_unique<EnemyVortex>(offset));
                 enemies.push_back(std::make_unique<EnemyKnight>(offset));
                 enemies.push_back(std::make_unique<Enemy_Bat>(offset));
+                enemies.push_back(std::make_unique<Enemy_Demon>(offset));
+
             }
-            else {
-                // Mix
-                switch(rand()%5){
-                case 0: enemies.push_back(std::make_unique<Enemy_Demon>(offset)); break;
-                case 1: enemies.push_back(std::make_unique<Enemy_Bat>(offset)); break;
-                case 2: enemies.push_back(std::make_unique<EnemyKnight>(offset)); break;
-                case 3: enemies.push_back(std::make_unique<EnemySkeleton>(offset)); break;
-                case 4: enemies.push_back(std::make_unique<EnemyVortex>(offset)); break;
-                }
+            else if(currentWave == 8){
+                enemies.push_back(std::make_unique<EnemyVortex>(offset));
+                enemies.push_back(std::make_unique<EnemyKnight>(offset));
+                enemies.push_back(std::make_unique<EnemyKnight>(offset));
+                enemies.push_back(std::make_unique<EnemySkeleton>(offset));
+                enemies.push_back(std::make_unique<EnemySkeleton>(offset));
+
             }
+            else if(currentWave == 9){
+                enemies.push_back(std::make_unique<Enemy_Bat>(offset));
+                enemies.push_back(std::make_unique<Enemy_Demon>(offset));
+                enemies.push_back(std::make_unique<EnemyVortex>(offset));
+                enemies.push_back(std::make_unique<EnemySkeleton>(offset));
+                enemies.push_back(std::make_unique<Enemy_GhostGroup>(offset, player.getPosition() + offset));
+
+
+            }
+            else if(currentWave == 10){
+                enemies.push_back(std::make_unique<Enemy_Bat>(offset));
+                enemies.push_back(std::make_unique<Enemy_Demon>(offset));
+                enemies.push_back(std::make_unique<EnemyVortex>(offset));
+                enemies.push_back(std::make_unique<EnemySkeleton>(offset));
+                enemies.push_back(std::make_unique<Enemy_GhostGroup>(offset, player.getPosition()+offset));
+                enemies.push_back(std::make_unique<EnemyKnight>(offset));
+            }
+            else{
+                enemies.push_back(std::make_unique<Enemy_Bat>(offset));
+                enemies.push_back(std::make_unique<Enemy_Demon>(offset));
+                enemies.push_back(std::make_unique<EnemyVortex>(offset));
+                enemies.push_back(std::make_unique<EnemySkeleton>(offset));
+                enemies.push_back(std::make_unique<Enemy_GhostGroup>(offset, player.getPosition()+offset));
+                enemies.push_back(std::make_unique<EnemyKnight>(offset));
+            }
+
+
+
         }
 
         enemyspawnClock.restart();
     }
     // Boss spawn at wave 10
     if (currentWave==10 && !bossSpawned){
-        sf::Vector2f bossSpawn=generateSpawnPositionNear(player.getPosition(), map.getBounds(), 400.f, 600.f);
+        sf::Vector2f bossSpawn=generateSpawnPositionNear(player.getPosition(), map.getBounds(), 1000.f, 1300.f);
         enemies.push_back(std::make_unique<EnemyBoss>(bossSpawn));
         bossSpawned = true;
     }
@@ -604,25 +704,28 @@ void Game::wavesLogic() {
 
     if (ghostSpawnClock.getElapsedTime().asSeconds() >= ghostR){
 
-        int ghostCount = 20+rand()%10; // Ghosts
+        int ghostCount = 15+rand()%30; // Ghosts
         int dirX = (rand()%2==0) ? -1 : 1;
 
-        float yOffset = static_cast<float>((rand()%200) - 201);
-        sf::Vector2f direction(static_cast<float>(dirX), player.getPosition().y + yOffset);
+        float yOffset = static_cast<float>((rand()%20)-20);
+        sf::Vector2f direction = sf::Vector2f(static_cast<float>(dirX), 0.f);
 
-        sf::Vector2f baseSpawn = generateSpawnPositionNear(player.getPosition(), map.getBounds(), window.getSize().x-200.f, player.getPosition().y+yOffset);
+        sf::Vector2f baseSpawn = generateSpawnPositionNear(player.getPosition(), map.getBounds(), 600.f, 800.f);
 
         for (int i = 0; i < ghostCount; ++i) {
             float offsetX = static_cast<float>(i*30+rand()%30); // Random scatter of points around the axis X
-            float offsetY = static_cast<float>((rand()%60)-30);  // Random scatter of points around the axis Y
+            float offsetY = static_cast<float>((rand()%50)-50);  // Random scatter of points around the axis Y
 
             sf::Vector2f spawnOffset = baseSpawn + sf::Vector2f(offsetX * dirX, offsetY);
             enemies.push_back(std::make_unique<Enemy_GhostGroup>(spawnOffset, direction));
         }
 
         ghostSpawnClock.restart();
-        ghostR = 30 + rand() % 31; // Group of ghosts spawn from 30 to 60
+        ghostR = 5 + rand() % 10; // Group of ghosts spawn from 30 to 60
     }
+
+
+
 }
 
 void Game::showMenu() {
@@ -656,6 +759,7 @@ void Game::showMenu() {
 
     while (window.isOpen() && currentState == GameState::MENU) {
         sf::Event event;
+
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
@@ -701,7 +805,7 @@ void Game::GameOver(){
         }
 
         text.setFont(font);
-        text.setString("Get away...");
+        text.setString("1. Get away...");
         text.setCharacterSize(48);
         text.setFillColor(sf::Color::Red);
         sf::FloatRect bounds = text.getLocalBounds();

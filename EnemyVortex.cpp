@@ -5,7 +5,7 @@
 #include <iostream>
 
 EnemyVortex::EnemyVortex(const sf::Vector2f& startPos)
-    : Enemies(50.f, 80.f, 0.f, startPos), angle(0.f), angleSpeed(180.f),
+    : Enemies(5.f, 100.f, 0.f, startPos), angle(0.f), angleSpeed(180.f),
     vortex("assets/Vortex", "vortex", 4, 0.1f), phaseDifference(rand()%360)
 {
     setDamage(damage); //0 Damage
@@ -43,7 +43,7 @@ sf::Vector2f EnemyVortex::recoilForce(const sf::Vector2f& playerPos) const{
     float maxRange=300.f; // The repulsion force works only, when player is in close distance to the vortex
 
     if (distance < maxRange){
-        float strength =(maxRange - distance)/maxRange*500.f; //Dynamiclly increase the force of repulsion, when player getting closer to the vortex
+        float strength =(maxRange - distance)/maxRange*200.f; //Dynamiclly increase the force of repulsion, when player getting closer to the vortex
         return direction*strength;
     }
 

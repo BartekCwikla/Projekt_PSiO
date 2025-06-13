@@ -20,7 +20,7 @@ sf::Vector2f Player::getLastDirection() const
 }
 
 Player::Player()
-    : hp(100.f),
+    : hp(500.f),
     maxHp(100.f), exp(0.f), ExpNextLvl(100.f), speed(300.f), body(sf::Vector2f(70, 70)),
     shooting_direction(sf::Vector2f(1,1)),
     N("./assets/PlayerCharacter/N", "N", 14, 0.08f,1),
@@ -32,7 +32,6 @@ Player::Player()
     SE("./assets/PlayerCharacter/SE", "SE", 14, 0.08f,1),
     SW("./assets/PlayerCharacter/SW", "SW", 14, 0.08f,1),
     isalive(true)
-
     {
     auto g = std::make_unique<DoubleGun>();
     auto g1 = std::make_unique<Gun>();
@@ -84,11 +83,12 @@ void Player::update(sf::Time dt){
 
 void Player::playerAnimation(float dt){
     if (direction == sf::Vector2f(0.f, 0.f)) {
-        if (currentAnimation)
+        if (currentAnimation) {
             currentAnimation->setFrame(0);
+            currentAnimation->setPosition(body.getPosition().x, body.getPosition().y);
+        }
         return;
     }
-
 
     last_direction = direction;
 
@@ -249,7 +249,7 @@ void Player::takeDamage(const int& dam) {
 //Future method that adding experience and loading the exp bar
 void Player::addMaxLevelTreshold(float amount) {
     exp += amount;
-    float increasedHp = 20.f;
+    float increasedHp = 100.f;
 
     while (exp >= ExpNextLvl) {
         exp -= ExpNextLvl;
@@ -261,7 +261,7 @@ void Player::addMaxLevelTreshold(float amount) {
             hp=maxHp;
         }
         else if(lvl++){
-            hp += 20.f;
+            hp += 50.f;
             if(hp >= maxHp)
                 hp=maxHp;
 
