@@ -30,12 +30,10 @@ Player::Player()
     NW("./assets/PlayerCharacter/NW", "NW", 14, 0.08f,1),
     SE("./assets/PlayerCharacter/SE", "SE", 14, 0.08f,1),
     SW("./assets/PlayerCharacter/SW", "SW", 14, 0.08f,1),
-
-    isalive(true)
-
+    isalive(true),
     shooting_direction(sf::Vector2f(1,1))
 
-{
+    {
     auto g = std::make_unique<DoubleGun>();
     auto g1 = std::make_unique<Gun>();
     auto g2 = std::make_unique<ExplodingGun>();

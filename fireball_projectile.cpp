@@ -31,7 +31,11 @@ FireballProjectile::FireballProjectile(sf::Vector2f position, sf::Vector2f direc
     }
     sprite.setTexture(texture);
     sprite.setPosition(position);
-    sprite.setScale({5.f, 5.f});
+
+    auto sz = texture.getSize();
+    sprite.setOrigin(sz.x / 2.f, sz.y / 2.f);
+
+    sprite.setScale({12.f, 12.f});
 
     body.setRadius(150.f);
     float r = body.getRadius();
