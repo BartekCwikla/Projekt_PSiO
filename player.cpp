@@ -21,8 +21,8 @@ sf::Vector2f Player::getLastDirection() const
 
 Player::Player()
 
-    : hp(100.f),
-    maxHp(100.f), exp(0.f), ExpNextLvl(100.f), speed(300.f), body(sf::Vector2f(70, 70)),
+    : hp(1000.f),
+    maxHp(1000.f), exp(0.f), ExpNextLvl(100.f), speed(300.f), body(sf::Vector2f(70, 70)),
 
     shooting_direction(sf::Vector2f(1,1)),
     N("./assets/PlayerCharacter/N", "N", 14, 0.08f,1),
