@@ -20,18 +20,18 @@ sf::Vector2f Player::getLastDirection() const
 }
 
 Player::Player()
-    : body(sf::Vector2f(70, 70)),
-    speed(300.f), hp(100.f), maxHp(100.f), exp(0.f), ExpNextLvl(100.f),
+    : hp(100.f),
+    maxHp(100.f), exp(0.f), ExpNextLvl(100.f), speed(300.f), body(sf::Vector2f(70, 70)),
+    shooting_direction(sf::Vector2f(1,1)),
     N("./assets/PlayerCharacter/N", "N", 14, 0.08f,1),
+    E("./assets/PlayerCharacter/E", "E", 14, 0.08f,1),
     S("./assets/PlayerCharacter/S", "S", 14, 0.08f,1),
     W("./assets/PlayerCharacter/W", "W", 14, 0.08f,1),
-    E("./assets/PlayerCharacter/E", "E", 14, 0.08f,1),
     NE("./assets/PlayerCharacter/NE", "NE", 14, 0.08f,1),
     NW("./assets/PlayerCharacter/NW", "NW", 14, 0.08f,1),
     SE("./assets/PlayerCharacter/SE", "SE", 14, 0.08f,1),
     SW("./assets/PlayerCharacter/SW", "SW", 14, 0.08f,1),
-    isalive(true),
-    shooting_direction(sf::Vector2f(1,1))
+    isalive(true)
 
     {
     auto g = std::make_unique<DoubleGun>();

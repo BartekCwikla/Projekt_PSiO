@@ -1,6 +1,5 @@
 #include "gun.h"
 #include "bullet.h"
-#include "exploding_projectile.h"
 #include <iostream>
 
 

@@ -11,8 +11,6 @@ public:
     ~Bullet();
 
     void update() {};
-    bool checkColision(const Enemies& colision)  { return false; }
-    void move() {}
 
 };
 

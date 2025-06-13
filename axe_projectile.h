@@ -3,7 +3,6 @@
 
 #include "projectile.h"
 #include <SFML/Graphics.hpp>
-#include "animation.h"
 
 class AxeProjectile : public Projectile {
 private:

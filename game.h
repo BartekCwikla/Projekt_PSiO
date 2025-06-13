@@ -13,8 +13,6 @@
 #include "meteor.h"
 #include "map.h"
 #include "exporb.h"
-#include "weapon_factory.h"
-#include "superpower_factory.h"
 
 
 enum class GameState {

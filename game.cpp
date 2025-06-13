@@ -19,7 +19,7 @@
 #include "fireball_projectile.h"
 
 Game::Game() : window(sf::VideoMode(2400, 1500), "Window"),
-    view(window.getDefaultView()),ghostsDelay(static_cast<float>(rand()%15) + 30.f),  player(), isPaused(false), frameCounter(0), availableWeapons({"DoubleGun", "QuadGun", "ExplodingGun", "Axe", "Boomerang", "PiercingGun"})
+    view(window.getDefaultView()),ghostsDelay(static_cast<float>(rand()%15) + 30.f),  player(), isPaused(false), availableWeapons({"DoubleGun", "QuadGun", "ExplodingGun", "Axe", "Boomerang", "PiercingGun"}), frameCounter(0)
 {
     map.load("./assets/map/ground_stone.png", 256, 64, 64); //Map size is 16 384 x 16 384 pixels
     view.setSize(2400,1500);

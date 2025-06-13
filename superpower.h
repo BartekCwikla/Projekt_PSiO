@@ -1,7 +1,6 @@
 #ifndef SUPERPOWER_H
 #define SUPERPOWER_H
 
-#include "SFML/Graphics.hpp"
 #include "ActionResult.h"
 
 class SuperPower {
