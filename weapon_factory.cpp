@@ -11,4 +11,5 @@ std::unique_ptr<Weapon> WeaponFactory::createRandom() {
     case 4: return std::make_unique<DoubleGun>();
     case 5: return std::make_unique<QuadGun>();
     }
+    return nullptr;
 }

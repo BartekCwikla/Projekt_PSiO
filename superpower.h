@@ -1,7 +1,6 @@
 #ifndef SUPERPOWER_H
 #define SUPERPOWER_H
 
-#include "SFML/Graphics.hpp"
 #include "ActionResult.h"
 
 class SuperPower {
@@ -15,8 +14,10 @@ protected:
    sf::Texture icon;
 
 public:
-   SuperPower(std::string iconPath, float cooldown);
-    virtual ActionResult activate(const sf::Vector2f& position) = 0;
+   SuperPower(std::string iconPath, float cooldown, std::string name = "SuperPower");
+    virtual ActionResult activate(const sf::Vector2f& position) {};
+    virtual ActionResult activate(const sf::Vector2f& position,
+                                  const sf::Vector2f& direction) {};
     std::string getName() const;
     void setName(const std::string &newName);
     sf::Texture getIcon() const;

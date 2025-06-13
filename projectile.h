@@ -11,8 +11,7 @@ private:
     sf::CircleShape body;
     float damage;
     sf::Vector2f direction;
-    sf::Vector2f position;
-    float distance_traveled;
+
     float max_distance;
     bool isExploding = false;
 
@@ -25,13 +24,13 @@ protected:
     bool isPiercing = false;
     sf::Vector2f velocity;
     float speed = 5.f;
-
+    sf::Vector2f position;
+    float distance_traveled;
 
 public:
     Projectile(sf::Vector2f, sf::Vector2f, float, float, float);
     virtual ~Projectile()=default;
     virtual void update()=0;
-    virtual bool checkColision(const Enemies& colision) {return false;};
     virtual void move(sf::Time dt) {
         position += velocity * dt.asSeconds();
         float normalised_velocity = std::sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
@@ -68,6 +67,8 @@ public:
     float getSpeed() const;
     void setSpeed(float newSpeed);
 
+    sf::Vector2f getVelocity() const;
+    void setVelocity(const sf::Vector2f &newVelocity);
 };
 
 

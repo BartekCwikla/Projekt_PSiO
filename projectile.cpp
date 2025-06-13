@@ -25,9 +25,19 @@ void Projectile::setSpeed(float newSpeed)
     speed = newSpeed;
 }
 
+sf::Vector2f Projectile::getVelocity() const
+{
+    return velocity;
+}
+
+void Projectile::setVelocity(const sf::Vector2f &newVelocity)
+{
+    velocity = newVelocity;
+}
+
 Projectile::Projectile(sf::Vector2f dir, sf::Vector2f initial_position, float speed, float max_distance, float damage)
 
-    : direction(dir), position(initial_position), max_distance(max_distance), damage(damage), speed(speed) {
+    : damage(damage), direction(dir), max_distance(max_distance), speed(speed), position(initial_position) {
     //direction vector normalization in Projectile class constructor
     float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
     if (len != 0.f)

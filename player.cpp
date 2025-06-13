@@ -9,26 +9,30 @@
 #include "axe.h"
 #include "boomerang.h"
 #include "meteor_rain.h"
+#include "fireball.h"
 
 
 
+
+sf::Vector2f Player::getLastDirection() const
+{
+    return last_direction;
+}
 
 Player::Player()
-    : body(sf::Vector2f(70, 70)),
-    speed(300.f), hp(500.f), maxHp(500.f), exp(0.f), ExpNextLvl(100.f),
+    : hp(500.f),
+    maxHp(100.f), exp(0.f), ExpNextLvl(100.f), speed(300.f), body(sf::Vector2f(70, 70)),
+    shooting_direction(sf::Vector2f(1,1)),
     N("./assets/PlayerCharacter/N", "N", 14, 0.08f,1),
+    E("./assets/PlayerCharacter/E", "E", 14, 0.08f,1),
     S("./assets/PlayerCharacter/S", "S", 14, 0.08f,1),
     W("./assets/PlayerCharacter/W", "W", 14, 0.08f,1),
-    E("./assets/PlayerCharacter/E", "E", 14, 0.08f,1),
     NE("./assets/PlayerCharacter/NE", "NE", 14, 0.08f,1),
     NW("./assets/PlayerCharacter/NW", "NW", 14, 0.08f,1),
     SE("./assets/PlayerCharacter/SE", "SE", 14, 0.08f,1),
     SW("./assets/PlayerCharacter/SW", "SW", 14, 0.08f,1),
-    isalive(true),
-
-    shooting_direction(sf::Vector2f(1,1))
-
-{
+    isalive(true)
+    {
     auto g = std::make_unique<DoubleGun>();
     auto g1 = std::make_unique<Gun>();
     auto g2 = std::make_unique<ExplodingGun>();
@@ -60,8 +64,10 @@ Player::Player()
     W.setScale(2.f,2.f);
 
     auto spwr1 = std::make_unique<MeteorRain>(3.f, 100.f, 15);
+    auto spwr2 = std::make_unique<Fireball>(1000.f, 400.f);
 
     super_powers.push_back(std::move(spwr1));
+    super_powers.push_back(std::move(spwr2));
 
     direction = {0,0};
     last_direction = {1,0};
@@ -289,7 +295,7 @@ void Player::selectWeapon(std::size_t index) {
 }
 
 
-bool Player::isAlive(){
+void Player::isAlive(){
     if(hp > 0 && hp <= maxHp)
         isalive = true;
     else if(hp<=0)

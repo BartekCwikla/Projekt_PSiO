@@ -19,7 +19,6 @@ public:
     }
 
     void update() override {}
-    bool checkColision(const Enemies& colision) override { return false; }
     void move() {}
 };
 
