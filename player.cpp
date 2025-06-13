@@ -20,7 +20,7 @@ sf::Vector2f Player::getLastDirection() const
 }
 
 Player::Player()
-    : hp(500.f),
+    : hp(100.f),
     maxHp(100.f), exp(0.f), ExpNextLvl(100.f), speed(300.f), body(sf::Vector2f(70, 70)),
     shooting_direction(sf::Vector2f(1,1)),
     N("./assets/PlayerCharacter/N", "N", 14, 0.08f,1),
@@ -63,7 +63,7 @@ Player::Player()
     NE.setScale(2.f,2.f);
     W.setScale(2.f,2.f);
 
-    auto spwr1 = std::make_unique<MeteorRain>(3.f, 100.f, 15);
+    auto spwr1 = std::make_unique<MeteorRain>(30.f, 100.f, 15);
     auto spwr2 = std::make_unique<Fireball>(1000.f, 400.f);
 
     super_powers.push_back(std::move(spwr1));

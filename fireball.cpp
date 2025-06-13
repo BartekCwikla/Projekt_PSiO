@@ -32,7 +32,7 @@ void Fireball::setSpeed(float newSpeed)
     speed = newSpeed;
 }
 
-Fireball::Fireball(float range, float damage) : SuperPower("./assets/SuperPowers/fireball.png", 2.f, "Fireball"), damage(damage), range(range), speed(400.f) {
+Fireball::Fireball(float range, float damage) : SuperPower("./assets/SuperPowers/fireball.png", 20.f, "Fireball"), damage(damage), range(range), speed(400.f) {
 
 }
 
