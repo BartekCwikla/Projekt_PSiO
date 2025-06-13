@@ -592,6 +592,7 @@ void Game::wavesLogic() {
     currentWave = elapsed/30 + 1;
 
 
+    if(enemies.size() > 600) return;
 
     // Enemeis spawn in shorter period of time for each wave
     if (enemyspawnClock.getElapsedTime().asSeconds() >= std::max(0.7f, 1.8f - currentWave * 0.8f)){
@@ -706,7 +707,7 @@ void Game::wavesLogic() {
         int ghostCount = 15+rand()%30; // Ghosts
         int dirX = (rand()%2==0) ? -1 : 1;
 
-        float yOffset = static_cast<float>((rand()%20)-20);
+
         sf::Vector2f direction = sf::Vector2f(static_cast<float>(dirX), 0.f);
 
         sf::Vector2f baseSpawn = generateSpawnPositionNear(player.getPosition(), map.getBounds(), 600.f, 800.f);
