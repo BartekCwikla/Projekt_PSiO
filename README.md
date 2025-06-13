@@ -44,7 +44,7 @@ You summon falling meteors, that appear in random places on the "sky" or whateve
 
 ### Fireball
 
-You throw a fireball in the direction specified via arrows. It crashes and burns everything on it's course. You can pave the way for yourself using that.
+You throw a fireball in the direction specified by last movement direction. It crashes and burns everything on it's course. You can pave the way for yourself using that.
 
 ## Enemies
 
@@ -64,5 +64,20 @@ Those two are also after you. They are actively trying to get closer and damage 
 
 Well... they move in groups. Moving in your direction. There can be plenty of them
 
+## Milestone explanation
 
+Milestone messages might not be visible on Github, so here is an explanation for each of them 
+
+| Milestone    | Explanation                        |
+|--------------|------------------------------------|
+|  Milestone 1 | Player movement                    |
+|  Milestone 2 | Working shooting enemies           |
+| Milestone 3  | Added health and experience bars   |
+| Milestone 4  | Added a new type of gun            |
+| Milestone 5  | New kind of enemy and enemy damage |
+| Milestone 6  | New type of projectile (explosive) |
+| Milestone 7  | Added a boss with texture          |
+| Milestone 8  | Added textures                     |
+| Milestone 9  | Weapon selection and music         |
+| Milestone 10 | Final Game                         |
 
