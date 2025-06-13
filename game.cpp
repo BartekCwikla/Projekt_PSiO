@@ -32,6 +32,7 @@ Game::Game() : window(sf::VideoMode(2400, 1500), "Window"),
     view.setCenter(player.getPosition());
     gunSound.loadSoundEffect("gun", "./assets/Sounds/Sounds/gun.wav", 35.f, false);
     gunSound.loadSoundEffect("axe", "./assets/Sounds/Sounds/axe.wav", 35.f, false);
+    Dead.loadSoundEffect("dead", "./assets/Sounds/Music/Doom.wav", 30.f, true);
 
 
 
@@ -379,6 +380,8 @@ void Game::render(float dt)
     if (currentState == GameState::GAMEOVER) {
         if (!gameOver) {
             window.clear(sf::Color::Black);
+            audio.stopMusic();
+            Dead.playSoundEffect("dead");
             GameOver();
             window.display();
             gameOver= true;
@@ -420,7 +423,7 @@ void Game::render(float dt)
 
 
     float padding = 10.f;
-    float yOffset = window.getSize().y - padding;
+    float yOffset = window.getSize().y - padding - 250.f;
     int slot = 1;
 
     for (auto& wptr : player.getWeapons()) {
@@ -433,7 +436,7 @@ void Game::render(float dt)
 
         // position text
         auto tb = weaponText.getLocalBounds();
-        float tx = window.getSize().x - tb.width - padding;
+        float tx = window.getSize().x - tb.width - padding -250.f;
         float ty = yOffset - tb.height;
         weaponText.setPosition(tx, ty);
 
@@ -464,17 +467,18 @@ void Game::render(float dt)
     }
 
 
-    float superPowerYOffset = window.getSize().y - padding;
+    float superPowerYOffset = window.getSize().y - padding - 300.f;
     int spSlot = 1;
 
     for (auto& spw : player.getSuperPowers()) {
-        std::string label = std::to_string(spSlot++) + ". " + spw->getName();
+       // std::string label = std::to_string(spSlot++) + ". " + spw->getName();
+        std::string label = "R. " + spw->getName();
         sf::Text superText(label, hud.getFont(), 24);
         superText.setFillColor(sf::Color::Cyan);
 
         auto tb = superText.getLocalBounds();
-        float tx = padding;
-        float ty = superPowerYOffset - tb.height;
+        float tx = padding + 250.f;
+        float ty = superPowerYOffset - tb.height+ 50.f;
         superText.setPosition(tx, ty);
 
         // Sprite icon
@@ -577,8 +581,9 @@ void Game::wavesLogic() {
         for (int i=0; i<enemyCount; i++){
             sf::Vector2f offset = spawnPos + sf::Vector2f(rand()%600-400, rand()%600-400);
 
-            if (currentWave == 1)
+            if (currentWave == 1){
                 enemies.push_back(std::make_unique<Enemy_Demon>(offset));
+            }
             else if (currentWave == 2){
                 enemies.push_back(std::make_unique<Enemy_Bat>(offset));
                 enemies.push_back(std::make_unique<Enemy_Demon>(offset));
@@ -629,6 +634,14 @@ void Game::wavesLogic() {
 
             }
             else if(currentWave == 10){
+                enemies.push_back(std::make_unique<Enemy_Bat>(offset));
+                enemies.push_back(std::make_unique<Enemy_Demon>(offset));
+                enemies.push_back(std::make_unique<EnemyVortex>(offset));
+                enemies.push_back(std::make_unique<EnemySkeleton>(offset));
+                enemies.push_back(std::make_unique<Enemy_GhostGroup>(offset, player.getPosition()+offset));
+                enemies.push_back(std::make_unique<EnemyKnight>(offset));
+            }
+            else{
                 enemies.push_back(std::make_unique<Enemy_Bat>(offset));
                 enemies.push_back(std::make_unique<Enemy_Demon>(offset));
                 enemies.push_back(std::make_unique<EnemyVortex>(offset));

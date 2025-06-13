@@ -77,11 +77,12 @@ void Player::update(sf::Time dt){
 
 void Player::playerAnimation(float dt){
     if (direction == sf::Vector2f(0.f, 0.f)) {
-        if (currentAnimation)
+        if (currentAnimation) {
             currentAnimation->setFrame(0);
+            currentAnimation->setPosition(body.getPosition().x, body.getPosition().y);
+        }
         return;
     }
-
 
     last_direction = direction;
 

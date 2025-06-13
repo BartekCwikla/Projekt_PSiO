@@ -5,7 +5,7 @@
 #include <iostream>
 
 EnemyVortex::EnemyVortex(const sf::Vector2f& startPos)
-    : Enemies(50.f, 80.f, 0.f, startPos), angle(0.f), angleSpeed(180.f),
+    : Enemies(5.f, 100.f, 0.f, startPos), angle(0.f), angleSpeed(180.f),
     vortex("assets/Vortex", "vortex", 4, 0.1f), phaseDifference(rand()%360)
 {
     setDamage(damage); //0 Damage
