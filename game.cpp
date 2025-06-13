@@ -25,13 +25,14 @@ Game::Game() : window(sf::VideoMode(2400, 1500), "Window"),
 
 {
     map.load("./assets/map/ground_stone.png", 256, 64, 64); //Map size is 16 384 x 16 384 pixels
+    font.loadFromFile("./assets/fonts/MinimalPixel.ttf");
     view.setSize(2400,1500);
     defaultView = window.getDefaultView();
     currentWaveClock.restart();
     player.setPosition(map.getSize()/2.f);
     view.setCenter(player.getPosition());
-    gunSound.loadSoundEffect("gun", "./assets/Sounds/Sounds/gun.wav", 35.f, false);
-    gunSound.loadSoundEffect("axe", "./assets/Sounds/Sounds/axe.wav", 35.f, false);
+    gunSound.loadSoundEffect("gun", "./assets/Sounds/Sounds/gun.wav", 30.f, false);
+    gunSound.loadSoundEffect("axe", "./assets/Sounds/Sounds/axe.wav", 30.f, false);
     Dead.loadSoundEffect("dead", "./assets/Sounds/Music/Doom.wav", 30.f, true);
 
 
@@ -49,7 +50,7 @@ bool Game::isWindowOpen() const{
 
 void Game::run(){
     window.setFramerateLimit(60);
-    if(!audio.playMusic("assets/Sounds/Music/MasterOfPuppets.wav", 30.f, true)) {
+    if(!audio.playMusic("./assets/Sounds/Music/MasterOfPuppets.wav", 30.f, true)) {
         return;
     }
 
@@ -274,12 +275,23 @@ void Game::update(sf::Time& dt) {
     enemies.erase(std::remove_if(enemies.begin(), enemies.end(),
                                  [&](const std::unique_ptr<Enemies>& e) {
                                      if (e->getHP() <= 0.f) {
+                                         //To show "You won!" text after killed Boss
+                                         if(dynamic_cast<EnemyBoss*>(e.get())){
+                                             bossKilled=true;
+                                             winClock.restart();
+                                             showWinText = true;
+                                         }
                                          //if any enemy is killed, it drops an exp orb
                                          expOrbs.push_back(std::make_unique<ExpOrb>(e->getPosition(), 20.f));
                                          return true;
                                      }
                                      return false;
                                  }), enemies.end());
+    //Removing dead enemies if they are 4000 pixels from player position
+    enemies.erase(std::remove_if(enemies.begin(), enemies.end(), [&](const std::unique_ptr<Enemies>& e){
+                        //std::hypot() calculate the shortest distance from enemy to player
+                      float dist = std::hypot(player.getPosition().x-e->getPosition().x, player.getPosition().y-e->getPosition().y);
+                                                return dist>4000.f;}), enemies.end());
 
     expOrbs.erase(std::remove_if(expOrbs.begin(), expOrbs.end(),[&](const std::unique_ptr<ExpOrb>& orb)
                                  {
@@ -468,7 +480,7 @@ void Game::render(float dt)
 
 
     float superPowerYOffset = window.getSize().y - padding - 300.f;
-    int spSlot = 1;
+
 
     for (auto& spw : player.getSuperPowers()) {
        // std::string label = std::to_string(spSlot++) + ". " + spw->getName();
@@ -493,6 +505,22 @@ void Game::render(float dt)
         window.draw(superText);
 
         superPowerYOffset -= std::max(tb.height, ib.height) + padding;
+    }
+
+    //The victory text after killing boss
+    if (showWinText && winClock.getElapsedTime().asSeconds() < 5.f) {
+        winText.setFont(font);
+        winText.setString("YOU WON!");
+        winText.setCharacterSize(100);
+        winText.setFillColor(sf::Color::Yellow);
+
+        sf::FloatRect bounds = winText.getLocalBounds();
+        winText.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+        winText.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
+
+        window.draw(winText);
+    } else if (showWinText) {
+        showWinText = false;
     }
 
 
@@ -552,10 +580,9 @@ void Game::wavesLogic() {
 
     // Counting wave in relative to time
     int elapsed = static_cast<int>(waveClock.getElapsedTime().asSeconds());
-    currentWave = elapsed/25 + 1;
+    currentWave = elapsed/30 + 1;
 
 
-    if (enemies.size()>500) return; //Maximum number of enemies at the screen
 
     // Enemeis spawn in shorter period of time for each wave
     if (enemyspawnClock.getElapsedTime().asSeconds() >= std::max(0.7f, 1.8f - currentWave * 0.8f)){
@@ -658,7 +685,7 @@ void Game::wavesLogic() {
     }
     // Boss spawn at wave 10
     if (currentWave==10 && !bossSpawned){
-        sf::Vector2f bossSpawn=generateSpawnPositionNear(player.getPosition(), map.getBounds(), 400.f, 600.f);
+        sf::Vector2f bossSpawn=generateSpawnPositionNear(player.getPosition(), map.getBounds(), 1000.f, 1300.f);
         enemies.push_back(std::make_unique<EnemyBoss>(bossSpawn));
         bossSpawned = true;
     }
@@ -667,25 +694,28 @@ void Game::wavesLogic() {
 
     if (ghostSpawnClock.getElapsedTime().asSeconds() >= ghostR){
 
-        int ghostCount = 30+rand()%20; // Ghosts
+        int ghostCount = 15+rand()%30; // Ghosts
         int dirX = (rand()%2==0) ? -1 : 1;
 
-        float yOffset = static_cast<float>((rand()%200) - 201);
-        sf::Vector2f direction(static_cast<float>(dirX), player.getPosition().y + yOffset);
+        float yOffset = static_cast<float>((rand()%20)-20);
+        sf::Vector2f direction = sf::Vector2f(static_cast<float>(dirX), 0.f);
 
-        sf::Vector2f baseSpawn = generateSpawnPositionNear(player.getPosition(), map.getBounds(), window.getSize().x-200.f, player.getPosition().y+yOffset);
+        sf::Vector2f baseSpawn = generateSpawnPositionNear(player.getPosition(), map.getBounds(), 600.f, 800.f);
 
         for (int i = 0; i < ghostCount; ++i) {
             float offsetX = static_cast<float>(i*30+rand()%30); // Random scatter of points around the axis X
-            float offsetY = static_cast<float>((rand()%60)-30);  // Random scatter of points around the axis Y
+            float offsetY = static_cast<float>((rand()%50)-50);  // Random scatter of points around the axis Y
 
             sf::Vector2f spawnOffset = baseSpawn + sf::Vector2f(offsetX * dirX, offsetY);
             enemies.push_back(std::make_unique<Enemy_GhostGroup>(spawnOffset, direction));
         }
 
         ghostSpawnClock.restart();
-        ghostR = 20 + rand() % 15; // Group of ghosts spawn from 30 to 60
+        ghostR = 5 + rand() % 10; // Group of ghosts spawn from 30 to 60
     }
+
+
+
 }
 
 void Game::showMenu() {
@@ -719,6 +749,7 @@ void Game::showMenu() {
 
     while (window.isOpen() && currentState == GameState::MENU) {
         sf::Event event;
+
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();

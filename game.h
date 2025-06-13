@@ -41,9 +41,14 @@ private:
     sf::Clock currentWaveClock;
     sf::Clock FPS;
     bool bossSpawned = false;
+    bool bossKilled = false;
+    bool showWinText = false;
+    sf::Font font;
+    sf::Text winText;
+    sf::Clock winClock;
     bool testWaveSpawned = false;
     float ghostsDelay;
-    int ghostR = 30.f;
+    int ghostR = std::rand()%5 + 5;
     Player player;
     std::vector<std::unique_ptr<Enemies>> enemies;
     std::vector<std::unique_ptr<Projectile>> projectiles;

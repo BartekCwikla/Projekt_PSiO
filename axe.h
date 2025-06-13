@@ -14,7 +14,7 @@ public:
 private:
     float rotationSpeed = 75.f;
     float aoeRadius = 50.f;
-    float cooldownTime = 3.f;
+    float cooldownTime = 1.5f;
     sf::Clock coolDown;
 };
 

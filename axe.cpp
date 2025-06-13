@@ -6,7 +6,7 @@ Axe::Axe() {
     name = "Axe";
     setVelocity(600.f);
     setRange(800.f);
-    setDamage(15.f);
+    setDamage(20.f);
     setExplosionRange(aoeRadius);
     level = 1;
     if (!texture.loadFromFile("./assets/weapons/axe.png")) {
