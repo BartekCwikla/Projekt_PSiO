@@ -56,9 +56,9 @@ Bats are quite shy, so they spawn in a fixed minimal distance from you. They are
 
 Vortex doesn't deal any damage, but stil can hurt you. It pushes you, so you might just land into a group of enemies. Still can be killed though.
 
-### Knight, Skeleton
+### Knight, Skeleton, Demon
 
-Those two are also after you. They are actively trying to get closer and damage you.
+Those three are also after you. They are actively trying to get closer and damage you.
 
 ### Ghost group
 
