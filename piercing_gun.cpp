@@ -2,7 +2,7 @@
 #include <iostream>
 #include "bullet.h"
 
-PiercingGun::PiercingGun(float initRange, float initDamage, float initCooldown) {
+PiercingGun::PiercingGun(float initRange, float initDamage) {
     name="Piercing Gun";
     setVelocity(1500);
     setRange(initRange);

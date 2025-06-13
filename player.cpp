@@ -295,7 +295,7 @@ void Player::selectWeapon(std::size_t index) {
 }
 
 
-bool Player::isAlive(){
+void Player::isAlive(){
     if(hp > 0 && hp <= maxHp)
         isalive = true;
     else if(hp<=0)

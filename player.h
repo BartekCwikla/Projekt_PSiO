@@ -96,7 +96,7 @@ public:
     void selectWeapon(std::size_t index);
 
 
-    bool isAlive();
+    void isAlive();
     void GameOverStopMove();
 
     sf::Vector2f getShootingDirection() const;
