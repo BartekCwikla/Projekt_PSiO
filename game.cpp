@@ -21,8 +21,7 @@
 
 Game::Game() : window(sf::VideoMode(2400, 1500), "Window"),
 
-    view(window.getDefaultView()),ghostsDelay(static_cast<float>(rand()%15) + 30.f),  player(), isPaused(false), frameCounter(0),
-    availableWeapons({"DoubleGun", "QuadGun", "ExplodingGun", "Axe", "Boomerang", "PiercingGun"}),
+
     view(window.getDefaultView()),ghostsDelay(static_cast<float>(rand()%15) + 30.f),  player(), isPaused(false), availableWeapons({"DoubleGun", "QuadGun", "ExplodingGun", "Axe", "Boomerang", "PiercingGun"}), frameCounter(0)
 
 {
