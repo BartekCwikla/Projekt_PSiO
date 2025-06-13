@@ -3,7 +3,7 @@
 #include <iostream>
 
 EnemyBoss::EnemyBoss(const sf::Vector2f& startPos)
-    : Enemies(1000.f, 100.f, 10.f, startPos), animationRight("assets/Boss/WormRight", "WormRight", 9, 0.1f), //Loading boss texture files
+    : Enemies(1000.f, 200.f, 20.f, startPos), animationRight("assets/Boss/WormRight", "WormRight", 9, 0.1f), //Loading boss texture files
     animationLeft("assets/Boss/WormLeft", "WormLeft", 9, 0.1f),
     currentDirection("right")
 {
@@ -116,8 +116,7 @@ void EnemyBoss::setColor(const sf::Color &color){
 
 }
 void EnemyBoss::applyKnockback(const sf::Vector2f& direction, float strength) {
-    knockbackVelocity = direction * strength;
-    knockTimer = 0.1f;
+
 }
 
 // flash on hit

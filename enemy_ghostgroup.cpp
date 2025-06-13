@@ -2,7 +2,7 @@
 #include <cmath>
 
 Enemy_GhostGroup::Enemy_GhostGroup(const sf::Vector2f& startPos, const sf::Vector2f& dir)
-    : Enemies(4.f, 700.f, 2.f, startPos), direction(dir), constY(startPos.y), amplitude(20.f),
+    : Enemies(2.f, 800.f, 2.f, startPos), direction(dir), constY(startPos.y), amplitude(20.f),
     frequency(2.f), timePassed(0.f),
     animationLeft("./assets/Ghost/GhostLeft", "GhostLeft", 12, 0.14f, 1),
     animationRight("./assets/Ghost/GhostRight", "GhostRight", 12, 0.14f, 1),

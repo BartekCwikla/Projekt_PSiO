@@ -32,7 +32,7 @@ private:
     GameState currentState = GameState::MENU;
     sf::RenderWindow window;
     sf::View view;
-    Audio audio;
+    Audio audio, gunSound;
     sf::View defaultView; //HUD render
     sf::Clock enemyspawnClock;
     sf::Clock ghostSpawnClock; //New clock to spawns group of ghosts
@@ -74,7 +74,7 @@ public:
     void run();
     void handleEvents();
     void update(sf::Time& dt);
-    void render();
+    void render(float dt);
     void spawnEnemies();
     void updateWave();
     void handleShot(std::vector<std::unique_ptr<Projectile>>);

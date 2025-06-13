@@ -4,7 +4,7 @@
 #include <iostream>
 
 EnemyKnight::EnemyKnight(const sf::Vector2f& startPos)
-    : Enemies(30.f, 100.f, 15.f, startPos),
+    : Enemies(50.f, 100.f, 15.f, startPos),
     animLeft("./assets/Knight/KnightLeft", "KnightLeft", 8, 0.14f, 1),
     animRight("./assets/Knight/KnightRight", "KnightRight", 8, 0.14f, 1),
     facingLeft(true)

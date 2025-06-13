@@ -15,7 +15,7 @@
 
 Player::Player()
     : body(sf::Vector2f(70, 70)),
-    speed(300.f), hp(100.f), maxHp(100.f), exp(0.f), ExpNextLvl(100.f),
+    speed(300.f), hp(500.f), maxHp(500.f), exp(0.f), ExpNextLvl(100.f),
     N("./assets/PlayerCharacter/N", "N", 14, 0.08f,1),
     S("./assets/PlayerCharacter/S", "S", 14, 0.08f,1),
     W("./assets/PlayerCharacter/W", "W", 14, 0.08f,1),
@@ -24,8 +24,7 @@ Player::Player()
     NW("./assets/PlayerCharacter/NW", "NW", 14, 0.08f,1),
     SE("./assets/PlayerCharacter/SE", "SE", 14, 0.08f,1),
     SW("./assets/PlayerCharacter/SW", "SW", 14, 0.08f,1),
-
-    isalive(true)
+    isalive(true),
 
     shooting_direction(sf::Vector2f(1,1))
 
@@ -243,7 +242,7 @@ void Player::takeDamage(const int& dam) {
 //Future method that adding experience and loading the exp bar
 void Player::addMaxLevelTreshold(float amount) {
     exp += amount;
-    float increasedHp = 20.f;
+    float increasedHp = 100.f;
 
     while (exp >= ExpNextLvl) {
         exp -= ExpNextLvl;
@@ -255,7 +254,7 @@ void Player::addMaxLevelTreshold(float amount) {
             hp=maxHp;
         }
         else if(lvl++){
-            hp += 20.f;
+            hp += 50.f;
             if(hp >= maxHp)
                 hp=maxHp;
 

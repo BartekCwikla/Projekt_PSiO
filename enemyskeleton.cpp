@@ -1,7 +1,7 @@
 #include "enemyskeleton.h"
 #include "cmath"
 EnemySkeleton::EnemySkeleton(const sf::Vector2f& startPos)
-    : Enemies(100.f, 80.f, 10.f, startPos),
+    : Enemies(80.f, 80.f, 10.f, startPos),
     animationLeft("assets/Skeleton/SkeletonLeft", "SkeletonLeft", 12, 0.12f, 1),
     animationRight("assets/Skeleton/SkeletonRight", "SkeletonRight", 12, 0.12f, 1),
     facingRight(true)

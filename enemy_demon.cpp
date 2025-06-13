@@ -2,7 +2,7 @@
 #include <cmath>
 
 Enemy_Demon::Enemy_Demon(const sf::Vector2f& startPos)
-    : Enemies(20.f, 80.f, 15.f, startPos),
+    : Enemies(10.f, 80.f, 4.f, startPos),
     animLeft("./assets/Demon/DemonLeft", "DemonLeft", 8, 0.14f, 1),
     animRight("./assets/Demon/DemonRight", "DemonRight", 8, 0.14f, 1),
     facingLeft(true)

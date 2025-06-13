@@ -3,7 +3,7 @@
 #include <cmath>
 
 Enemy_Bat::Enemy_Bat(sf::Vector2f startPos)
-    : Enemies(20.f, 50.f, 15.f, startPos), constY(startPos.y),
+    : Enemies(30.f, 50.f, 5.f, startPos), constY(startPos.y),
      amplitude(60.f), frequency(6.f), timePassed(0.f),
     animation("./assets/Bat", "Bat", 4, 0.14f, 1), facingRight(true)
 {

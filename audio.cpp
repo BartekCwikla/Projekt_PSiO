@@ -18,22 +18,31 @@ void Audio::stopMusic() {
     backgroundMusic.stop();
 }
 
-bool Audio::loadSoundEffect(const std::string& name, const std::string& filepath) {
+bool Audio::loadSoundEffect(const std::string& name, const std::string& filepath, float volume, bool loop) {
+
     sf::SoundBuffer buffer;
-    if (!buffer.loadFromFile(filepath)) {
-        std::cerr<<"Cannot loaded the audio file "<<filepath<<std::endl;
+    if (!buffer.loadFromFile(filepath)){
+        std::cerr<<"Failed to load"<<filepath<<std::endl;
         return false;
     }
-    soundBuffers[name] = buffer;
-
-    sf::Sound sound;
-    sound.setBuffer(soundBuffers[name]);
-    sounds[name] = sound;
+    soundBuffers[name]=buffer;
+    sf::Sound s;
+    s.setBuffer(soundBuffers[name]);
+    s.setVolume(volume);
+    s.setLoop(loop);
+    sounds[name] = SoundSets{s, volume, loop};
     return true;
 }
-
 void Audio::playSoundEffect(const std::string& name) {
     if (sounds.count(name)) {
-        sounds[name].play();
+        auto& meta = sounds[name];
+
+        // reset, jeśli już gra
+        if (meta.sound.getStatus() == sf::Sound::Playing)
+            meta.sound.stop();
+
+        meta.sound.setVolume(meta.defaultVolume);
+        meta.sound.setLoop(meta.loop);
+        meta.sound.play();
     }
 }
