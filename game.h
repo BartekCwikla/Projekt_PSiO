@@ -46,7 +46,7 @@ private:
     sf::Clock winClock;
     bool testWaveSpawned = false;
     float ghostsDelay;
-    int ghostR = std::rand()%5 + 5;
+    int ghostR = std::rand()%15 + 20;
     Player player;
     std::vector<std::unique_ptr<Enemies>> enemies;
     std::vector<std::unique_ptr<Projectile>> projectiles;
